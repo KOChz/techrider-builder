@@ -1,0 +1,2151 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>headachee - Tech Rider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 1rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.1rem;
+          padding: 0.5rem 0;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.65rem;
+          padding: 0.5rem 0.25rem;
+          min-height: 44px;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #0a0a0a;
+        --color-surface: #1a1a1a;
+        --color-surface-hover: #252525;
+        --color-border: #2a2a2a;
+        --color-text: #e8e8e8;
+        --color-text-muted: #a0a0a0;
+        --color-text-dim: #707070;
+        --color-accent: #d4d4d4;
+        --color-accent-dim: #d4d4d433;
+        --color-focus: #ffffff;
+        --color-dark-green: #1a4d2e;
+        --spacing-xs: 0.5rem;
+        --spacing-sm: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+        --font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Roboto", sans-serif;
+        --font-mono: "SF Mono", "Consolas", "Monaco", monospace;
+        --transition-base: 0.2s ease;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-sm) var(--spacing-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--color-dark-green);
+        text-decoration: none;
+        transition: opacity var(--transition-base);
+      }
+
+      .logo:hover,
+      .logo:focus {
+        opacity: 0.7;
+        outline: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: var(--spacing-lg);
+        list-style: none;
+        align-items: baseline;
+      }
+
+      .nav-links a {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color var(--transition-base);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus {
+        color: var(--color-text);
+        outline: none;
+      }
+
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-toggle {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color var(--transition-base);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: var(--font-sans);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+      }
+
+      .dropdown-toggle::after {
+        content: "▾";
+        font-size: 0.8rem;
+        transition: transform var(--transition-base);
+      }
+
+      .dropdown.is-open .dropdown-toggle::after {
+        transform: rotate(180deg);
+      }
+
+      .dropdown-toggle:hover,
+      .dropdown-toggle:focus {
+        color: var(--color-text);
+        outline: none;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 1rem);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        min-width: 300px;
+
+        width: max-content;
+
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition-base),
+          visibility var(--transition-base);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .dropdown:hover .dropdown-menu {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .dropdown.is-open .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .dropdown-menu::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 12px;
+        background: var(--color-surface);
+        border-left: 1px solid var(--color-border);
+        border-top: 1px solid var(--color-border);
+        transform: translateX(-50%) rotate(45deg);
+      }
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        color: var(--color-text);
+        text-decoration: none;
+        transition: background-color var(--transition-base);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .dropdown-item:last-child {
+        border-bottom: none;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: var(--color-surface-hover);
+        outline: none;
+      }
+
+      .dropdown-item:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+
+      .dropdown-item:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+
+      .dropdown-icon {
+        font-size: 1.5rem;
+        filter: grayscale(100%);
+        flex-shrink: 0;
+      }
+
+      .dropdown-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dropdown-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
+      }
+
+      .dropdown-role {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-xl) var(--spacing-md);
+        background: linear-gradient(
+          180deg,
+          var(--color-bg) 0%,
+          var(--color-surface) 100%
+        );
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        margin-bottom: var(--spacing-sm);
+        background: linear-gradient(
+          95deg,
+          var(--color-text) 0%,
+          var(--color-dark-green) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      #tech-rider {
+        scroll-margin-top: 70px;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-xl);
+        font-family: var(--font-mono);
+        font-weight: 400;
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        background-color: var(--color-dark-green);
+        color: var(--color-text);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        transition: transform var(--transition-base),
+          box-shadow var(--transition-base),
+          background-color var(--transition-base);
+        border: 2px solid var(--color-dark-green);
+      }
+
+      .cta-button:hover,
+      .cta-button:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(26, 77, 46, 0.4);
+        outline: none;
+        background-color: #235a37;
+      }
+
+      .cta-button:active {
+        transform: translateY(0);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-lg) var(--spacing-sm);
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-xl);
+        text-align: center;
+        letter-spacing: -0.02em;
+        color: var(--color-dark-green);
+      }
+
+      .section-subtitle {
+        text-align: center;
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-xl);
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+      }
+
+      .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .member-card {
+        background: var(--color-surface);
+        border-radius: 8px;
+        padding: var(--spacing-sm);
+        transition: transform var(--transition-base),
+          box-shadow var(--transition-base), border-color var(--transition-base);
+        border: 1px solid var(--color-border);
+        scroll-margin-top: 80px;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .member-card:hover {
+          transform: translateY(-4px);
+          border-color: var(--color-accent);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .member-card:focus-within {
+        border-color: var(--color-focus);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+      }
+
+      .member-header {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 2px solid var(--color-border);
+      }
+
+      .member-icon {
+        font-size: 2rem;
+        filter: grayscale(100%);
+      }
+
+      .member-info h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        letter-spacing: -0.01em;
+      }
+
+      .member-role {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .equipment-list {
+        list-style: none;
+      }
+
+      .equipment-item {
+        padding: var(--spacing-xs) 0;
+        font-size: 0.95rem;
+      }
+
+      .equipment-item summary {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color var(--transition-base);
+        user-select: none;
+        list-style: none;
+      }
+
+      .equipment-item summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .equipment-item summary::before {
+        content: "▸";
+        color: var(--color-text-muted);
+        font-weight: bold;
+        flex-shrink: 0;
+        margin-top: 2px;
+        transition: transform var(--transition-base);
+      }
+
+      .equipment-item[open] summary::before {
+        transform: rotate(90deg);
+      }
+
+      .equipment-item summary:hover,
+      .equipment-item summary:focus {
+        background: var(--color-bg);
+        outline: none;
+      }
+
+      .equipment-item:not(:has(summary ~ *)) summary {
+        cursor: default;
+        pointer-events: none;
+      }
+
+      .equipment-item:not(:has(summary ~ *)) summary::before {
+        content: "•";
+        transform: none !important;
+      }
+
+      .equipment-simple {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        padding: 0.5rem;
+      }
+
+      .equipment-simple::before {
+        content: "•";
+        color: var(--color-text-muted);
+        font-weight: bold;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .quantity {
+        color: var(--color-text-dim);
+        font-weight: 500;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+      }
+
+      .examples {
+        margin-top: var(--spacing-xs);
+        padding: var(--spacing-sm);
+        background: var(--color-bg);
+        border-radius: 4px;
+        border-left: 2px solid var(--color-border);
+      }
+
+      .examples-title {
+        font-size: 0.75rem;
+        color: var(--color-text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+      }
+
+      .examples-list {
+        list-style: none;
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        line-height: 1.8;
+      }
+
+      .examples-list li {
+        padding-left: var(--spacing-sm);
+        position: relative;
+      }
+
+      .examples-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--color-text-dim);
+      }
+
+      .quick-ref {
+        background: var(--color-surface);
+        border-radius: 8px;
+        padding: var(--spacing-lg);
+        border: 1px solid var(--color-border);
+      }
+
+      .quick-ref h3 {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-md);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        letter-spacing: -0.01em;
+      }
+
+      .checklist {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-sm);
+        list-style: none;
+      }
+
+      .checklist li {
+        padding: var(--spacing-xs);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .checklist li::before {
+        content: "☐";
+        font-size: 1.2rem;
+        color: var(--color-text-muted);
+      }
+
+      footer {
+        background: var(--color-surface);
+        padding: var(--spacing-xl) var(--spacing-md);
+        text-align: center;
+        border-top: 1px solid var(--color-border);
+        margin-top: var(--spacing-xl);
+      }
+
+      footer h3 {
+        margin-bottom: var(--spacing-sm);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      footer p {
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      footer a {
+        color: var(--color-text);
+        text-decoration: none;
+        transition: opacity var(--transition-base);
+      }
+
+      footer a:hover,
+      footer a:focus {
+        opacity: 0.7;
+        text-decoration: underline;
+        outline: none;
+      }
+
+      *:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+      }
+
+      /* Tablet and mobile devices */
+      @media (max-width: 768px) {
+        #dropdown-danya {
+          padding: 0.75rem 1rem;
+        }
+
+        #dropdown-kyrylo {
+          padding: 0.75rem 1rem;
+        }
+
+        #dropdown-kristina {
+          padding: 0.75rem 1rem;
+        }
+
+        #dropdown-maksym {
+          padding: 0.75rem 1rem;
+        }
+
+        .nav-container {
+          padding: 0.75rem var(--spacing-sm);
+        }
+
+        .logo {
+          font-size: 1.65rem;
+        }
+
+        .nav-links {
+          gap: var(--spacing-sm);
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.7rem;
+        }
+
+        .dropdown-menu {
+          right: 0;
+          left: auto;
+          transform: none;
+          min-width: 220px;
+        }
+
+        .dropdown-menu::before {
+          left: auto;
+          right: 1rem;
+          transform: rotate(45deg);
+        }
+
+        .dropdown-item {
+          padding: 1.25rem 2rem;
+          min-height: 56px;
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+
+        .tech-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .checklist {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .member-card {
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+      }
+
+      /* Small mobile devices */
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 1rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.4rem;
+          padding: 0.5rem 0;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.65rem;
+          padding: 0.5rem 0.25rem;
+          min-height: 44px;
+        }
+
+        /* Maintain good touch target size for dropdown items */
+        .dropdown-item {
+          padding: 3.25rem 1.5rem;
+          min-height: 56px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 0.5rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.45rem;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+          padding: 0.25rem 1.75rem;
+          min-height: 56px;
+        }
+      }
+
+      @media print {
+        nav {
+          position: relative;
+        }
+
+        .hero {
+          min-height: auto;
+          padding: var(--spacing-lg);
+        }
+
+        .member-card {
+          break-inside: avoid;
+        }
+
+        details {
+          display: none;
+        }
+
+        .dropdown-menu {
+          display: none;
+        }
+      }
+    </style>
+    <style>
+      /* ============================================
+         2D STAGE PLAN STYLES
+         ============================================ */
+
+      #stageContainer {
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        position: relative;
+        overflow: hidden; /* Prevent default scroll */
+      }
+
+      #canvas {
+        touch-action: none;
+        display: block;
+      }
+
+      .stage-node {
+        cursor: move;
+        user-select: none;
+      }
+
+      .panning {
+        cursor: grabbing !important;
+      }
+
+      .panning * {
+        cursor: grabbing !important;
+      }
+
+      .stage-plan-section {
+        background: var(--color-bg);
+        padding: var(--spacing-xl) 0;
+      }
+
+      .canvas-wrapper {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        min-height: 500px;
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .canvas-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: grab;
+      }
+
+      .canvas-container.panning {
+        cursor: grabbing;
+      }
+
+      #canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .stage-controls {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(26, 26, 26, 0.95);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+      }
+
+      .control-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      .stage-btn {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all var(--transition-base);
+        font-weight: 500;
+        font-family: var(--font-sans);
+      }
+
+      .stage-btn:hover {
+        background: var(--color-surface-hover);
+        border-color: var(--color-dark-green);
+      }
+
+      .stage-btn:active {
+        transform: translateY(1px);
+      }
+
+      .stage-info {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(26, 26, 26, 0.95);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+      }
+
+      .info-line {
+        margin: 4px 0;
+        color: var(--color-text-muted);
+      }
+
+      .info-value {
+        color: var(--color-dark-green);
+        font-weight: 600;
+      }
+
+      .stage-node {
+        cursor: move;
+        transition: filter var(--transition-base);
+      }
+
+      .stage-node:hover {
+        filter: brightness(1.2);
+      }
+
+      .stage-node:active {
+        cursor: grabbing;
+      }
+
+      .node-rect {
+        fill: var(--color-dark-green);
+        stroke: #2a6d4e;
+        stroke-width: 2;
+      }
+
+      .node-text {
+        fill: var(--color-text);
+        font-size: 14px;
+        font-weight: 600;
+        text-anchor: middle;
+        pointer-events: none;
+        user-select: none;
+        font-family: var(--font-sans);
+      }
+
+      .node-coords {
+        fill: var(--color-text-muted);
+        font-size: 10px;
+        font-family: var(--font-mono);
+        text-anchor: middle;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .grid-line {
+        stroke: var(--color-border);
+        stroke-width: 1;
+      }
+
+      .grid-line-major {
+        stroke: #3a3a3a;
+        stroke-width: 1.5;
+      }
+
+      .axis-line {
+        stroke: #4a4a4a;
+        stroke-width: 2;
+      }
+
+      /* Tablet and mobile devices */
+      @media (max-width: 768px) {
+        #dropdown-danya,
+        #dropdown-kyrylo,
+        #dropdown-kristina,
+        #dropdown-maksym {
+          padding: 0.75rem 1rem;
+        }
+
+        .nav-container {
+          padding: 0.75rem var(--spacing-sm);
+        }
+
+        .logo {
+          font-size: 1.65rem;
+        }
+
+        .nav-links {
+          gap: var(--spacing-sm);
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.7rem;
+        }
+
+        .dropdown-menu {
+          right: 0;
+          left: auto;
+          transform: none;
+          min-width: 220px;
+        }
+
+        .dropdown-menu::before {
+          left: auto;
+          right: 1rem;
+          transform: rotate(45deg);
+        }
+
+        .dropdown-item {
+          padding: 1.25rem 2rem;
+          min-height: 56px;
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+
+        .tech-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .member-card {
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .canvas-wrapper {
+          height: 50vh;
+          min-height: 400px;
+        }
+
+        .stage-controls {
+          top: 10px;
+          right: 10px;
+          padding: 12px;
+        }
+
+        .stage-info {
+          bottom: 10px;
+          left: 10px;
+          padding: 8px 12px;
+          font-size: 11px;
+        }
+      }
+
+      /* Small mobile devices */
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 0.5rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.45rem;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+          padding: 0.25rem 1.75rem;
+          min-height: 56px;
+        }
+
+        .canvas-wrapper {
+          height: 60vh;
+          min-height: 350px;
+        }
+
+        .stage-controls {
+          padding: 8px;
+        }
+
+        .stage-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+      }
+
+      @media print {
+        nav {
+          position: relative;
+        }
+
+        .hero {
+          min-height: auto;
+          padding: var(--spacing-lg);
+        }
+
+        .member-card {
+          break-inside: avoid;
+        }
+
+        details {
+          display: none;
+        }
+
+        .dropdown-menu {
+          display: none;
+        }
+
+        .stage-plan-section {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-container">
+        <a href="#home" class="logo">headachee</a>
+        <ul class="nav-links">
+          <!-- <li><a href="#home">Home</a></li> -->
+          <li class="dropdown">
+            <button
+              class="dropdown-toggle"
+              aria-haspopup="true"
+              aria-expanded="false"
+              id="techRiderToggle"
+            >
+              Tech Rider
+            </button>
+            <div
+              class="dropdown-menu"
+              role="menu"
+              aria-labelledby="techRiderToggle"
+            >
+              <a
+                href="#danya"
+                id="dropdown-danya"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🥁</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Danya</span>
+                  <span class="dropdown-role">Drums</span>
+                </div>
+              </a>
+
+              <a
+                href="#kyrylo"
+                id="dropdown-kyrylo"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎸</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Kyrylo</span>
+                  <span class="dropdown-role">Bass</span>
+                </div>
+              </a>
+
+              <a
+                href="#kristina"
+                id="dropdown-kristina"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎤</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Kristina</span>
+                  <span class="dropdown-role">Guitar / Vocals</span>
+                </div>
+              </a>
+
+              <a
+                href="#maksym"
+                id="dropdown-maksym"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎸</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Maksym</span>
+                  <span class="dropdown-role">Guitar</span>
+                </div>
+              </a>
+
+              <a
+                href="#stage-plan"
+                id="dropdown-maksym"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎸</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Stage Plan</span>
+                </div>
+              </a>
+            </div>
+          </li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <section id="home" class="hero">
+      <div>
+        <h1>headachee</h1>
+        <a href="#tech-rider" class="cta-button">View Tech Rider</a>
+      </div>
+    </section>
+
+    <section id="tech-rider" class="container">
+      <h2 class="section-title">Technical Requirements</h2>
+
+      <div class="tech-grid">
+        <div class="member-card" id="danya">
+          <div class="member-header">
+            <span class="member-icon">🥁</span>
+            <div class="member-info">
+              <h3>Danya</h3>
+              <p class="member-role">Drums</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span>Bass drum <span class="quantity">× 1</span></span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Brands</p>
+                <ul class="examples-list">
+                  <li>DW Performance Series 22"</li>
+                  <li>Yamaha Stage Custom 22"</li>
+                  <li>Pearl Export 22"</li>
+                  <li>Tama Superstar 22"</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Snare <span class="quantity">× 1</span></span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Models</p>
+                <ul class="examples-list">
+                  <li>Ludwig Supraphonic 14"×6.5"</li>
+                  <li>Pearl Sensitone Steel 14"×5"</li>
+                  <li>Yamaha Recording Custom 14"×5.5"</li>
+                  <li>DW Collector's Maple 14"×6"</li>
+                </ul>
+              </div>
+            </details>
+            <li class="equipment-simple">
+              <span>High tom 12" <span class="quantity">× 1</span></span>
+            </li>
+            <li class="equipment-simple">
+              <span>Mid tom 14" <span class="quantity">× 1</span></span>
+            </li>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor tom <span class="quantity">× 1</span></span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Typical Sizes</p>
+                <ul class="examples-list">
+                  <li>16"×16" (standard)</li>
+                  <li>14"×14" (compact)</li>
+                  <li>18"×16" (deep tone)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Hi-hat stand <span class="quantity">× 1</span></span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Boom cymbal stands <span class="quantity">× 2</span></span
+                >
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Snare stand <span class="quantity">× 1</span></span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                  <li>EV ELX112P (12", 1000W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Wireless in-ear monitoring system
+                  <span class="quantity">(ear monitors provided)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Compatible Systems</p>
+                <ul class="examples-list">
+                  <li>Shure PSM 300 / PSM 900</li>
+                  <li>Sennheiser EW IEM G4</li>
+                  <li>Audio-Technica M3</li>
+                  <li>Frequency range: 520-865 MHz</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Drum rug</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Size</p>
+                <ul class="examples-list">
+                  <li>Minimum 6' × 8' (183cm × 244cm)</li>
+                  <li>Non-slip rubber backing</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+
+        <div class="member-card" id="kyrylo">
+          <div class="member-header">
+            <span class="member-icon">🎸</span>
+            <div class="member-info">
+              <h3>Kyrylo</h3>
+              <p class="member-role">Bass</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span>Bass combo amp/stack</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Amps</p>
+                <ul class="examples-list">
+                  <li>Ampeg SVT-410HLF + SVT-3 Pro</li>
+                  <li>Fender Rumble 500 combo</li>
+                  <li>Gallien-Krueger MB212</li>
+                  <li>Markbass CMD 121H combo</li>
+                  <li>Minimum 300W recommended</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Spare Jack-to-Jack cable &gt;2m
+                  <span class="quantity">× 2</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Cables</p>
+                <ul class="examples-list">
+                  <li>Mogami Gold 10ft / 3m (6.35mm)</li>
+                  <li>Planet Waves American Stage 10ft</li>
+                  <li>Fender Professional Series 10ft</li>
+                  <li>Length: 2-3m (7-10ft) minimum</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Bass guitar stand</span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Power outlet / extension cord</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Requirements</p>
+                <ul class="examples-list">
+                  <li>Standard AC power (220-240V EU / 110-120V US)</li>
+                  <li>3m+ extension cord if needed</li>
+                  <li>Grounded outlets preferred</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+
+        <div class="member-card" id="kristina">
+          <div class="member-header">
+            <span class="member-icon">🎤</span>
+            <div class="member-info">
+              <h3>Kristina</h3>
+              <p class="member-role">Guitar / Vocals</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Guitar combo amplifier
+                  <span class="quantity">(Fender / VOX / Roland)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Models</p>
+                <ul class="examples-list">
+                  <li>Fender Hot Rod Deluxe (40W)</li>
+                  <li>VOX AC30 (30W)</li>
+                  <li>Roland JC-120 Jazz Chorus</li>
+                  <li>Fender Blues Deluxe (40W)</li>
+                  <li>Minimum 30W tube / 50W solid state</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Guitar stand</span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Microphone stand</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Stand Types</p>
+                <ul class="examples-list">
+                  <li>Boom stand with adjustable arm</li>
+                  <li>Height: adjustable to 1.5-2m</li>
+                  <li>Heavy base for stability</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Microphone</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Vocal Microphones</p>
+                <ul class="examples-list">
+                  <li>Shure SM58 (industry standard)</li>
+                  <li>Shure Beta 58A (brighter tone)</li>
+                  <li>Sennheiser e935 (clear highs)</li>
+                  <li>Sennheiser e945 (supercardioid)</li>
+                  <li>Audio-Technica ATM710</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Spare Jack-to-Jack cable &gt;3m
+                  <span class="quantity">× 2</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Cables</p>
+                <ul class="examples-list">
+                  <li>Mogami Gold 15ft / 4.5m (6.35mm)</li>
+                  <li>Planet Waves American Stage 15ft</li>
+                  <li>Fender Professional Series 15ft</li>
+                  <li>D'Addario Circuit Breaker 15ft</li>
+                  <li>Length: 3-5m (10-15ft) minimum</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Wireless in-ear monitoring system
+                  <span class="quantity">(ear monitors provided)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Compatible Systems</p>
+                <ul class="examples-list">
+                  <li>Shure PSM 300 / PSM 900</li>
+                  <li>Sennheiser EW IEM G4</li>
+                  <li>Audio-Technica M3</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Power outlet / extension cord</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Requirements</p>
+                <ul class="examples-list">
+                  <li>Standard AC power (220-240V EU)</li>
+                  <li>3m+ extension cord if needed</li>
+                  <li>Grounded outlets preferred</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+
+        <div class="member-card" id="maksym">
+          <div class="member-header">
+            <span class="member-icon">🎸</span>
+            <div class="member-info">
+              <h3>Maksym</h3>
+              <p class="member-role">Guitar</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Guitar combo amplifier
+                  <span class="quantity">(Fender / VOX / Roland)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Models</p>
+                <ul class="examples-list">
+                  <li>Fender Hot Rod Deluxe (40W)</li>
+                  <li>VOX AC30 (30W)</li>
+                  <li>Roland JC-120 Jazz Chorus</li>
+                  <li>Fender Blues Deluxe (40W)</li>
+                  <li>Minimum 30W tube / 50W solid state</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Guitar stand</span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Microphone</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Backing Vocal Mics</p>
+                <ul class="examples-list">
+                  <li>Shure SM58 (industry standard)</li>
+                  <li>Shure Beta 58A</li>
+                  <li>Sennheiser e835</li>
+                  <li>Audio-Technica ATM510</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Spare Jack-to-Jack cable &gt;3m
+                  <span class="quantity">× 2</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Cables</p>
+                <ul class="examples-list">
+                  <li>Mogami Gold 15ft / 4.5m (6.35mm)</li>
+                  <li>Planet Waves American Stage 15ft</li>
+                  <li>Fender Professional Series 15ft</li>
+                  <li>Length: 3-5m (10-15ft) minimum</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Power outlet / extension cord</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Requirements</p>
+                <ul class="examples-list">
+                  <li>Standard AC power (220-240V EU)</li>
+                  <li>3m+ extension cord if needed</li>
+                  <li>Grounded outlets preferred</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         2D STAGE PLAN SECTION
+         ============================================ -->
+    <section id="stage-plan" class="stage-plan-section">
+      <div class="container">
+        <h2 class="section-title">Stage Plan</h2>
+        <p class="section-subtitle">
+          Interactive stage layout - pan, zoom, and drag equipment positions
+        </p>
+
+        <div class="canvas-wrapper">
+          <div class="canvas-container" id="stageContainer">
+            <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern
+                  id="grid"
+                  width="50"
+                  height="50"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <line x1="0" y1="0" x2="0" y2="50" class="grid-line" />
+                  <line x1="0" y1="0" x2="50" y2="0" class="grid-line" />
+                </pattern>
+                <pattern
+                  id="grid-major"
+                  width="200"
+                  height="200"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <rect width="200" height="200" fill="url(#grid)" />
+                  <line x1="0" y1="0" x2="0" y2="200" class="grid-line-major" />
+                  <line x1="0" y1="0" x2="200" y2="0" class="grid-line-major" />
+                </pattern>
+              </defs>
+
+              <g id="viewport">
+                <rect
+                  x="-5000"
+                  y="-5000"
+                  width="10000"
+                  height="10000"
+                  fill="url(#grid-major)"
+                />
+                <line x1="-5000" y1="0" x2="5000" y2="0" class="axis-line" />
+                <line x1="0" y1="-5000" x2="0" y2="5000" class="axis-line" />
+                <g id="stageNodes"></g>
+              </g>
+            </svg>
+
+            <div class="stage-controls">
+              <div class="control-group">
+                <button class="stage-btn" id="zoomIn">Zoom In (+)</button>
+                <button class="stage-btn" id="zoomOut">Zoom Out (−)</button>
+              </div>
+              <button class="stage-btn" id="resetView">Reset View</button>
+              <!-- <button class="stage-btn" id="addEquipment">Add Equipment</button> -->
+            </div>
+
+            <div class="stage-info">
+              <div class="info-line">
+                Zoom: <span class="info-value" id="zoomDisplay">100%</span>
+              </div>
+              <div class="info-line">
+                Pan: <span class="info-value" id="panDisplay">0, 0</span>
+              </div>
+              <div class="info-line">
+                Mouse: <span class="info-value" id="mouseDisplay">0, 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <h3>Get in Touch</h3>
+      <p>For bookings and technical questions:</p>
+      <p>
+        <a href="mailto:kristinaheadachee@gmail.com"
+          >kristinaheadachee@gmail.com</a
+        >
+      </p>
+      <p style="margin-top: var(--spacing-md); font-size: 0.85rem">
+        © 2025 headachee. All rights reserved.
+      </p>
+    </footer>
+
+    <script>
+      const dropdown = document.querySelector(".dropdown");
+      const dropdownToggle = document.getElementById("techRiderToggle");
+      const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+      const dropdownItems = dropdown.querySelectorAll(".dropdown-item");
+
+      const isTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+      if (isTouchDevice) {
+        dropdownToggle.addEventListener("click", (e) => {
+          e.preventDefault();
+          const isOpen = dropdown.classList.contains("is-open");
+          dropdown.classList.toggle("is-open");
+          dropdownToggle.setAttribute("aria-expanded", !isOpen);
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove("is-open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        dropdownItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            dropdown.classList.remove("is-open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      dropdownToggle.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const isOpen = dropdown.classList.contains("is-open");
+          dropdown.classList.toggle("is-open");
+          dropdownToggle.setAttribute("aria-expanded", !isOpen);
+
+          if (!isOpen) {
+            setTimeout(() => {
+              dropdownItems[0]?.focus();
+            }, 100);
+          }
+        }
+      });
+
+      dropdownItems.forEach((item, index) => {
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const nextItem = dropdownItems[index + 1] || dropdownItems[0];
+            nextItem.focus();
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const prevItem =
+              dropdownItems[index - 1] ||
+              dropdownItems[dropdownItems.length - 1];
+            prevItem.focus();
+          } else if (e.key === "Escape") {
+            dropdown.classList.remove("is-open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+            dropdownToggle.focus();
+          }
+        });
+      });
+
+      /* ============================================
+     2D STAGE PLAN JAVASCRIPT
+     ============================================ */
+
+      const canvas = document.getElementById("canvas");
+      const viewport = document.getElementById("viewport");
+      const nodesContainer = document.getElementById("stageNodes");
+      const container = document.getElementById("stageContainer");
+
+      let viewBox = { x: -500, y: -500, width: 1000, height: 1000 };
+      let zoom = 1;
+      let isPanning = false;
+      let panStart = { x: 0, y: 0 };
+      let isDraggingNode = false;
+      let draggedNode = null;
+      let dragOffset = { x: 0, y: 0 };
+
+      const stageNodes = [
+        { id: 1, x: 0, y: -150, label: "🥁 Danya", type: "drums" },
+        { id: 2, x: -200, y: 50, label: "🎸 Kyrylo", type: "bass" },
+        { id: 3, x: 0, y: 150, label: "🎤 Kristina", type: "vocals" },
+        { id: 4, x: 180, y: 35, label: "🎸 Maksym", type: "guitar" },
+        { id: 5, x: 200, y: -50, label: "🔊 Guitar Amp 1", type: "equipment" },
+        { id: 6, x: -250, y: -50, label: "🔊 Bass Amp", type: "equipment" },
+        { id: 7, x: 0, y: 0, label: "🔊 Guitar Amp 2", type: "equipment" },
+      ];
+
+      function init() {
+        updateViewBox();
+        renderNodes();
+        setupEventListeners();
+        updateInfo();
+      }
+
+      function updateViewBox() {
+        canvas.setAttribute(
+          "viewBox",
+          `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`
+        );
+      }
+
+      function renderNodes() {
+        nodesContainer.innerHTML = "";
+        stageNodes.forEach((node) => {
+          const g = createNodeElement(node);
+          nodesContainer.appendChild(g);
+        });
+      }
+
+      function createNodeElement(node) {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.classList.add("stage-node");
+        g.setAttribute("data-id", node.id);
+        g.setAttribute("transform", `translate(${node.x}, ${node.y})`);
+
+        const rect = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        rect.classList.add("node-rect");
+        rect.setAttribute("x", -60);
+        rect.setAttribute("y", -30);
+        rect.setAttribute("width", 120);
+        rect.setAttribute("height", 60);
+        rect.setAttribute("rx", 8);
+
+        const text = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+        text.classList.add("node-text");
+        text.setAttribute("y", -5);
+        text.textContent = node.label;
+
+        const coords = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text"
+        );
+        coords.classList.add("node-coords");
+        coords.setAttribute("y", 12);
+        coords.textContent = `(${Math.round(node.x)}, ${Math.round(node.y)})`;
+
+        g.appendChild(rect);
+        g.appendChild(text);
+        g.appendChild(coords);
+
+        return g;
+      }
+
+      function screenToCanvas(screenX, screenY) {
+        const rect = canvas.getBoundingClientRect();
+        const x =
+          viewBox.x + ((screenX - rect.left) / rect.width) * viewBox.width;
+        const y =
+          viewBox.y + ((screenY - rect.top) / rect.height) * viewBox.height;
+        return { x, y };
+      }
+
+      function zoomCanvas(delta, centerX, centerY) {
+        const canvasCenter = screenToCanvas(centerX, centerY);
+        const oldZoom = zoom;
+        zoom *= delta;
+        zoom = Math.max(0.1, Math.min(zoom, 10));
+
+        const actualDelta = zoom / oldZoom;
+
+        viewBox.width /= actualDelta;
+        viewBox.height /= actualDelta;
+        viewBox.x = canvasCenter.x - (canvasCenter.x - viewBox.x) / actualDelta;
+        viewBox.y = canvasCenter.y - (canvasCenter.y - viewBox.y) / actualDelta;
+
+        updateViewBox();
+        updateInfo();
+      }
+
+      function panCanvas(dx, dy) {
+        viewBox.x -= dx;
+        viewBox.y -= dy;
+        updateViewBox();
+        updateInfo();
+      }
+
+      function updateInfo() {
+        document.getElementById("zoomDisplay").textContent = `${Math.round(
+          zoom * 100
+        )}%`;
+        document.getElementById("panDisplay").textContent = `${Math.round(
+          viewBox.x
+        )}, ${Math.round(viewBox.y)}`;
+      }
+
+      function resetView() {
+        viewBox = { x: -500, y: -500, width: 1000, height: 1000 };
+        zoom = 1;
+        updateViewBox();
+        updateInfo();
+      }
+
+      function setupEventListeners() {
+        // Button controls
+        document.getElementById("zoomIn").addEventListener("click", () => {
+          const rect = canvas.getBoundingClientRect();
+          zoomCanvas(1.2, rect.width / 2, rect.height / 2);
+        });
+
+        document.getElementById("zoomOut").addEventListener("click", () => {
+          const rect = canvas.getBoundingClientRect();
+          zoomCanvas(0.8, rect.width / 2, rect.height / 2);
+        });
+
+        document
+          .getElementById("resetView")
+          .addEventListener("click", resetView);
+
+        // Mouse wheel zoom
+        container.addEventListener(
+          "wheel",
+          (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            zoomCanvas(delta, e.clientX, e.clientY);
+          },
+          { passive: false }
+        );
+
+        // Mouse events (desktop)
+        canvas.addEventListener("mousedown", (e) => {
+          const target = e.target;
+          const nodeElement = target.closest(".stage-node");
+
+          if (nodeElement) {
+            isDraggingNode = true;
+            draggedNode = nodeElement;
+            const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+            const node = stageNodes.find((n) => n.id === nodeId);
+            const canvasPos = screenToCanvas(e.clientX, e.clientY);
+            dragOffset.x = canvasPos.x - node.x;
+            dragOffset.y = canvasPos.y - node.y;
+            e.preventDefault();
+          } else {
+            isPanning = true;
+            container.classList.add("panning");
+            panStart = { x: e.clientX, y: e.clientY };
+          }
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+          const canvasPos = screenToCanvas(e.clientX, e.clientY);
+          document.getElementById("mouseDisplay").textContent = `${Math.round(
+            canvasPos.x
+          )}, ${Math.round(canvasPos.y)}`;
+
+          if (isDraggingNode && draggedNode) {
+            const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+            const node = stageNodes.find((n) => n.id === nodeId);
+            node.x = canvasPos.x - dragOffset.x;
+            node.y = canvasPos.y - dragOffset.y;
+
+            draggedNode.setAttribute(
+              "transform",
+              `translate(${node.x}, ${node.y})`
+            );
+            draggedNode.querySelector(
+              ".node-coords"
+            ).textContent = `(${Math.round(node.x)}, ${Math.round(node.y)})`;
+          } else if (isPanning) {
+            const dx =
+              ((e.clientX - panStart.x) * viewBox.width) /
+              canvas.getBoundingClientRect().width;
+            const dy =
+              ((e.clientY - panStart.y) * viewBox.height) /
+              canvas.getBoundingClientRect().height;
+            panCanvas(dx, dy);
+            panStart = { x: e.clientX, y: e.clientY };
+          }
+        });
+
+        canvas.addEventListener("mouseup", () => {
+          isPanning = false;
+          isDraggingNode = false;
+          draggedNode = null;
+          container.classList.remove("panning");
+        });
+
+        canvas.addEventListener("mouseleave", () => {
+          isPanning = false;
+          isDraggingNode = false;
+          draggedNode = null;
+          container.classList.remove("panning");
+        });
+
+        // Touch events (mobile/tablet)
+        let touchStartDistance = 0;
+        let touchStartZoom = 1;
+        let lastTouchCount = 0;
+
+        const getTouchDistance = (touches) => {
+          const dx = touches[0].clientX - touches[1].clientX;
+          const dy = touches[0].clientY - touches[1].clientY;
+          return Math.sqrt(dx * dx + dy * dy);
+        };
+
+        const getTouchMidpoint = (touches) => {
+          return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2,
+          };
+        };
+
+        canvas.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            const touches = e.touches;
+            lastTouchCount = touches.length;
+
+            if (touches.length === 2) {
+              // Two-finger pinch-to-zoom - reset any dragging state
+              isPanning = false;
+              isDraggingNode = false;
+              draggedNode = null;
+              touchStartDistance = getTouchDistance(touches);
+              touchStartZoom = zoom;
+            } else if (touches.length === 1) {
+              const touch = touches[0];
+              const target = e.target;
+              const nodeElement = target.closest(".stage-node");
+
+              if (nodeElement) {
+                isDraggingNode = true;
+                draggedNode = nodeElement;
+                const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+                const node = stageNodes.find((n) => n.id === nodeId);
+                const canvasPos = screenToCanvas(touch.clientX, touch.clientY);
+                dragOffset.x = canvasPos.x - node.x;
+                dragOffset.y = canvasPos.y - node.y;
+                isPanning = false;
+              } else {
+                isPanning = true;
+                isDraggingNode = false;
+                draggedNode = null;
+                container.classList.add("panning");
+                panStart = { x: touch.clientX, y: touch.clientY };
+              }
+            }
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener(
+          "touchmove",
+          (e) => {
+            e.preventDefault();
+            const touches = e.touches;
+
+            if (touches.length === 2) {
+              // Pinch-to-zoom
+              const currentDistance = getTouchDistance(touches);
+              const midpoint = getTouchMidpoint(touches);
+              const scale = currentDistance / touchStartDistance;
+              const newZoom = touchStartZoom * scale;
+              const zoomDelta = newZoom / zoom;
+
+              zoomCanvas(zoomDelta, midpoint.x, midpoint.y);
+
+              touchStartDistance = currentDistance;
+              touchStartZoom = zoom;
+            } else if (touches.length === 1) {
+              const touch = touches[0];
+              const canvasPos = screenToCanvas(touch.clientX, touch.clientY);
+
+              document.getElementById(
+                "mouseDisplay"
+              ).textContent = `${Math.round(canvasPos.x)}, ${Math.round(
+                canvasPos.y
+              )}`;
+
+              if (isDraggingNode && draggedNode) {
+                const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+                const node = stageNodes.find((n) => n.id === nodeId);
+                node.x = canvasPos.x - dragOffset.x;
+                node.y = canvasPos.y - dragOffset.y;
+
+                draggedNode.setAttribute(
+                  "transform",
+                  `translate(${node.x}, ${node.y})`
+                );
+                draggedNode.querySelector(
+                  ".node-coords"
+                ).textContent = `(${Math.round(node.x)}, ${Math.round(
+                  node.y
+                )})`;
+              } else if (isPanning) {
+                const dx =
+                  ((touch.clientX - panStart.x) * viewBox.width) /
+                  canvas.getBoundingClientRect().width;
+                const dy =
+                  ((touch.clientY - panStart.y) * viewBox.height) /
+                  canvas.getBoundingClientRect().height;
+                panCanvas(dx, dy);
+                panStart = { x: touch.clientX, y: touch.clientY };
+              }
+            }
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener(
+          "touchend",
+          (e) => {
+            e.preventDefault();
+
+            if (e.touches.length === 0) {
+              isPanning = false;
+              isDraggingNode = false;
+              draggedNode = null;
+              container.classList.remove("panning");
+              lastTouchCount = 0;
+            } else if (e.touches.length === 1 && lastTouchCount === 2) {
+              const touch = e.touches[0];
+              panStart = { x: touch.clientX, y: touch.clientY };
+              isPanning = true;
+              isDraggingNode = false;
+              draggedNode = null;
+            }
+
+            lastTouchCount = e.touches.length;
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener(
+          "touchcancel",
+          (e) => {
+            e.preventDefault();
+            isPanning = false;
+            isDraggingNode = false;
+            draggedNode = null;
+            container.classList.remove("panning");
+            lastTouchCount = 0;
+          },
+          { passive: false }
+        );
+      }
+
+      init();
+    </script>
+  </body>
+</html>
