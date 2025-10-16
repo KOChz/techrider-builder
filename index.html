@@ -969,6 +969,11 @@
           font-size: 12px;
         }
       }
+
+      .stage-node .rotation-handle,
+      .stage-node .rotation-icon {
+        transition: opacity 0.1s ease 0.1s; /* 0.1s delay before hiding */
+      }
     </style>
   </head>
   <body>
@@ -2655,19 +2660,53 @@
           node.y
         )}) • ${Math.round(node.angle)}°`;
 
+        const handleY = -(config.height * scale) / 3.5 - 25;
+
+        // Invisible larger hitbox for easier interaction
+        const rotationHitbox = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "circle"
+        );
+        rotationHitbox.classList.add("rotation-hitbox");
+        rotationHitbox.setAttribute("cx", 0);
+        rotationHitbox.setAttribute("cy", handleY);
+        rotationHitbox.setAttribute("r", 20); // Larger radius for easier hovering
+        rotationHitbox.setAttribute("fill", "transparent");
+        rotationHitbox.setAttribute("opacity", "0");
+        rotationHitbox.style.cursor = "grab";
+
+        // Connecting area
+        const connectingArea = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        connectingArea.setAttribute("x", -(config.width * scale) / 4);
+        connectingArea.setAttribute("y", handleY);
+        connectingArea.setAttribute("width", (config.width * scale) / 2);
+        connectingArea.setAttribute(
+          "height",
+          Math.abs(handleY) - (config.height * scale) / 2
+        );
+        connectingArea.setAttribute("fill", "transparent");
+        connectingArea.style.pointerEvents = "all";
+
+        g.appendChild(connectingArea);
+
+        // Visible rotation handle
         const rotationHandle = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "circle"
         );
         rotationHandle.classList.add("rotation-handle");
         rotationHandle.setAttribute("cx", 0);
-        rotationHandle.setAttribute("cy", -(config.height * scale) / 2 - 25);
+        rotationHandle.setAttribute("cy", handleY);
         rotationHandle.setAttribute("r", 8);
         rotationHandle.setAttribute("fill", "#4CAF50");
         rotationHandle.setAttribute("stroke", "#fff");
         rotationHandle.setAttribute("stroke-width", "2");
         rotationHandle.setAttribute("opacity", "0");
         rotationHandle.style.cursor = "grab";
+        rotationHandle.style.pointerEvents = "none"; // Let hitbox handle the interaction
 
         const rotationIcon = document.createElementNS(
           "http://www.w3.org/2000/svg",
@@ -2681,22 +2720,23 @@
         rotationIcon.setAttribute("fill", "none");
         rotationIcon.setAttribute("stroke", "#fff");
         rotationIcon.setAttribute("stroke-width", "1.5");
-        rotationIcon.setAttribute(
-          "transform",
-          `translate(0, ${-(config.height * scale) / 2 - 20})`
-        );
+        rotationIcon.setAttribute("transform", `translate(0, ${handleY + 5})`);
         rotationIcon.setAttribute("opacity", "0");
+        rotationIcon.style.pointerEvents = "none";
 
         g.appendChild(use);
         g.appendChild(text);
         g.appendChild(coords);
+        g.appendChild(rotationHitbox); // Add hitbox before handle
         g.appendChild(rotationHandle);
         g.appendChild(rotationIcon);
 
+        // Show handles on hover over the entire group (including hitbox area)
         g.addEventListener("mouseenter", () => {
           if (!isDraggingNode && !isRotatingNode) {
             rotationHandle.setAttribute("opacity", "0.8");
             rotationIcon.setAttribute("opacity", "0.8");
+            rotationHitbox.setAttribute("opacity", "1");
           }
         });
 
@@ -2704,6 +2744,7 @@
           if (!isRotatingNode) {
             rotationHandle.setAttribute("opacity", "0");
             rotationIcon.setAttribute("opacity", "0");
+            rotationHitbox.setAttribute("opacity", "0");
           }
         });
 
