@@ -16,9 +16,7 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           for (const { name, value, options } of cookiesToSet) {
-            // Make new cookies visible to Server Components
             request.cookies.set(name, value);
-            // And persist to browser
             response.cookies.set(name, value, options);
           }
         },
