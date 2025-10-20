@@ -1,0 +1,3669 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>headachee - Tech Rider</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 1rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.1rem;
+          padding: 0.5rem 0;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.65rem;
+          padding: 0.5rem 0.25rem;
+          min-height: 44px;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #0a0a0a;
+        --color-surface: #1a1a1a;
+        --color-surface-hover: #252525;
+        --color-border: #2a2a2a;
+        --color-text: #e8e8e8;
+        --color-text-muted: #a0a0a0;
+        --color-text-dim: #707070;
+        --color-accent: #d4d4d4;
+        --color-accent-dim: #d4d4d433;
+        --color-focus: #ffffff;
+        --color-dark-green: #1a4d2e;
+        --spacing-xs: 0.5rem;
+        --spacing-sm: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+        --font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Roboto", sans-serif;
+        --font-mono: "SF Mono", "Consolas", "Monaco", monospace;
+        --transition-base: 0.2s ease;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-sm) var(--spacing-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--color-dark-green);
+        text-decoration: none;
+        transition: opacity var(--transition-base);
+      }
+
+      .logo:hover,
+      .logo:focus {
+        opacity: 0.7;
+        outline: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: var(--spacing-lg);
+        list-style: none;
+        align-items: baseline;
+      }
+
+      .nav-links a {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color var(--transition-base);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus {
+        color: var(--color-text);
+        outline: none;
+      }
+
+      .dropdown {
+        position: relative;
+      }
+
+      .dropdown-toggle {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color var(--transition-base);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: var(--font-sans);
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+      }
+
+      .dropdown-toggle::after {
+        content: "▾";
+        font-size: 0.8rem;
+        transition: transform var(--transition-base);
+      }
+
+      .dropdown.is-open .dropdown-toggle::after {
+        transform: rotate(180deg);
+      }
+
+      .dropdown-toggle:hover,
+      .dropdown-toggle:focus {
+        color: var(--color-text);
+        outline: none;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 1rem);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        min-width: 300px;
+
+        width: max-content;
+
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition-base),
+          visibility var(--transition-base);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .dropdown:hover .dropdown-menu {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .dropdown.is-open .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .dropdown-menu::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 12px;
+        background: var(--color-surface);
+        border-left: 1px solid var(--color-border);
+        border-top: 1px solid var(--color-border);
+        transform: translateX(-50%) rotate(45deg);
+      }
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        color: var(--color-text);
+        text-decoration: none;
+        transition: background-color var(--transition-base);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .dropdown-item:last-child {
+        border-bottom: none;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: var(--color-surface-hover);
+        outline: none;
+      }
+
+      .dropdown-item:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+
+      .dropdown-item:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+
+      .dropdown-icon {
+        font-size: 1.5rem;
+        filter: grayscale(100%);
+        flex-shrink: 0;
+      }
+
+      .dropdown-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dropdown-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
+      }
+
+      .dropdown-role {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-xl) var(--spacing-md);
+        background: linear-gradient(
+          180deg,
+          var(--color-bg) 0%,
+          var(--color-surface) 100%
+        );
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        margin-bottom: var(--spacing-sm);
+        background: linear-gradient(
+          95deg,
+          var(--color-text) 0%,
+          var(--color-dark-green) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      #tech-rider {
+        scroll-margin-top: 70px;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-xl);
+        font-family: var(--font-mono);
+        font-weight: 400;
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        background-color: var(--color-dark-green);
+        color: var(--color-text);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        transition: transform var(--transition-base),
+          box-shadow var(--transition-base),
+          background-color var(--transition-base);
+        border: 2px solid var(--color-dark-green);
+      }
+
+      .cta-button:hover,
+      .cta-button:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(26, 77, 46, 0.4);
+        outline: none;
+        background-color: #235a37;
+      }
+
+      .cta-button:active {
+        transform: translateY(0);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-lg) var(--spacing-sm);
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-xl);
+        text-align: center;
+        letter-spacing: -0.02em;
+        color: var(--color-dark-green);
+      }
+
+      .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .member-card {
+        background: var(--color-surface);
+        border-radius: 8px;
+        padding: var(--spacing-sm);
+        transition: transform var(--transition-base),
+          box-shadow var(--transition-base), border-color var(--transition-base);
+        border: 1px solid var(--color-border);
+        scroll-margin-top: 80px;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .member-card:hover {
+          transform: translateY(-4px);
+          border-color: var(--color-accent);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .member-card:focus-within {
+        border-color: var(--color-focus);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+      }
+
+      .member-header {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 2px solid var(--color-border);
+      }
+
+      .member-icon {
+        font-size: 2rem;
+        filter: grayscale(100%);
+      }
+
+      .member-info h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        letter-spacing: -0.01em;
+      }
+
+      .member-role {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .equipment-list {
+        list-style: none;
+      }
+
+      .equipment-item {
+        padding: var(--spacing-xs) 0;
+        font-size: 0.95rem;
+      }
+
+      .equipment-item summary {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color var(--transition-base);
+        user-select: none;
+        list-style: none;
+      }
+
+      .equipment-item summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .equipment-item summary::before {
+        content: "▸";
+        color: var(--color-text-muted);
+        font-weight: bold;
+        flex-shrink: 0;
+        margin-top: 2px;
+        transition: transform var(--transition-base);
+      }
+
+      .equipment-item[open] summary::before {
+        transform: rotate(90deg);
+      }
+
+      .equipment-item summary:hover,
+      .equipment-item summary:focus {
+        background: var(--color-bg);
+        outline: none;
+      }
+
+      .equipment-item:not(:has(summary ~ *)) summary {
+        cursor: default;
+        pointer-events: none;
+      }
+
+      .equipment-item:not(:has(summary ~ *)) summary::before {
+        content: "•";
+        transform: none !important;
+      }
+
+      .equipment-simple {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        padding: 0.5rem;
+      }
+
+      .equipment-simple::before {
+        content: "•";
+        color: var(--color-text-muted);
+        font-weight: bold;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .quantity {
+        color: var(--color-text-dim);
+        font-weight: 500;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+      }
+
+      .examples {
+        margin-top: var(--spacing-xs);
+        padding: var(--spacing-sm);
+        background: var(--color-bg);
+        border-radius: 4px;
+        border-left: 2px solid var(--color-border);
+      }
+
+      .examples-title {
+        font-size: 0.75rem;
+        color: var(--color-text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+      }
+
+      .examples-list {
+        list-style: none;
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        line-height: 1.8;
+      }
+
+      .examples-list li {
+        padding-left: var(--spacing-sm);
+        position: relative;
+      }
+
+      .examples-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--color-text-dim);
+      }
+
+      .quick-ref {
+        background: var(--color-surface);
+        border-radius: 8px;
+        padding: var(--spacing-lg);
+        border: 1px solid var(--color-border);
+      }
+
+      .quick-ref h3 {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-md);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        letter-spacing: -0.01em;
+      }
+
+      .checklist {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-sm);
+        list-style: none;
+      }
+
+      .checklist li {
+        padding: var(--spacing-xs);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .checklist li::before {
+        content: "☐";
+        font-size: 1.2rem;
+        color: var(--color-text-muted);
+      }
+
+      footer {
+        background: var(--color-surface);
+        padding: var(--spacing-xl) var(--spacing-md);
+        text-align: center;
+        border-top: 1px solid var(--color-border);
+        margin-top: var(--spacing-xl);
+      }
+
+      footer h3 {
+        margin-bottom: var(--spacing-sm);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      footer p {
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      footer a {
+        color: var(--color-text);
+        text-decoration: none;
+        transition: opacity var(--transition-base);
+      }
+
+      footer a:hover,
+      footer a:focus {
+        opacity: 0.7;
+        text-decoration: underline;
+        outline: none;
+      }
+
+      *:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+      }
+
+      /* Tablet and mobile devices */
+      @media (max-width: 768px) {
+        #dropdown-danya {
+          padding: 0.75rem 1rem;
+        }
+
+        #dropdown-kyrylo {
+          padding: 0.75rem 1rem;
+        }
+
+        #dropdown-kristina {
+          padding: 0.75rem 1rem;
+        }
+
+        #dropdown-maksym {
+          padding: 0.75rem 1rem;
+        }
+
+        .nav-container {
+          padding: 0.75rem var(--spacing-sm);
+        }
+
+        .logo {
+          font-size: 1.65rem;
+        }
+
+        .nav-links {
+          gap: var(--spacing-sm);
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.7rem;
+        }
+
+        .dropdown-menu {
+          right: 0;
+          left: auto;
+          transform: none;
+          min-width: 220px;
+        }
+
+        .dropdown-menu::before {
+          left: auto;
+          right: 1rem;
+          transform: rotate(45deg);
+        }
+
+        .dropdown-item {
+          padding: 1.25rem 2rem;
+          min-height: 56px;
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+
+        .tech-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .checklist {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .member-card {
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+      }
+
+      /* Small mobile devices */
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 1rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.4rem;
+          padding: 0.5rem 0;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.65rem;
+          padding: 0.5rem 0.25rem;
+          min-height: 44px;
+        }
+
+        /* Maintain good touch target size for dropdown items */
+        .dropdown-item {
+          padding: 3.25rem 1.5rem;
+          min-height: 56px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 0.5rem 0.75rem;
+        }
+
+        .logo {
+          font-size: 1.45rem;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-links a,
+        .dropdown-toggle {
+          font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+          padding: 0.25rem 1.75rem;
+          min-height: 56px;
+        }
+      }
+
+      @media print {
+        nav {
+          position: relative;
+        }
+
+        .hero {
+          min-height: auto;
+          padding: var(--spacing-lg);
+        }
+
+        .member-card {
+          break-inside: avoid;
+        }
+
+        details {
+          display: none;
+        }
+
+        .dropdown-menu {
+          display: none;
+        }
+      }
+    </style>
+
+    <!-- ============================================
+         2D STAGE PLAN STYLES
+         ============================================ -->
+    <style>
+      #stageContainer {
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #canvas {
+        touch-action: none;
+        display: block;
+      }
+
+      .stage-node {
+        cursor: move;
+        user-select: none;
+      }
+
+      .panning {
+        cursor: grabbing !important;
+      }
+
+      .panning * {
+        cursor: grabbing !important;
+      }
+
+      .stage-plan-section {
+        background: var(--color-bg);
+        padding: var(--spacing-xl) 0;
+      }
+
+      .canvas-wrapper {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        min-height: 500px;
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .canvas-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        cursor: grab;
+      }
+
+      .canvas-container.panning {
+        cursor: grabbing;
+      }
+
+      #canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .stage-controls {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(26, 26, 26, 0.95);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+      }
+
+      .control-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      .stage-btn {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all var(--transition-base);
+        font-weight: 500;
+        font-family: var(--font-sans);
+      }
+
+      .stage-btn:hover {
+        background: var(--color-surface-hover);
+        border-color: var(--color-dark-green);
+      }
+
+      .stage-btn:active {
+        transform: translateY(1px);
+      }
+
+      .stage-info {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(26, 26, 26, 0.95);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+      }
+
+      .info-line {
+        margin: 4px 0;
+        color: var(--color-text-muted);
+      }
+
+      .info-value {
+        color: var(--color-dark-green);
+        font-weight: 600;
+      }
+
+      .stage-node {
+        cursor: move;
+        transition: filter var(--transition-base);
+      }
+
+      .stage-node:hover {
+        filter: brightness(1.2);
+      }
+
+      .stage-node:active {
+        cursor: grabbing;
+      }
+
+      .node-text {
+        fill: var(--color-text);
+        font-size: 14px;
+        font-weight: 600;
+        text-anchor: middle;
+        pointer-events: none;
+        user-select: none;
+        font-family: var(--font-sans);
+      }
+
+      .node-coords {
+        fill: var(--color-text-muted);
+        font-size: 10px;
+        font-family: var(--font-mono);
+        text-anchor: middle;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .grid-line {
+        stroke: var(--color-border);
+        stroke-width: 1;
+      }
+
+      .grid-line-major {
+        stroke: #3a3a3a;
+        stroke-width: 1.5;
+      }
+
+      .axis-line {
+        stroke: #4a4a4a;
+        stroke-width: 2;
+      }
+
+      @media (max-width: 768px) {
+        .canvas-wrapper {
+          height: 50vh;
+          min-height: 400px;
+        }
+
+        .stage-controls {
+          top: 10px;
+          right: 10px;
+          padding: 12px;
+        }
+
+        .stage-info {
+          bottom: 10px;
+          left: 10px;
+          padding: 8px 12px;
+          font-size: 11px;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .canvas-wrapper {
+          height: 60vh;
+          min-height: 350px;
+        }
+
+        .stage-controls {
+          padding: 8px;
+        }
+
+        .stage-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+      }
+
+      .stage-node .rotation-handle,
+      .stage-node .rotation-icon {
+        transition: opacity 0.1s ease 0.1s; /* 0.1s delay before hiding */
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-container">
+        <a href="#home" class="logo">headachee</a>
+        <ul class="nav-links">
+          <!-- <li><a href="#home">Home</a></li> -->
+          <li class="dropdown">
+            <button
+              class="dropdown-toggle"
+              aria-haspopup="true"
+              aria-expanded="false"
+              id="techRiderToggle"
+            >
+              Tech Rider
+            </button>
+            <div
+              class="dropdown-menu"
+              role="menu"
+              aria-labelledby="techRiderToggle"
+            >
+              <a
+                href="#danya"
+                id="dropdown-danya"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🥁</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Danya</span>
+                  <span class="dropdown-role">Drums</span>
+                </div>
+              </a>
+
+              <a
+                href="#kyrylo"
+                id="dropdown-kyrylo"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎸</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Kyrylo</span>
+                  <span class="dropdown-role">Bass</span>
+                </div>
+              </a>
+
+              <a
+                href="#kristina"
+                id="dropdown-kristina"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎤</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Kristina</span>
+                  <span class="dropdown-role">Guitar / Vocals</span>
+                </div>
+              </a>
+
+              <a
+                href="#maksym"
+                id="dropdown-maksym"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🎸</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Maksym</span>
+                  <span class="dropdown-role">Guitar</span>
+                </div>
+              </a>
+
+              <a
+                href="#stage-plan"
+                id="dropdown-maksym"
+                class="dropdown-item"
+                role="menuitem"
+              >
+                <span class="dropdown-icon">🏟️</span>
+                <div class="dropdown-info">
+                  <span class="dropdown-name">Stage Plan</span>
+                </div>
+              </a>
+            </div>
+          </li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <section id="home" class="hero">
+      <div>
+        <h1>headachee</h1>
+        <a href="#tech-rider" class="cta-button">View Tech Rider</a>
+      </div>
+    </section>
+
+    <section id="tech-rider" class="container">
+      <h2 class="section-title">Technical Requirements</h2>
+
+      <div class="tech-grid">
+        <div class="member-card" id="danya">
+          <div class="member-header">
+            <span class="member-icon">🥁</span>
+            <div class="member-info">
+              <h3>Danya</h3>
+              <p class="member-role">Drums</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span>Bass drum <span class="quantity">× 1</span></span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Brands</p>
+                <ul class="examples-list">
+                  <li>DW Performance Series 22"</li>
+                  <li>Yamaha Stage Custom 22"</li>
+                  <li>Pearl Export 22"</li>
+                  <li>Tama Superstar 22"</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Snare <span class="quantity">× 1</span></span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Models</p>
+                <ul class="examples-list">
+                  <li>Ludwig Supraphonic 14"×6.5"</li>
+                  <li>Pearl Sensitone Steel 14"×5"</li>
+                  <li>Yamaha Recording Custom 14"×5.5"</li>
+                  <li>DW Collector's Maple 14"×6"</li>
+                </ul>
+              </div>
+            </details>
+            <li class="equipment-simple">
+              <span>High tom 12" <span class="quantity">× 1</span></span>
+            </li>
+            <li class="equipment-simple">
+              <span>Mid tom 14" <span class="quantity">× 1</span></span>
+            </li>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor tom <span class="quantity">× 1</span></span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Typical Sizes</p>
+                <ul class="examples-list">
+                  <li>16"×16" (standard)</li>
+                  <li>14"×14" (compact)</li>
+                  <li>18"×16" (deep tone)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Hi-hat stand <span class="quantity">× 1</span></span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Boom cymbal stands <span class="quantity">× 2</span></span
+                >
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Snare stand <span class="quantity">× 1</span></span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                  <li>EV ELX112P (12", 1000W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Wireless in-ear monitoring system
+                  <span class="quantity">(ear monitors provided)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Compatible Systems</p>
+                <ul class="examples-list">
+                  <li>Shure PSM 300 / PSM 900</li>
+                  <li>Sennheiser EW IEM G4</li>
+                  <li>Audio-Technica M3</li>
+                  <li>Frequency range: 520-865 MHz</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Drum rug</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Size</p>
+                <ul class="examples-list">
+                  <li>Minimum 6' × 8' (183cm × 244cm)</li>
+                  <li>Non-slip rubber backing</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+
+        <div class="member-card" id="kyrylo">
+          <div class="member-header">
+            <span class="member-icon">🎸</span>
+            <div class="member-info">
+              <h3>Kyrylo</h3>
+              <p class="member-role">Bass</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span>Bass combo amp/stack</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Amps</p>
+                <ul class="examples-list">
+                  <li>Ampeg SVT-410HLF + SVT-3 Pro</li>
+                  <li>Fender Rumble 500 combo</li>
+                  <li>Gallien-Krueger MB212</li>
+                  <li>Markbass CMD 121H combo</li>
+                  <li>Minimum 300W recommended</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Spare Jack-to-Jack cable &gt;5m
+                  <span class="quantity">× 2</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Cables</p>
+                <ul class="examples-list">
+                  <li>Length: 3-6m minimum</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Bass guitar stand</span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Power outlet / extension cord</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Requirements</p>
+                <ul class="examples-list">
+                  <li>Standard AC power (220-240V EU / 110-120V US)</li>
+                  <li>5m+ extension cord if needed</li>
+                  <li>Grounded outlets preferred</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+
+        <div class="member-card" id="kristina">
+          <div class="member-header">
+            <span class="member-icon">🎤</span>
+            <div class="member-info">
+              <h3>Kristina</h3>
+              <p class="member-role">Guitar / Vocals</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Guitar combo amplifier
+                  <span class="quantity">(Fender / VOX / Roland)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Models</p>
+                <ul class="examples-list">
+                  <li>Fender Hot Rod Deluxe (40W)</li>
+                  <li>VOX AC30 (30W)</li>
+                  <li>Roland JC-120 Jazz Chorus</li>
+                  <li>Fender Blues Deluxe (40W)</li>
+                  <li>Minimum 30W tube / 50W solid state</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Guitar stand</span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Microphone stand</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Stand Types</p>
+                <ul class="examples-list">
+                  <li>Boom stand with adjustable arm</li>
+                  <li>Height: adjustable to 1.5-2m</li>
+                  <li>Heavy base for stability</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Microphone</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Vocal Microphones</p>
+                <ul class="examples-list">
+                  <li>Shure SM58 (industry standard)</li>
+                  <li>Shure Beta 58A (brighter tone)</li>
+                  <li>Sennheiser e935 (clear highs)</li>
+                  <li>Sennheiser e945 (supercardioid)</li>
+                  <li>Audio-Technica ATM710</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Spare Jack-to-Jack cable &gt;5m
+                  <span class="quantity">× 2</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Cables</p>
+                <ul class="examples-list">
+                  <li>Mogami Gold 15ft / 4.5m (6.35mm)</li>
+                  <li>Planet Waves American Stage 15ft</li>
+                  <li>Fender Professional Series 15ft</li>
+                  <li>D'Addario Circuit Breaker 15ft</li>
+                  <li>Length: 3-5m (10-15ft) minimum</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Wireless in-ear monitoring system
+                  <span class="quantity">(ear monitors provided)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Compatible Systems</p>
+                <ul class="examples-list">
+                  <li>Shure PSM 300 / PSM 900</li>
+                  <li>Sennheiser EW IEM G4</li>
+                  <li>Audio-Technica M3</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Power outlet / extension cord</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Requirements</p>
+                <ul class="examples-list">
+                  <li>Standard AC power (220-240V EU)</li>
+                  <li>5m+ extension cord if needed</li>
+                  <li>Grounded outlets preferred</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+
+        <div class="member-card" id="maksym">
+          <div class="member-header">
+            <span class="member-icon">🎸</span>
+            <div class="member-info">
+              <h3>Maksym</h3>
+              <p class="member-role">Guitar</p>
+            </div>
+          </div>
+          <ul class="equipment-list">
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Guitar combo amplifier
+                  <span class="quantity">(Fender / VOX / Roland)</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Recommended Models</p>
+                <ul class="examples-list">
+                  <li>Fender Hot Rod Deluxe (40W)</li>
+                  <li>VOX AC30 (30W)</li>
+                  <li>Roland JC-120 Jazz Chorus</li>
+                  <li>Fender Blues Deluxe (40W)</li>
+                  <li>Minimum 30W tube / 50W solid state</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Guitar stand</span>
+              </summary>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Microphone</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Backing Vocal Mics</p>
+                <ul class="examples-list">
+                  <li>Shure SM58 (industry standard)</li>
+                  <li>Shure Beta 58A</li>
+                  <li>Sennheiser e835</li>
+                  <li>Audio-Technica ATM510</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span
+                  >Spare Jack-to-Jack cable &gt;5m
+                  <span class="quantity">× 2</span></span
+                >
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Cables</p>
+                <ul class="examples-list">
+                  <li>Mogami Gold 15ft / 4.5m (6.35mm)</li>
+                  <li>Planet Waves American Stage 15ft</li>
+                  <li>Fender Professional Series 15ft</li>
+                  <li>Length: 3-5m (10-15ft) minimum</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Floor monitor (wedge)</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Professional Options</p>
+                <ul class="examples-list">
+                  <li>QSC K12.2 (12", 2000W)</li>
+                  <li>Yamaha DXR12 (12", 1100W)</li>
+                  <li>JBL PRX412M (12", 1200W)</li>
+                </ul>
+              </div>
+            </details>
+            <details class="equipment-item">
+              <summary>
+                <span>Power outlet / extension cord</span>
+              </summary>
+              <div class="examples">
+                <p class="examples-title">Requirements</p>
+                <ul class="examples-list">
+                  <li>Standard AC power (220-240V EU)</li>
+                  <li>5m+ extension cord if needed</li>
+                  <li>Grounded outlets preferred</li>
+                </ul>
+              </div>
+            </details>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         2D STAGE PLAN SECTION
+         ============================================ -->
+    <section id="stage-plan" class="stage-plan-section">
+      <div class="container">
+        <h2 class="section-title">Stage Plan</h2>
+        <p class="section-subtitle">
+          Interactive stage layout - pan, zoom, and drag equipment positions
+        </p>
+
+        <div class="canvas-wrapper">
+          <div class="canvas-container" id="stageContainer">
+            <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern
+                  id="grid"
+                  width="50"
+                  height="50"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <line x1="0" y1="0" x2="0" y2="50" class="grid-line" />
+                  <line x1="0" y1="0" x2="50" y2="0" class="grid-line" />
+                </pattern>
+                <pattern
+                  id="grid-major"
+                  width="200"
+                  height="200"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <rect width="200" height="200" fill="url(#grid)" />
+                  <line x1="0" y1="0" x2="0" y2="200" class="grid-line-major" />
+                  <line x1="0" y1="0" x2="200" y2="0" class="grid-line-major" />
+                </pattern>
+
+                <!-- Drumkit Symbol -->
+                <symbol id="drumkit" viewBox="0 0 1024 1024">
+                  <path
+                    d="M783.744 200.64h38.528V908.16h-38.528z"
+                    fill="#C2C7E5"
+                  />
+                  <path
+                    d="M822.272 187.584v-18.176h-38.528v18.176h-99.264v35.52h236.992v-35.52zM684.48 251.648h236.992v35.52h-236.992z"
+                    fill="#F5BB1B"
+                  />
+                  <path
+                    d="M218.496 200.64h38.528V908.16h-38.528z"
+                    fill="#C2C7E5"
+                  />
+                  <path
+                    d="M135.168 138.624l218.88 91.2-13.696 32.832-218.88-91.2z"
+                    fill="#F5BB1B"
+                  />
+                  <path
+                    d="M73.024 347.392h317.568v35.52H73.024z"
+                    fill="#35464E"
+                  />
+                  <path
+                    d="M88.448 382.848h286.784v135.68H88.448z"
+                    fill="#E72845"
+                  />
+                  <path
+                    d="M73.024 518.656h317.568v35.648H73.024z"
+                    fill="#35464E"
+                  />
+                  <path
+                    d="M88.448 382.848h286.784v39.104H88.448z"
+                    fill="#C7161E"
+                  />
+                  <path
+                    d="M135.872 382.848h42.048v92.416h-42.048zM286.912 382.848h42.112v92.416h-42.112z"
+                    fill="#35464E"
+                  />
+                  <path
+                    d="M644.16 347.392h317.568v35.52h-317.568z"
+                    fill="#35464E"
+                  />
+                  <path
+                    d="M659.648 382.848h286.72v135.68h-286.72z"
+                    fill="#E72845"
+                  />
+                  <path
+                    d="M644.16 518.656h317.568v35.648h-317.568z"
+                    fill="#35464E"
+                  />
+                  <path
+                    d="M659.648 382.848h286.72v39.104h-286.72z"
+                    fill="#C7161E"
+                  />
+                  <path
+                    d="M707.008 382.848h41.984v92.416h-41.984zM858.112 382.848h41.984v92.416h-41.984z"
+                    fill="#35464E"
+                  />
+                  <path
+                    d="M727.36 880.192l-33.408 27.84-52.352-62.72 33.344-27.84zM366.912 817.472l33.408 27.84-52.352 62.72-33.472-27.84z"
+                    fill="#C2C7E5"
+                  />
+                  <path
+                    d="M521.664 671.424m-224.96 0a224.96 224.96 0 1 0 449.92 0 224.96 224.96 0 1 0-449.92 0Z"
+                    fill="#526C78"
+                  />
+                  <path
+                    d="M521.664 914.176a242.944 242.944 0 0 1-242.688-242.752 242.944 242.944 0 0 1 242.688-242.688 242.944 242.944 0 0 1 242.688 242.688 242.944 242.944 0 0 1-242.688 242.752z m0-449.856a207.36 207.36 0 0 0-207.168 207.104c0 114.24 92.928 207.168 207.168 207.168s207.232-92.928 207.232-207.168a207.424 207.424 0 0 0-207.232-207.104z"
+                    fill="#263137"
+                  />
+                </symbol>
+
+                <!-- ============================================
+           AMPLIFIER SYMBOL (Your existing design)
+           ============================================ -->
+                <symbol id="amp" viewBox="0 0 50 50">
+                  <defs>
+                    <linearGradient
+                      id="ampBodyGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: #2a2a2a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="50%"
+                        style="stop-color: #1a1a1a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #0a0a0a; stop-opacity: 1"
+                      />
+                    </linearGradient>
+                    <linearGradient
+                      id="grilleGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: #4a4a4a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="50%"
+                        style="stop-color: #3a3a3a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #2a2a2a; stop-opacity: 1"
+                      />
+                    </linearGradient>
+                    <radialGradient id="knobGradient">
+                      <stop
+                        offset="0%"
+                        style="stop-color: #ffd700; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="70%"
+                        style="stop-color: #b8860b; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #8b6914; stop-opacity: 1"
+                      />
+                    </radialGradient>
+                  </defs>
+
+                  <rect
+                    x="3"
+                    y="6"
+                    width="44"
+                    height="38"
+                    rx="2"
+                    fill="url(#ampBodyGradient)"
+                    stroke="#000"
+                    stroke-width="0.5"
+                  />
+                  <path
+                    d="M 15 6 Q 15 3 25 3 Q 35 3 35 6"
+                    fill="none"
+                    stroke="#1a1a1a"
+                    stroke-width="2"
+                  />
+                  <rect
+                    x="5"
+                    y="8"
+                    width="40"
+                    height="6"
+                    rx="1"
+                    fill="#1a1a1a"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                  <circle cx="9" cy="11" r="1" fill="#ff4444" opacity="0.8" />
+                  <circle
+                    cx="16"
+                    cy="11"
+                    r="1.2"
+                    fill="url(#knobGradient)"
+                    stroke="#8b6914"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="22"
+                    cy="11"
+                    r="1.2"
+                    fill="url(#knobGradient)"
+                    stroke="#8b6914"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="28"
+                    cy="11"
+                    r="1.2"
+                    fill="url(#knobGradient)"
+                    stroke="#8b6914"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="34"
+                    cy="11"
+                    r="1.2"
+                    fill="url(#knobGradient)"
+                    stroke="#8b6914"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="40"
+                    cy="11"
+                    r="1.2"
+                    fill="url(#knobGradient)"
+                    stroke="#8b6914"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="16"
+                    y1="10"
+                    x2="16"
+                    y2="9.2"
+                    stroke="#fff"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="22"
+                    y1="10"
+                    x2="22"
+                    y2="9.2"
+                    stroke="#fff"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="28"
+                    y1="10"
+                    x2="28"
+                    y2="9.2"
+                    stroke="#fff"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="34"
+                    y1="10"
+                    x2="34"
+                    y2="9.2"
+                    stroke="#fff"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="40"
+                    y1="10"
+                    x2="40"
+                    y2="9.2"
+                    stroke="#fff"
+                    stroke-width="0.3"
+                  />
+                  <rect
+                    x="7"
+                    y="16"
+                    width="36"
+                    height="26"
+                    rx="1.5"
+                    fill="url(#grilleGradient)"
+                    stroke="#2a2a2a"
+                    stroke-width="0.5"
+                  />
+                  <g opacity="0.6">
+                    <line
+                      x1="9"
+                      y1="18"
+                      x2="41"
+                      y2="18"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="20"
+                      x2="41"
+                      y2="20"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="22"
+                      x2="41"
+                      y2="22"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="24"
+                      x2="41"
+                      y2="24"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="26"
+                      x2="41"
+                      y2="26"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="28"
+                      x2="41"
+                      y2="28"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="30"
+                      x2="41"
+                      y2="30"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="32"
+                      x2="41"
+                      y2="32"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="34"
+                      x2="41"
+                      y2="34"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="36"
+                      x2="41"
+                      y2="36"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="38"
+                      x2="41"
+                      y2="38"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="9"
+                      y1="40"
+                      x2="41"
+                      y2="40"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="11"
+                      y1="16"
+                      x2="11"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="15"
+                      y1="16"
+                      x2="15"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="19"
+                      y1="16"
+                      x2="19"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="23"
+                      y1="16"
+                      x2="23"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="27"
+                      y1="16"
+                      x2="27"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="31"
+                      y1="16"
+                      x2="31"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="35"
+                      y1="16"
+                      x2="35"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                    <line
+                      x1="39"
+                      y1="16"
+                      x2="39"
+                      y2="42"
+                      stroke="#1a1a1a"
+                      stroke-width="0.3"
+                    />
+                  </g>
+                  <circle
+                    cx="25"
+                    cy="29"
+                    r="8"
+                    fill="none"
+                    stroke="#2a2a2a"
+                    stroke-width="0.5"
+                    opacity="0.5"
+                  />
+                  <circle
+                    cx="25"
+                    cy="29"
+                    r="5"
+                    fill="none"
+                    stroke="#3a3a3a"
+                    stroke-width="0.4"
+                    opacity="0.4"
+                  />
+                  <circle
+                    cx="8"
+                    cy="17"
+                    r="0.6"
+                    fill="#4a4a4a"
+                    stroke="#2a2a2a"
+                    stroke-width="0.2"
+                  />
+                  <circle
+                    cx="42"
+                    cy="17"
+                    r="0.6"
+                    fill="#4a4a4a"
+                    stroke="#2a2a2a"
+                    stroke-width="0.2"
+                  />
+                  <circle
+                    cx="8"
+                    cy="41"
+                    r="0.6"
+                    fill="#4a4a4a"
+                    stroke="#2a2a2a"
+                    stroke-width="0.2"
+                  />
+                  <circle
+                    cx="42"
+                    cy="41"
+                    r="0.6"
+                    fill="#4a4a4a"
+                    stroke="#2a2a2a"
+                    stroke-width="0.2"
+                  />
+                  <rect
+                    x="44"
+                    y="35"
+                    width="2"
+                    height="4"
+                    rx="0.5"
+                    fill="#2a2a2a"
+                    stroke="#1a1a1a"
+                    stroke-width="0.3"
+                  />
+                </symbol>
+
+                <!-- ============================================
+           FLOOR MONITOR / WEDGE SYMBOL
+           ============================================ -->
+                <symbol id="monitor" viewBox="0 0 70 50">
+                  <defs>
+                    <linearGradient
+                      id="monitorBodyGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: #3a3a3a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="50%"
+                        style="stop-color: #2a2a2a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #1a1a1a; stop-opacity: 1"
+                      />
+                    </linearGradient>
+                    <linearGradient
+                      id="speakerGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: #2a2a2a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #0a0a0a; stop-opacity: 1"
+                      />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Monitor body (trapezoid shape - wedge) -->
+                  <path
+                    d="M 10 45 L 5 15 L 65 15 L 60 45 Z"
+                    fill="url(#monitorBodyGradient)"
+                    stroke="#000"
+                    stroke-width="1"
+                  />
+
+                  <!-- Front face (angled) -->
+                  <path
+                    d="M 5 15 L 35 5 L 65 15 Z"
+                    fill="#2a2a2a"
+                    stroke="#000"
+                    stroke-width="0.8"
+                  />
+
+                  <!-- Speaker grille -->
+                  <path
+                    d="M 12 40 L 8 20 L 62 20 L 58 40 Z"
+                    fill="url(#speakerGradient)"
+                    stroke="#1a1a1a"
+                    stroke-width="0.8"
+                  />
+
+                  <!-- Grille mesh pattern -->
+                  <g opacity="0.5">
+                    <line
+                      x1="10"
+                      y1="23"
+                      x2="60"
+                      y2="23"
+                      stroke="#0a0a0a"
+                      stroke-width="0.4"
+                    />
+                    <line
+                      x1="10.5"
+                      y1="26"
+                      x2="59.5"
+                      y2="26"
+                      stroke="#0a0a0a"
+                      stroke-width="0.4"
+                    />
+                    <line
+                      x1="11"
+                      y1="29"
+                      x2="59"
+                      y2="29"
+                      stroke="#0a0a0a"
+                      stroke-width="0.4"
+                    />
+                    <line
+                      x1="11.5"
+                      y1="32"
+                      x2="58.5"
+                      y2="32"
+                      stroke="#0a0a0a"
+                      stroke-width="0.4"
+                    />
+                    <line
+                      x1="12"
+                      y1="35"
+                      x2="58"
+                      y2="35"
+                      stroke="#0a0a0a"
+                      stroke-width="0.4"
+                    />
+                    <line
+                      x1="12.5"
+                      y1="38"
+                      x2="57.5"
+                      y2="38"
+                      stroke="#0a0a0a"
+                      stroke-width="0.4"
+                    />
+                  </g>
+
+                  <!-- Speaker cone outline -->
+                  <ellipse
+                    cx="35"
+                    cy="30"
+                    rx="12"
+                    ry="10"
+                    fill="none"
+                    stroke="#1a1a1a"
+                    stroke-width="0.6"
+                    opacity="0.6"
+                  />
+                  <ellipse
+                    cx="35"
+                    cy="30"
+                    rx="8"
+                    ry="6"
+                    fill="none"
+                    stroke="#2a2a2a"
+                    stroke-width="0.5"
+                    opacity="0.5"
+                  />
+
+                  <!-- Handle on top -->
+                  <rect
+                    x="30"
+                    y="7"
+                    width="10"
+                    height="3"
+                    rx="1"
+                    fill="#1a1a1a"
+                    stroke="#0a0a0a"
+                    stroke-width="0.5"
+                  />
+
+                  <!-- Logo/brand area -->
+                  <rect
+                    x="28"
+                    y="21"
+                    width="14"
+                    height="4"
+                    rx="1"
+                    fill="#1a1a1a"
+                    opacity="0.6"
+                  />
+
+                  <!-- Corner details -->
+                  <circle
+                    cx="13"
+                    cy="42"
+                    r="1"
+                    fill="#1a1a1a"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="57"
+                    cy="42"
+                    r="1"
+                    fill="#1a1a1a"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                </symbol>
+
+                <!-- Microphone Stand Symbol --->
+                <symbol id="mic-stand" viewBox="0 0 50 120">
+                  <!-- Base tripod legs - matte black powder coat -->
+                  <line
+                    x1="25"
+                    y1="115"
+                    x2="10"
+                    y2="115"
+                    stroke="#1a1a1a"
+                    stroke-width="3"
+                  />
+                  <line
+                    x1="25"
+                    y1="115"
+                    x2="40"
+                    y2="115"
+                    stroke="#1a1a1a"
+                    stroke-width="3"
+                  />
+
+                  <!-- Center post connector - black metal -->
+                  <line
+                    x1="25"
+                    y1="115"
+                    x2="25"
+                    y2="108"
+                    stroke="#2a2a2a"
+                    stroke-width="3"
+                  />
+
+                  <!-- Main vertical pole - brushed chrome/silver -->
+                  <line
+                    x1="25"
+                    y1="108"
+                    x2="25"
+                    y2="30"
+                    stroke="#8b8b8b"
+                    stroke-width="2.5"
+                  />
+
+                  <!-- Boom arm - chrome with slight shadow -->
+                  <line
+                    x1="25"
+                    y1="30"
+                    x2="35"
+                    y2="15"
+                    stroke="#9a9a9a"
+                    stroke-width="2"
+                  />
+
+                  <!-- Mic clip bottom - black plastic -->
+                  <ellipse
+                    cx="35"
+                    cy="12"
+                    rx="3"
+                    ry="4"
+                    fill="#1a1a1a"
+                    stroke="#404040"
+                    stroke-width="1"
+                  />
+
+                  <!-- Mic body - dark metal housing -->
+                  <ellipse
+                    cx="35"
+                    cy="8"
+                    rx="4"
+                    ry="6"
+                    fill="#2a2a2a"
+                    stroke="#505050"
+                    stroke-width="1.5"
+                  />
+
+                  <!-- Mic grille mesh - charcoal black -->
+                  <rect
+                    x="31"
+                    y="2"
+                    width="8"
+                    height="6"
+                    rx="1"
+                    fill="#1a1a1a"
+                    stroke="#3a3a3a"
+                    stroke-width="1"
+                  />
+
+                  <!-- Grille mesh lines - subtle gray -->
+                  <line
+                    x1="33"
+                    y1="3"
+                    x2="33"
+                    y2="7"
+                    stroke="#404040"
+                    stroke-width="0.5"
+                  />
+                  <line
+                    x1="35"
+                    y1="3"
+                    x2="35"
+                    y2="7"
+                    stroke="#404040"
+                    stroke-width="0.5"
+                  />
+                  <line
+                    x1="37"
+                    y1="3"
+                    x2="37"
+                    y2="7"
+                    stroke="#404040"
+                    stroke-width="0.5"
+                  />
+
+                  <!-- Boom arm joint - chrome knob -->
+                  <circle
+                    cx="25"
+                    cy="30"
+                    r="3"
+                    fill="#6a6a6a"
+                    stroke="#9a9a9a"
+                    stroke-width="1.5"
+                  />
+
+                  <!-- Height adjustment knob - smaller chrome detail -->
+                  <circle
+                    cx="25"
+                    cy="70"
+                    r="2.5"
+                    fill="#7a7a7a"
+                    stroke="#4a4a4a"
+                    stroke-width="1"
+                  />
+                </symbol>
+
+                <!-- Power Extension Cord Symbol (Horizontal) -->
+                <symbol id="power-extension" viewBox="0 0 160 40">
+                  <defs>
+                    <linearGradient
+                      id="powerStripGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: #2a2a2a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="50%"
+                        style="stop-color: #1a1a1a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #0a0a0a; stop-opacity: 1"
+                      />
+                    </linearGradient>
+                    <radialGradient id="outletGradient">
+                      <stop
+                        offset="0%"
+                        style="stop-color: #0a0a0a; stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: #1a1a1a; stop-opacity: 1"
+                      />
+                    </radialGradient>
+                  </defs>
+
+                  <!-- Main power strip housing -->
+                  <rect
+                    x="10"
+                    y="8"
+                    width="140"
+                    height="24"
+                    rx="3"
+                    fill="url(#powerStripGradient)"
+                    stroke="#000"
+                    stroke-width="0.8"
+                  />
+
+                  <!-- Top highlight -->
+                  <rect
+                    x="12"
+                    y="9"
+                    width="136"
+                    height="2"
+                    rx="1"
+                    fill="#3a3a3a"
+                    opacity="0.5"
+                  />
+
+                  <!-- Power cable (left side) -->
+                  <path
+                    d="M 10 20 Q 5 20 2 18"
+                    fill="none"
+                    stroke="#1a1a1a"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M 10 20 Q 5 20 2 18"
+                    fill="none"
+                    stroke="#0a0a0a"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  />
+
+                  <!-- Outlet 1 -->
+                  <rect
+                    x="25"
+                    y="14"
+                    width="18"
+                    height="12"
+                    rx="2"
+                    fill="url(#outletGradient)"
+                    stroke="#000"
+                    stroke-width="0.5"
+                  />
+                  <rect
+                    x="28"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <rect
+                    x="36"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <circle cx="33.5" cy="20" r="1.2" fill="#6a5511" />
+
+                  <!-- Outlet 2 -->
+                  <rect
+                    x="50"
+                    y="14"
+                    width="18"
+                    height="12"
+                    rx="2"
+                    fill="url(#outletGradient)"
+                    stroke="#000"
+                    stroke-width="0.5"
+                  />
+                  <rect
+                    x="53"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <rect
+                    x="61"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <circle cx="58.5" cy="20" r="1.2" fill="#6a5511" />
+
+                  <!-- Outlet 3 -->
+                  <rect
+                    x="75"
+                    y="14"
+                    width="18"
+                    height="12"
+                    rx="2"
+                    fill="url(#outletGradient)"
+                    stroke="#000"
+                    stroke-width="0.5"
+                  />
+                  <rect
+                    x="78"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <rect
+                    x="86"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <circle cx="83.5" cy="20" r="1.2" fill="#6a5511" />
+
+                  <!-- Outlet 4 -->
+                  <rect
+                    x="100"
+                    y="14"
+                    width="18"
+                    height="12"
+                    rx="2"
+                    fill="url(#outletGradient)"
+                    stroke="#000"
+                    stroke-width="0.5"
+                  />
+                  <rect
+                    x="103"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <rect
+                    x="111"
+                    y="17"
+                    width="3"
+                    height="6"
+                    rx="0.5"
+                    fill="#8b6914"
+                  />
+                  <circle cx="108.5" cy="20" r="1.2" fill="#6a5511" />
+
+                  <!-- Power switch (right side) -->
+                  <rect
+                    x="125"
+                    y="13"
+                    width="12"
+                    height="14"
+                    rx="1.5"
+                    fill="#1a1a1a"
+                    stroke="#000"
+                    stroke-width="0.5"
+                  />
+                  <rect
+                    x="127"
+                    y="15"
+                    width="8"
+                    height="5"
+                    rx="0.8"
+                    fill="#ff4444"
+                    stroke="#cc0000"
+                    stroke-width="0.4"
+                  />
+                  <text
+                    x="131"
+                    y="25"
+                    font-size="4"
+                    fill="#888"
+                    text-anchor="middle"
+                    font-family="Arial"
+                  >
+                    ON
+                  </text>
+
+                  <!-- Power indicator LED -->
+                  <circle cx="143" cy="20" r="2" fill="#ff4444" opacity="0.9" />
+                  <circle cx="143" cy="20" r="1.2" fill="#ff6666" />
+
+                  <!-- Mounting screws -->
+                  <circle
+                    cx="15"
+                    cy="13"
+                    r="1"
+                    fill="#2a2a2a"
+                    stroke="#1a1a1a"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="145"
+                    cy="13"
+                    r="1"
+                    fill="#2a2a2a"
+                    stroke="#1a1a1a"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="15"
+                    cy="27"
+                    r="1"
+                    fill="#2a2a2a"
+                    stroke="#1a1a1a"
+                    stroke-width="0.3"
+                  />
+                  <circle
+                    cx="145"
+                    cy="27"
+                    r="1"
+                    fill="#2a2a2a"
+                    stroke="#1a1a1a"
+                    stroke-width="0.3"
+                  />
+
+                  <!-- Screw details -->
+                  <line
+                    x1="14"
+                    y1="12"
+                    x2="16"
+                    y2="14"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="144"
+                    y1="12"
+                    x2="146"
+                    y2="14"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="14"
+                    y1="26"
+                    x2="16"
+                    y2="28"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                  <line
+                    x1="144"
+                    y1="26"
+                    x2="146"
+                    y2="28"
+                    stroke="#0a0a0a"
+                    stroke-width="0.3"
+                  />
+                </symbol>
+              </defs>
+
+              <g id="viewport">
+                <rect
+                  x="-5000"
+                  y="-5000"
+                  width="10000"
+                  height="10000"
+                  fill="url(#grid-major)"
+                />
+                <line x1="-5000" y1="0" x2="5000" y2="0" class="axis-line" />
+                <line x1="0" y1="-5000" x2="0" y2="5000" class="axis-line" />
+                <g id="stageNodes">
+                  <!-- Sample equipment - can be dragged -->
+                  <use
+                    href="#drumkit"
+                    x="-100"
+                    y="-100"
+                    width="100"
+                    height="100"
+                    class="draggable"
+                  />
+                  <use
+                    href="#amp"
+                    x="150"
+                    y="-50"
+                    width="80"
+                    height="80"
+                    class="draggable"
+                  />
+                  <use
+                    href="#amp"
+                    x="250"
+                    y="-50"
+                    width="80"
+                    height="80"
+                    class="draggable"
+                  />
+                  <use
+                    href="#monitor"
+                    x="-200"
+                    y="50"
+                    width="70"
+                    height="70"
+                    class="draggable"
+                  />
+                  <use
+                    href="#monitor"
+                    x="200"
+                    y="50"
+                    width="70"
+                    height="70"
+                    class="draggable"
+                  />
+                  <use
+                    href="#mic-stand"
+                    x="-50"
+                    y="-80"
+                    width="40"
+                    height="100"
+                    class="draggable"
+                  />
+                </g>
+              </g>
+            </svg>
+
+            <div class="stage-controls">
+              <div class="control-group">
+                <button class="stage-btn" id="zoomIn">Zoom In (+)</button>
+                <button class="stage-btn" id="zoomOut">Zoom Out (−)</button>
+              </div>
+              <button class="stage-btn" id="resetView">Reset View</button>
+            </div>
+
+            <div class="stage-info">
+              <div class="info-line">
+                Zoom: <span class="info-value" id="zoomDisplay">100%</span>
+              </div>
+              <div class="info-line">
+                Pan: <span class="info-value" id="panDisplay">0, 0</span>
+              </div>
+              <div class="info-line">
+                Mouse: <span class="info-value" id="mouseDisplay">0, 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <h3>Get in Touch</h3>
+      <p>For bookings and technical questions:</p>
+      <p>
+        <a href="mailto:kristinaheadachee@gmail.com"
+          >kristinaheadachee@gmail.com</a
+        >
+      </p>
+      <p style="margin-top: var(--spacing-md); font-size: 0.85rem">
+        © 2025 headachee. All rights reserved.
+      </p>
+    </footer>
+
+    <script>
+      const dropdown = document.querySelector(".dropdown");
+      const dropdownToggle = document.getElementById("techRiderToggle");
+      const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+      const dropdownItems = dropdown.querySelectorAll(".dropdown-item");
+
+      const isTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+      if (isTouchDevice) {
+        dropdownToggle.addEventListener("click", (e) => {
+          e.preventDefault();
+          const isOpen = dropdown.classList.contains("is-open");
+          dropdown.classList.toggle("is-open");
+          dropdownToggle.setAttribute("aria-expanded", !isOpen);
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove("is-open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        dropdownItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            dropdown.classList.remove("is-open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      dropdownToggle.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const isOpen = dropdown.classList.contains("is-open");
+          dropdown.classList.toggle("is-open");
+          dropdownToggle.setAttribute("aria-expanded", !isOpen);
+
+          if (!isOpen) {
+            setTimeout(() => {
+              dropdownItems[0]?.focus();
+            }, 100);
+          }
+        }
+      });
+
+      dropdownItems.forEach((item, index) => {
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const nextItem = dropdownItems[index + 1] || dropdownItems[0];
+            nextItem.focus();
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const prevItem =
+              dropdownItems[index - 1] ||
+              dropdownItems[dropdownItems.length - 1];
+            prevItem.focus();
+          } else if (e.key === "Escape") {
+            dropdown.classList.remove("is-open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+            dropdownToggle.focus();
+          }
+        });
+      });
+    </script>
+
+    <!-- ============================================
+         2D STAGE PLAN SCRIPT
+         ============================================ -->
+    <script>
+      const canvas = document.getElementById("canvas");
+      const viewport = document.getElementById("viewport");
+      const nodesContainer = document.getElementById("stageNodes");
+      const container = document.getElementById("stageContainer");
+
+      let viewBox = { x: -500, y: -500, width: 1000, height: 1000 };
+      let zoom = 1;
+      let isPanning = false;
+      let panStart = { x: 0, y: 0 };
+      let isDraggingNode = false;
+      let isRotatingNode = false;
+      let draggedNode = null;
+      let dragOffset = { x: 0, y: 0 };
+      let rotationStart = { angle: 0, mouseAngle: 0 };
+
+      const stageNodes = [
+        {
+          id: 1,
+          x: 0,
+          y: -299,
+          label: "Drumkit",
+          type: "drumkit",
+          angle: 0,
+          scale: 1.2,
+        },
+        {
+          id: 2,
+          x: 170,
+          y: -280,
+          label: "Drum Monitor",
+          type: "monitor",
+          angle: 90,
+          scale: 1,
+        },
+        {
+          id: 3,
+          x: 330,
+          y: -270,
+          label: "Bass Amp",
+          type: "amp",
+          angle: 0,
+          scale: 1.1,
+        },
+        {
+          id: 4,
+          x: 309,
+          y: 177,
+          label: "Bass Monitor",
+          type: "monitor",
+          angle: 0,
+          scale: 1,
+        },
+        {
+          id: 5,
+          x: -346,
+          y: -296,
+          label: "Guitar Amp 1",
+          type: "amp",
+          angle: 0,
+          scale: 1,
+        },
+        {
+          id: 7,
+          x: -210,
+          y: -296,
+          label: "Guitar Amp 2",
+          type: "amp",
+          angle: 0,
+          scale: 1,
+        },
+        {
+          id: 8,
+          x: -285,
+          y: 155,
+          label: "Guitar 2/Backing Vocal 2 Monitor",
+          type: "monitor",
+          angle: 0,
+          scale: 1,
+        },
+        {
+          id: 9,
+          x: 0,
+          y: 81,
+          label: "Lead Vocal Mic",
+          type: "mic-stand",
+          angle: 0,
+          scale: 1,
+        },
+        {
+          id: 10,
+          x: 2,
+          y: 196,
+          label: "Vocal 1/Guitar 1 Monitor",
+          type: "monitor",
+          angle: 0,
+          scale: 1.1,
+        },
+        {
+          id: 11,
+          x: -285,
+          y: 50,
+          label: "Backing Vocal 2 Mic",
+          type: "mic-stand",
+          angle: 0,
+          scale: 0.9,
+        },
+
+        {
+          id: 12,
+          x: -450,
+          y: 0,
+          label: "Stage Left",
+          type: "text",
+          angle: -90,
+          scale: 1.2,
+        },
+        {
+          id: 13,
+          x: 450,
+          y: 0,
+          label: "Stage Right",
+          type: "text",
+          angle: 90,
+          scale: 1.2,
+        },
+        {
+          id: 14,
+          x: 0,
+          y: -450,
+          label: "Upstage",
+          type: "text",
+          angle: 0,
+          scale: 1.2,
+        },
+        {
+          id: 15,
+          x: 0,
+          y: 350,
+          label: "Downstage / Audience",
+          type: "text",
+          angle: 0,
+          scale: 1.2,
+        },
+        {
+          id: 16,
+          x: -415,
+          y: 110,
+          label: "Power Strip 1",
+          type: "power-extension",
+          angle: 0,
+          scale: 0.4,
+        },
+        {
+          id: 17,
+          x: 115,
+          y: 110,
+          label: "Power Strip 2",
+          type: "power-extension",
+          angle: 0,
+          scale: 0.4,
+        },
+        {
+          id: 17,
+          x: 410,
+          y: 90,
+          label: "Power Strip 3",
+          type: "power-extension",
+          angle: 0,
+          scale: 0.4,
+        },
+      ];
+
+      const equipmentConfig = {
+        drumkit: { width: 200, height: 180, labelOffset: 100 },
+        amp: { width: 80, height: 100, labelOffset: 60 },
+        monitor: { width: 70, height: 50, labelOffset: 35 },
+        "mic-stand": { width: 50, height: 120, labelOffset: 70 },
+        "power-extension": { width: 160, height: 40, labelOffset: 30 },
+        text: { width: 0, height: 0, labelOffset: 0 },
+      };
+
+      function init() {
+        updateViewBox();
+        renderNodes();
+        setupEventListeners();
+        updateInfo();
+      }
+
+      function updateViewBox() {
+        canvas.setAttribute(
+          "viewBox",
+          `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`
+        );
+      }
+
+      function renderNodes() {
+        nodesContainer.innerHTML = "";
+        stageNodes.forEach((node) => {
+          const g = createNodeElement(node);
+          nodesContainer.appendChild(g);
+        });
+      }
+
+      function createNodeElement(node) {
+        const config = equipmentConfig[node.type];
+        const scale = node.scale || 1;
+
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.classList.add("stage-node");
+        g.setAttribute("data-id", node.id);
+        g.setAttribute(
+          "transform",
+          `translate(${node.x}, ${node.y}) rotate(${node.angle || 0})`
+        );
+
+        // Handle text nodes differently - they don't have equipment symbols
+        if (node.type === "text") {
+          // Main text label for text nodes (larger and styled differently)
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          text.classList.add("node-text");
+          text.setAttribute("y", 0);
+          text.setAttribute("font-size", "28"); // Increased from 20 to 28
+          text.setAttribute("letter-spacing", "2"); // Adds spacing between letters for width
+          text.setAttribute("fill", "#9a9a9a");
+          text.setAttribute("opacity", "0.7");
+          text.setAttribute("font-weight", "600");
+          text.textContent = node.label;
+
+          // Coordinates display for text nodes (smaller and positioned below)
+          const coords = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          coords.classList.add("node-coords");
+          coords.setAttribute("y", 20);
+          coords.textContent = `(${Math.round(node.x)}, ${Math.round(
+            node.y
+          )}) • ${Math.round(node.angle)}°`;
+
+          // Rotation handle positioned above the text
+          const handleY = -30;
+
+          // Invisible larger hitbox for easier interaction
+          const rotationHitbox = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          rotationHitbox.classList.add("rotation-hitbox");
+          rotationHitbox.setAttribute("cx", 0);
+          rotationHitbox.setAttribute("cy", handleY);
+          rotationHitbox.setAttribute("r", 20);
+          rotationHitbox.setAttribute("fill", "transparent");
+          rotationHitbox.setAttribute("opacity", "0");
+          rotationHitbox.style.cursor = "grab";
+
+          // Connecting area between handle and text
+          const connectingArea = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+          connectingArea.setAttribute("x", -40);
+          connectingArea.setAttribute("y", handleY);
+          connectingArea.setAttribute("width", 80);
+          connectingArea.setAttribute("height", Math.abs(handleY));
+          connectingArea.setAttribute("fill", "transparent");
+          connectingArea.style.pointerEvents = "all";
+
+          g.appendChild(connectingArea);
+
+          // Visible rotation handle
+          const rotationHandle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          rotationHandle.classList.add("rotation-handle");
+          rotationHandle.setAttribute("cx", 0);
+          rotationHandle.setAttribute("cy", handleY);
+          rotationHandle.setAttribute("r", 8);
+          rotationHandle.setAttribute("fill", "#4CAF50");
+          rotationHandle.setAttribute("stroke", "#fff");
+          rotationHandle.setAttribute("stroke-width", "2");
+          rotationHandle.setAttribute("opacity", "0");
+          rotationHandle.style.cursor = "grab";
+          rotationHandle.style.pointerEvents = "none";
+
+          const rotationIcon = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+          );
+          rotationIcon.classList.add("rotation-icon");
+          rotationIcon.setAttribute(
+            "d",
+            "M-3,-3 A 4 4 0 1 1 3,-3 M 3,-3 L 3,0 L 0,-3"
+          );
+          rotationIcon.setAttribute("fill", "none");
+          rotationIcon.setAttribute("stroke", "#fff");
+          rotationIcon.setAttribute("stroke-width", "1.5");
+          rotationIcon.setAttribute(
+            "transform",
+            `translate(0, ${handleY + 5})`
+          );
+          rotationIcon.setAttribute("opacity", "0");
+          rotationIcon.style.pointerEvents = "none";
+
+          g.appendChild(text);
+          // g.appendChild(coords);
+          g.appendChild(rotationHitbox);
+          g.appendChild(rotationHandle);
+          g.appendChild(rotationIcon);
+        } else {
+          // Original equipment node rendering logic
+          const use = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "use"
+          );
+          use.setAttribute("href", `#${node.type}`);
+          use.setAttribute("x", -(config.width * scale) / 2);
+          use.setAttribute("y", -(config.height * scale) / 2);
+          use.setAttribute("width", config.width * scale);
+          use.setAttribute("height", config.height * scale);
+
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          text.classList.add("node-text");
+          text.setAttribute("y", config.labelOffset);
+          text.setAttribute("font-size", "14");
+          text.textContent = node.label;
+
+          const coords = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          coords.classList.add("node-coords");
+          coords.setAttribute("y", config.labelOffset + 15);
+          coords.textContent = `(${Math.round(node.x)}, ${Math.round(
+            node.y
+          )}) • ${Math.round(node.angle)}°`;
+
+          const handleY = -(config.height * scale) / 3.5 - 25;
+
+          const rotationHitbox = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          rotationHitbox.classList.add("rotation-hitbox");
+          rotationHitbox.setAttribute("cx", 0);
+          rotationHitbox.setAttribute("cy", handleY);
+          rotationHitbox.setAttribute("r", 20);
+          rotationHitbox.setAttribute("fill", "transparent");
+          rotationHitbox.setAttribute("opacity", "0");
+          rotationHitbox.style.cursor = "grab";
+
+          const connectingArea = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+          connectingArea.setAttribute("x", -(config.width * scale) / 4);
+          connectingArea.setAttribute("y", handleY);
+          connectingArea.setAttribute("width", (config.width * scale) / 2);
+          connectingArea.setAttribute(
+            "height",
+            Math.abs(handleY) - (config.height * scale) / 2
+          );
+          connectingArea.setAttribute("fill", "transparent");
+          connectingArea.style.pointerEvents = "all";
+
+          g.appendChild(connectingArea);
+
+          const rotationHandle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+          );
+          rotationHandle.classList.add("rotation-handle");
+          rotationHandle.setAttribute("cx", 0);
+          rotationHandle.setAttribute("cy", handleY);
+          rotationHandle.setAttribute("r", 8);
+          rotationHandle.setAttribute("fill", "#4CAF50");
+          rotationHandle.setAttribute("stroke", "#fff");
+          rotationHandle.setAttribute("stroke-width", "2");
+          rotationHandle.setAttribute("opacity", "0");
+          rotationHandle.style.cursor = "grab";
+          rotationHandle.style.pointerEvents = "none";
+
+          const rotationIcon = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+          );
+          rotationIcon.classList.add("rotation-icon");
+          rotationIcon.setAttribute(
+            "d",
+            "M-3,-3 A 4 4 0 1 1 3,-3 M 3,-3 L 3,0 L 0,-3"
+          );
+          rotationIcon.setAttribute("fill", "none");
+          rotationIcon.setAttribute("stroke", "#fff");
+          rotationIcon.setAttribute("stroke-width", "1.5");
+          rotationIcon.setAttribute(
+            "transform",
+            `translate(0, ${handleY + 5})`
+          );
+          rotationIcon.setAttribute("opacity", "0");
+          rotationIcon.style.pointerEvents = "none";
+
+          g.appendChild(use);
+          g.appendChild(text);
+          g.appendChild(coords);
+          g.appendChild(rotationHitbox);
+          g.appendChild(rotationHandle);
+          g.appendChild(rotationIcon);
+        }
+
+        // Show handles on hover for all node types
+        g.addEventListener("mouseenter", () => {
+          if (!isDraggingNode && !isRotatingNode) {
+            const handle = g.querySelector(".rotation-handle");
+            const icon = g.querySelector(".rotation-icon");
+            const hitbox = g.querySelector(".rotation-hitbox");
+            if (handle) handle.setAttribute("opacity", "0.8");
+            if (icon) icon.setAttribute("opacity", "0.8");
+            if (hitbox) hitbox.setAttribute("opacity", "1");
+          }
+        });
+
+        g.addEventListener("mouseleave", () => {
+          if (!isRotatingNode) {
+            const handle = g.querySelector(".rotation-handle");
+            const icon = g.querySelector(".rotation-icon");
+            const hitbox = g.querySelector(".rotation-hitbox");
+            if (handle) handle.setAttribute("opacity", "0");
+            if (icon) icon.setAttribute("opacity", "0");
+            if (hitbox) hitbox.setAttribute("opacity", "0");
+          }
+        });
+
+        return g;
+      }
+
+      function screenToCanvas(screenX, screenY) {
+        const rect = canvas.getBoundingClientRect();
+        const x =
+          viewBox.x + ((screenX - rect.left) / rect.width) * viewBox.width;
+        const y =
+          viewBox.y + ((screenY - rect.top) / rect.height) * viewBox.height;
+        return { x, y };
+      }
+
+      function calculateAngle(centerX, centerY, pointX, pointY) {
+        const dx = pointX - centerX;
+        const dy = pointY - centerY;
+        return (Math.atan2(dy, dx) * 180) / Math.PI;
+      }
+
+      function normalizeAngle(angle) {
+        angle = angle % 360;
+        if (angle > 180) angle -= 360;
+        if (angle < -180) angle += 360;
+        return angle;
+      }
+
+      function zoomCanvas(delta, centerX, centerY) {
+        const canvasCenter = screenToCanvas(centerX, centerY);
+        const oldZoom = zoom;
+        zoom *= delta;
+        zoom = Math.max(0.1, Math.min(zoom, 10));
+
+        const actualDelta = zoom / oldZoom;
+
+        viewBox.width /= actualDelta;
+        viewBox.height /= actualDelta;
+        viewBox.x = canvasCenter.x - (canvasCenter.x - viewBox.x) / actualDelta;
+        viewBox.y = canvasCenter.y - (canvasCenter.y - viewBox.y) / actualDelta;
+
+        updateViewBox();
+        updateInfo();
+      }
+
+      function panCanvas(dx, dy) {
+        viewBox.x -= dx;
+        viewBox.y -= dy;
+        updateViewBox();
+        updateInfo();
+      }
+
+      function updateInfo() {
+        document.getElementById("zoomDisplay").textContent = `${Math.round(
+          zoom * 100
+        )}%`;
+        document.getElementById("panDisplay").textContent = `${Math.round(
+          viewBox.x
+        )}, ${Math.round(viewBox.y)}`;
+      }
+
+      function resetView() {
+        viewBox = { x: -500, y: -500, width: 1000, height: 1000 };
+        zoom = 1;
+        updateViewBox();
+        updateInfo();
+      }
+
+      function setupEventListeners() {
+        document.getElementById("zoomIn").addEventListener("click", () => {
+          const rect = canvas.getBoundingClientRect();
+          zoomCanvas(1.2, rect.width / 2, rect.height / 2);
+        });
+
+        document.getElementById("zoomOut").addEventListener("click", () => {
+          const rect = canvas.getBoundingClientRect();
+          zoomCanvas(0.8, rect.width / 2, rect.height / 2);
+        });
+
+        document
+          .getElementById("resetView")
+          .addEventListener("click", resetView);
+
+        container.addEventListener(
+          "wheel",
+          (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            zoomCanvas(delta, e.clientX, e.clientY);
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener("mousedown", (e) => {
+          const target = e.target;
+          const isRotationHandle = target.classList.contains("rotation-hitbox");
+
+          const nodeElement = target.closest(".stage-node");
+
+          if (nodeElement) {
+            const nodeId = parseInt(nodeElement.getAttribute("data-id"));
+            const node = stageNodes.find((n) => n.id === nodeId);
+            const canvasPos = screenToCanvas(e.clientX, e.clientY);
+
+            if (isRotationHandle || e.altKey) {
+              isRotatingNode = true;
+              draggedNode = nodeElement;
+              const mouseAngle = calculateAngle(
+                node.x,
+                node.y,
+                canvasPos.x,
+                canvasPos.y
+              );
+              rotationStart = { angle: node.angle, mouseAngle };
+              nodeElement
+                .querySelector(".rotation-handle")
+                .setAttribute("opacity", "1");
+              nodeElement
+                .querySelector(".rotation-icon")
+                .setAttribute("opacity", "1");
+              e.preventDefault();
+            } else {
+              isDraggingNode = true;
+              draggedNode = nodeElement;
+              dragOffset.x = canvasPos.x - node.x;
+              dragOffset.y = canvasPos.y - node.y;
+              e.preventDefault();
+            }
+          } else {
+            isPanning = true;
+            container.classList.add("panning");
+            panStart = { x: e.clientX, y: e.clientY };
+          }
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+          const canvasPos = screenToCanvas(e.clientX, e.clientY);
+          document.getElementById("mouseDisplay").textContent = `${Math.round(
+            canvasPos.x
+          )}, ${Math.round(canvasPos.y)}`;
+
+          if (isRotatingNode && draggedNode) {
+            const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+            const node = stageNodes.find((n) => n.id === nodeId);
+
+            const currentMouseAngle = calculateAngle(
+              node.x,
+              node.y,
+              canvasPos.x,
+              canvasPos.y
+            );
+            const angleDelta = currentMouseAngle - rotationStart.mouseAngle;
+            node.angle = normalizeAngle(rotationStart.angle + angleDelta);
+
+            draggedNode.setAttribute(
+              "transform",
+              `translate(${node.x}, ${node.y}) rotate(${node.angle})`
+            );
+            draggedNode.querySelector(
+              ".node-coords"
+            ).textContent = `(${Math.round(node.x)}, ${Math.round(
+              node.y
+            )}) • ${Math.round(node.angle)}°`;
+          } else if (isDraggingNode && draggedNode) {
+            const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+            const node = stageNodes.find((n) => n.id === nodeId);
+            node.x = canvasPos.x - dragOffset.x;
+            node.y = canvasPos.y - dragOffset.y;
+
+            draggedNode.setAttribute(
+              "transform",
+              `translate(${node.x}, ${node.y}) rotate(${node.angle})`
+            );
+            draggedNode.querySelector(
+              ".node-coords"
+            ).textContent = `(${Math.round(node.x)}, ${Math.round(
+              node.y
+            )}) • ${Math.round(node.angle)}°`;
+          } else if (isPanning) {
+            const dx =
+              ((e.clientX - panStart.x) * viewBox.width) /
+              canvas.getBoundingClientRect().width;
+            const dy =
+              ((e.clientY - panStart.y) * viewBox.height) /
+              canvas.getBoundingClientRect().height;
+            panCanvas(dx, dy);
+            panStart = { x: e.clientX, y: e.clientY };
+          }
+        });
+
+        canvas.addEventListener("mouseup", () => {
+          isPanning = false;
+          isDraggingNode = false;
+          if (isRotatingNode && draggedNode) {
+            draggedNode
+              .querySelector(".rotation-handle")
+              .setAttribute("opacity", "0");
+            draggedNode
+              .querySelector(".rotation-icon")
+              .setAttribute("opacity", "0");
+          }
+          isRotatingNode = false;
+          draggedNode = null;
+          container.classList.remove("panning");
+        });
+
+        canvas.addEventListener("mouseleave", () => {
+          isPanning = false;
+          isDraggingNode = false;
+          if (isRotatingNode && draggedNode) {
+            draggedNode
+              .querySelector(".rotation-handle")
+              .setAttribute("opacity", "0");
+            draggedNode
+              .querySelector(".rotation-icon")
+              .setAttribute("opacity", "0");
+          }
+          isRotatingNode = false;
+          draggedNode = null;
+          container.classList.remove("panning");
+        });
+
+        let touchStartDistance = 0;
+        let touchStartZoom = 1;
+        let lastTouchCount = 0;
+        let isTouchRotating = false;
+
+        const getTouchDistance = (touches) => {
+          const dx = touches[0].clientX - touches[1].clientX;
+          const dy = touches[0].clientY - touches[1].clientY;
+          return Math.sqrt(dx * dx + dy * dy);
+        };
+
+        const getTouchMidpoint = (touches) => {
+          return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2,
+          };
+        };
+
+        canvas.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            const touches = e.touches;
+            lastTouchCount = touches.length;
+
+            if (touches.length === 2) {
+              isPanning = false;
+              isDraggingNode = false;
+              isRotatingNode = false;
+              draggedNode = null;
+              touchStartDistance = getTouchDistance(touches);
+              touchStartZoom = zoom;
+            } else if (touches.length === 1) {
+              const touch = touches[0];
+              const target = e.target;
+
+              const isRotationHandle =
+                target.classList.contains("rotation-hitbox");
+
+              const nodeElement = target.closest(".stage-node");
+
+              if (nodeElement) {
+                const nodeId = parseInt(nodeElement.getAttribute("data-id"));
+                const node = stageNodes.find((n) => n.id === nodeId);
+                const canvasPos = screenToCanvas(touch.clientX, touch.clientY);
+
+                if (isRotationHandle) {
+                  isTouchRotating = true;
+                  isRotatingNode = true;
+                  draggedNode = nodeElement;
+                  const mouseAngle = calculateAngle(
+                    node.x,
+                    node.y,
+                    canvasPos.x,
+                    canvasPos.y
+                  );
+                  rotationStart = { angle: node.angle, mouseAngle };
+                  nodeElement
+                    .querySelector(".rotation-handle")
+                    .setAttribute("opacity", "1");
+                  nodeElement
+                    .querySelector(".rotation-icon")
+                    .setAttribute("opacity", "1");
+                  isPanning = false;
+                  isDraggingNode = false;
+                } else {
+                  isDraggingNode = true;
+                  draggedNode = nodeElement;
+                  dragOffset.x = canvasPos.x - node.x;
+                  dragOffset.y = canvasPos.y - node.y;
+                  isPanning = false;
+                  isRotatingNode = false;
+                  nodeElement
+                    .querySelector(".rotation-handle")
+                    .setAttribute("opacity", "0.8");
+                  nodeElement
+                    .querySelector(".rotation-icon")
+                    .setAttribute("opacity", "0.8");
+                }
+              } else {
+                isPanning = true;
+                isDraggingNode = false;
+                isRotatingNode = false;
+                draggedNode = null;
+                container.classList.add("panning");
+                panStart = { x: touch.clientX, y: touch.clientY };
+              }
+            }
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener(
+          "touchmove",
+          (e) => {
+            e.preventDefault();
+            const touches = e.touches;
+
+            if (touches.length === 2) {
+              const currentDistance = getTouchDistance(touches);
+              const midpoint = getTouchMidpoint(touches);
+              const scale = currentDistance / touchStartDistance;
+              const newZoom = touchStartZoom * scale;
+              const zoomDelta = newZoom / zoom;
+
+              zoomCanvas(zoomDelta, midpoint.x, midpoint.y);
+
+              touchStartDistance = currentDistance;
+              touchStartZoom = zoom;
+            } else if (touches.length === 1) {
+              const touch = touches[0];
+              const canvasPos = screenToCanvas(touch.clientX, touch.clientY);
+
+              document.getElementById(
+                "mouseDisplay"
+              ).textContent = `${Math.round(canvasPos.x)}, ${Math.round(
+                canvasPos.y
+              )}`;
+
+              if (isRotatingNode && draggedNode) {
+                const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+                const node = stageNodes.find((n) => n.id === nodeId);
+
+                const currentMouseAngle = calculateAngle(
+                  node.x,
+                  node.y,
+                  canvasPos.x,
+                  canvasPos.y
+                );
+                const angleDelta = currentMouseAngle - rotationStart.mouseAngle;
+                node.angle = normalizeAngle(rotationStart.angle + angleDelta);
+
+                draggedNode.setAttribute(
+                  "transform",
+                  `translate(${node.x}, ${node.y}) rotate(${node.angle})`
+                );
+                draggedNode.querySelector(
+                  ".node-coords"
+                ).textContent = `(${Math.round(node.x)}, ${Math.round(
+                  node.y
+                )}) • ${Math.round(node.angle)}°`;
+              } else if (isDraggingNode && draggedNode) {
+                const nodeId = parseInt(draggedNode.getAttribute("data-id"));
+                const node = stageNodes.find((n) => n.id === nodeId);
+                node.x = canvasPos.x - dragOffset.x;
+                node.y = canvasPos.y - dragOffset.y;
+
+                draggedNode.setAttribute(
+                  "transform",
+                  `translate(${node.x}, ${node.y}) rotate(${node.angle})`
+                );
+                draggedNode.querySelector(
+                  ".node-coords"
+                ).textContent = `(${Math.round(node.x)}, ${Math.round(
+                  node.y
+                )}) • ${Math.round(node.angle)}°`;
+              } else if (isPanning) {
+                const dx =
+                  ((touch.clientX - panStart.x) * viewBox.width) /
+                  canvas.getBoundingClientRect().width;
+                const dy =
+                  ((touch.clientY - panStart.y) * viewBox.height) /
+                  canvas.getBoundingClientRect().height;
+                panCanvas(dx, dy);
+                panStart = { x: touch.clientX, y: touch.clientY };
+              }
+            }
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener(
+          "touchend",
+          (e) => {
+            e.preventDefault();
+
+            if (e.touches.length === 0) {
+              if (draggedNode) {
+                draggedNode
+                  .querySelector(".rotation-handle")
+                  .setAttribute("opacity", "0");
+                draggedNode
+                  .querySelector(".rotation-icon")
+                  .setAttribute("opacity", "0");
+              }
+              isPanning = false;
+              isDraggingNode = false;
+              isRotatingNode = false;
+              isTouchRotating = false;
+              draggedNode = null;
+              container.classList.remove("panning");
+              lastTouchCount = 0;
+            } else if (e.touches.length === 1 && lastTouchCount === 2) {
+              const touch = e.touches[0];
+              panStart = { x: touch.clientX, y: touch.clientY };
+              isPanning = true;
+              isDraggingNode = false;
+              isRotatingNode = false;
+              draggedNode = null;
+            }
+
+            lastTouchCount = e.touches.length;
+          },
+          { passive: false }
+        );
+
+        canvas.addEventListener(
+          "touchcancel",
+          (e) => {
+            e.preventDefault();
+            if (draggedNode) {
+              draggedNode
+                .querySelector(".rotation-handle")
+                .setAttribute("opacity", "0");
+              draggedNode
+                .querySelector(".rotation-icon")
+                .setAttribute("opacity", "0");
+            }
+            isPanning = false;
+            isDraggingNode = false;
+            isRotatingNode = false;
+            isTouchRotating = false;
+            draggedNode = null;
+            container.classList.remove("panning");
+            lastTouchCount = 0;
+          },
+          { passive: false }
+        );
+      }
+
+      init();
+    </script>
+  </body>
+</html>
