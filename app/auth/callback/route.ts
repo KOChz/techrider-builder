@@ -3,38 +3,40 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Handles Supabase email confirmation callback.
- * Exchanges the authorization code for a session and redirects the user.
+ * Handles OAuth callback from Supabase Auth
+ * Exchanges the auth code for a session and redirects to the app
  *
- * @param request - The incoming request with code and next query parameters
- * @returns Redirect response to the specified destination or error page
+ * @returns Redirect to destination on success, or login page with error on failure
  */
 export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
-  const next = requestUrl.searchParams.get("next") ?? "/";
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/";
+  const error = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
 
-  if (code) {
-    const supabase = await createClient();
-
-    // Exchange the code for a session
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-      console.error("Error exchanging code for session:", error);
-      return NextResponse.redirect(
-        `${requestUrl.origin}/auth/error?message=${encodeURIComponent(
-          error.message
-        )}`
-      );
-    }
-
-    // Successful verification - redirect to app
-    return NextResponse.redirect(`${requestUrl.origin}${next}`);
+  if (error) {
+    console.error("OAuth provider error:", { error, errorDescription });
+    return NextResponse.redirect(
+      `${origin}/login?error=${encodeURIComponent(errorDescription || error)}`
+    );
   }
 
-  // No code provided - redirect to error page
-  return NextResponse.redirect(
-    `${requestUrl.origin}/auth/error?message=No+code+provided`
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login?error=auth_code_missing`);
+  }
+
+  const supabase = await createClient();
+  const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
+    code
   );
+
+  if (exchangeError) {
+    console.error("Session exchange error:", exchangeError.message);
+    return NextResponse.redirect(
+      `${origin}/login?error=${encodeURIComponent(exchangeError.message)}`
+    );
+  }
+
+  return NextResponse.redirect(`${origin}${next}`);
 }
