@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { loginSchema, type TLoginState } from "@/types/auth";
 
 /**
@@ -31,7 +31,7 @@ export async function loginAction(
     };
   }
 
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
     email: validated.data.email,

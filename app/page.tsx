@@ -1,15 +1,13 @@
 import React from "react";
 import { redirect } from "next/navigation";
 
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 import StagePlan from "@/components/stage-plan/stage-plan";
 import { signOutAction } from "./actions/sign-out-action/sign-out-action";
 
 export default async function TechRider() {
-  const supabase = await createServerClient();
-
-  console.log("Fixing build issues;");
+  const supabase = await createClient();
 
   const {
     data: { user },

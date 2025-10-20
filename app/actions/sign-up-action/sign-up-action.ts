@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { signupSchema, type TSignUpState } from "@/types/auth";
 
 /**
@@ -29,7 +29,7 @@ export async function signUpAction(
     };
   }
 
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   // Optional: provide post-confirm redirect target if you use email confirmations
   const headersList = await headers();
