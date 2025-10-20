@@ -1,18 +1,21 @@
-// middleware.ts
-import { NextResponse, type NextRequest } from "next/server";
+// next.config.ts
+import type { NextConfig } from "next";
 
-export async function middleware(request: NextRequest) {
-  // Only handle basic redirects, let components handle auth
-  const path = request.nextUrl.pathname;
+const nextConfig: NextConfig = {
+  // Disable SWC minification temporarily to debug
+  swcMinify: false,
 
-  // Skip middleware for static assets and API routes
-  if (path.startsWith("/_next") || path.startsWith("/api")) {
-    return NextResponse.next();
-  }
+  // Ensure Edge Runtime compatibility
+  experimental: {
+    // Remove the serverComponentsExternalPackages for now
+    // as it might be causing the issue
+  },
 
-  return NextResponse.next();
-}
+  // Add source maps for better error tracking
+  productionBrowserSourceMaps: true,
 
-export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Disable static optimization for debugging
+  output: "standalone",
 };
+
+export default nextConfig;
