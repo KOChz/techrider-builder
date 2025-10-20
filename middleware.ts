@@ -1,13 +1,15 @@
-// middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+
+export type Database = Record<string, never>;
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  const supabase = createServerClient(
+  // Add Database type parameter if available, or use type assertion
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -24,22 +26,17 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // IMPORTANT: Use getUser() instead of getSession() for security
-  // getSession() only reads from cookies and can be spoofed
-  // getUser() makes a request to Supabase to verify the user
   const {
     data: { user },
     error,
   } = await supabase.auth.getUser();
 
-  // Redirect authenticated users away from login page
   if (user && !error && request.nextUrl.pathname === "/login") {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
   }
 
-  // Redirect unauthenticated users to login for protected routes
   const protectedRoutes = ["/dashboard", "/profile", "/settings"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
