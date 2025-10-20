@@ -1,29 +1,18 @@
-// next.config.ts
-import type { NextConfig } from "next";
+// middleware.ts
+import { NextResponse, type NextRequest } from "next/server";
 
-const nextConfig: NextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["@supabase/ssr"],
-  },
-  webpack: (config, context) => {
-    // Destructure after receiving the context object
-    const { isServer } = context;
+export async function middleware(request: NextRequest) {
+  // Only handle basic redirects, let components handle auth
+  const path = request.nextUrl.pathname;
 
-    if (!isServer) {
-      // Provide fallbacks for browser environment
-      config.resolve = {
-        ...config.resolve,
-        fallback: {
-          ...config.resolve?.fallback,
-          fs: false,
-          path: false,
-          crypto: false,
-        },
-      };
-    }
+  // Skip middleware for static assets and API routes
+  if (path.startsWith("/_next") || path.startsWith("/api")) {
+    return NextResponse.next();
+  }
 
-    return config;
-  },
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
-
-export default nextConfig;
