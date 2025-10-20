@@ -1,29 +1,28 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { createServerClient as createSupabaseServerClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-export interface CookieOptions {
-  path?: string;
-  domain?: string;
-  maxAge?: number;
-  expires?: Date;
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: "lax" | "strict" | "none";
-}
-declare module "@supabase/ssr" {
-  export function createServerClient(
-    supabaseUrl: string,
-    supabaseKey: string,
-    options: {
+export async function createClient(): Promise<SupabaseClient> {
+  const cookieStore = await cookies();
+
+  return createSupabaseServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
       cookies: {
-        getAll(): Array<{ name: string; value: string }>;
-        setAll(
-          cookies: Array<{
-            name: string;
-            value: string;
-            options: CookieOptions;
-          }>
-        ): void;
-      };
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch {
+            // Server Component context - cookies will be set on next request
+          }
+        },
+      },
     }
-  ): SupabaseClient;
+  );
 }
