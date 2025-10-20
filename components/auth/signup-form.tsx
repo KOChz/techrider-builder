@@ -12,7 +12,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-3.5 px-6 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+      className="w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-3.5 px-6 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
       aria-label={pending ? "Creating account..." : "Create your account"}
     >
       {pending ? "Creating account..." : "Sign Up"}
@@ -83,7 +83,7 @@ export default function SignUpForm() {
             type="email"
             autoComplete="email"
             required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
             placeholder="you@example.com"
             aria-invalid={state.errors?.email ? "true" : "false"}
             aria-describedby={state.errors?.email ? "email-error" : undefined}
@@ -125,7 +125,7 @@ export default function SignUpForm() {
             type="password"
             autoComplete="new-password"
             required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
             placeholder="••••••••"
             aria-invalid={state.errors?.password ? "true" : "false"}
             aria-describedby={
@@ -169,7 +169,7 @@ export default function SignUpForm() {
             type="password"
             autoComplete="new-password"
             required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
             placeholder="••••••••"
             aria-invalid={state.errors?.confirmPassword ? "true" : "false"}
             aria-describedby={
@@ -219,7 +219,7 @@ export default function SignUpForm() {
         <div className="text-center">
           <Link
             href="/login"
-            className="inline-flex items-center justify-center w-full px-6 py-3 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200"
+            className="inline-flex items-center justify-center w-full px-6 py-3 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 transition-all duration-200"
             prefetch={false}
           >
             Sign in
