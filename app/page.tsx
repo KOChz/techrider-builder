@@ -9,6 +9,8 @@ import { signOutAction } from "./actions/sign-out-action/sign-out-action";
 export default async function TechRider() {
   const supabase = await createClient();
 
+  console.log("Fixing build issues;");
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
