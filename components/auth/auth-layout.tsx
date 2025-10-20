@@ -8,7 +8,7 @@ interface IAuthLayoutProps {
 export default function AuthLayout({ children }: IAuthLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 border-b border-slate-700 bg-black/80 backdrop-blur-sm">
         <nav aria-label="Primary">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
@@ -46,11 +46,11 @@ export default function AuthLayout({ children }: IAuthLayoutProps) {
         </nav>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-4 pt-24">
+      <main className="flex-1 flex items-center justify-center px-4">
         {children}
       </main>
 
-      <footer className="border-t border-slate-700 bg-slate-900 py-8 px-4">
+      <footer className="border-t border-slate-700 bg-black py-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-sm text-slate-400">
             © 2025 headachee. All rights reserved.
