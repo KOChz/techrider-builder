@@ -1,6 +1,6 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientService } from "@/lib/supabase/server";
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar/dashboard-sidebar";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header/dashboard-header";
 
@@ -9,7 +9,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
+  const supabase = await createServerClientService();
 
   const {
     data: { user },

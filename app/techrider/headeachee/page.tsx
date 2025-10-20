@@ -1,7 +1,6 @@
 import React from "react";
-import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientService } from "@/lib/supabase/server";
 
 import StagePlan from "@/components/stage-plan/stage-plan";
 import Link from "next/link";
@@ -9,15 +8,11 @@ import Link from "next/link";
 import "./headeache-techrider.css";
 
 export default async function TechRider() {
-  const supabase = await createClient();
+  const supabase = await createServerClientService();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
 
   return (
     <>

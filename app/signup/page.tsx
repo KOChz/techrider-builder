@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientService } from "@/lib/supabase/server";
 import AuthLayout from "@/components/auth/auth-layout";
 import SignUpForm from "@/components/auth/signup-form";
 
 export default async function SignUpPage() {
-  const supabase = await createClient();
+  const supabase = await createServerClientService();
   const {
     data: { user },
   } = await supabase.auth.getUser();

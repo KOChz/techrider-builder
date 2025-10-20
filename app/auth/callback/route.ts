@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientService } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=auth_code_missing`);
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerClientService();
   const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
     code
   );
