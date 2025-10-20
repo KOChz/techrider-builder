@@ -1,52 +1,39 @@
 "use client";
 
-import React from "react";
+import React, { useActionState } from "react";
 import Link from "next/link";
-import { useFormState, useFormStatus } from "react-dom";
+import { useSearchParams } from "next/navigation";
 import type { TSignUpState } from "@/types/auth";
 import { signUpAction } from "@/app/actions/sign-up-action/sign-up-action";
+import { GoogleButton } from "../google-button/google-button";
+import { SubmitButton } from "../submit-button/submit-button";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-3.5 px-6 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
-      aria-label={pending ? "Creating account..." : "Create your account"}
-    >
-      {pending ? "Creating account..." : "Sign Up"}
-    </button>
-  );
-}
+const initialState: TSignUpState = { success: false };
 
 export default function SignUpForm() {
-  const initialState: TSignUpState = { success: false };
-  const [state, formAction] = useFormState(signUpAction, initialState);
+  const [state, formAction] = useActionState(signUpAction, initialState);
+
+  const searchParams = useSearchParams();
+  const oauthError = searchParams.get("error");
 
   return (
     <div className="w-full max-w-md">
-      <div className="mb-8">
+      <div className="mb-1">
         <h1 className="text-3xl font-bold text-slate-300">Create account</h1>
         <p className="text-slate-600">
           Spin up access to your tech rider dashboard
         </p>
       </div>
 
-      <form
-        action={formAction}
-        className="space-y-4 bg-white rounded-xl shadow-lg border border-slate-200 p-6"
-        noValidate
-      >
-        {/* Global message / confirmation */}
-        {state.message && (
+      <div className="space-y-1 bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+        {(state.message || oauthError) && (
           <div
             className={`px-4 py-3 rounded-lg text-sm flex items-start gap-3 border ${
               state.success
                 ? "bg-green-50 border-green-200 text-green-800"
                 : "bg-red-50 border-red-200 text-red-800"
             }`}
-            role="status"
+            role={state.success ? "status" : "alert"}
             aria-live="polite"
           >
             <svg
@@ -65,145 +52,159 @@ export default function SignUpForm() {
                 clipRule="evenodd"
               />
             </svg>
-            <span>{state.message}</span>
+            <span>
+              {state.message || (oauthError && decodeURIComponent(oauthError))}
+            </span>
           </div>
         )}
 
-        {/* Email */}
-        <div className="space-y-1.5">
-          <label
-            htmlFor="email"
-            className="block text-sm font-semibold text-slate-700"
-          >
-            Email Address
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
-            placeholder="you@example.com"
-            aria-invalid={state.errors?.email ? "true" : "false"}
-            aria-describedby={state.errors?.email ? "email-error" : undefined}
-          />
-          {state.errors?.email && (
-            <p
-              id="email-error"
-              className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
-              role="alert"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {state.errors.email[0]}
-            </p>
-          )}
+        <GoogleButton />
+
+        <div className="relative" aria-hidden="true">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-white text-slate-500">
+              Or continue with email
+            </span>
+          </div>
         </div>
 
-        {/* Password */}
-        <div className="space-y-1.5">
-          <label
-            htmlFor="password"
-            className="block text-sm font-semibold text-slate-700"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
-            placeholder="••••••••"
-            aria-invalid={state.errors?.password ? "true" : "false"}
-            aria-describedby={
-              state.errors?.password ? "password-error" : undefined
-            }
-          />
-          {state.errors?.password && (
-            <p
-              id="password-error"
-              className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
-              role="alert"
+        <form action={formAction} className="space-y-4" noValidate>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-slate-700"
             >
-              <svg
-                className="w-4 h-4"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              placeholder="you@example.com"
+              aria-invalid={state.errors?.email ? "true" : "false"}
+              aria-describedby={state.errors?.email ? "email-error" : undefined}
+            />
+            {state.errors?.email && (
+              <p
+                id="email-error"
+                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                role="alert"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {state.errors.password[0]}
-            </p>
-          )}
-        </div>
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {state.errors.email[0]}
+              </p>
+            )}
+          </div>
 
-        {/* Confirm Password */}
-        <div className="space-y-1.5">
-          <label
-            htmlFor="confirmPassword"
-            className="block text-sm font-semibold text-slate-700"
-          >
-            Confirm Password
-          </label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            autoComplete="new-password"
-            required
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
-            placeholder="••••••••"
-            aria-invalid={state.errors?.confirmPassword ? "true" : "false"}
-            aria-describedby={
-              state.errors?.confirmPassword
-                ? "confirm-password-error"
-                : undefined
-            }
-          />
-          {state.errors?.confirmPassword && (
-            <p
-              id="confirm-password-error"
-              className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
-              role="alert"
+          <div className="space-y-1.5">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-slate-700"
             >
-              <svg
-                className="w-4 h-4"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              placeholder="••••••••"
+              aria-invalid={state.errors?.password ? "true" : "false"}
+              aria-describedby={
+                state.errors?.password ? "password-error" : undefined
+              }
+            />
+            {state.errors?.password && (
+              <p
+                id="password-error"
+                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                role="alert"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {state.errors.confirmPassword[0]}
-            </p>
-          )}
-        </div>
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {state.errors.password[0]}
+              </p>
+            )}
+          </div>
 
-        <div className="pt-2">
-          <SubmitButton />
-        </div>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-semibold text-slate-700"
+            >
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              placeholder="••••••••"
+              aria-invalid={state.errors?.confirmPassword ? "true" : "false"}
+              aria-describedby={
+                state.errors?.confirmPassword
+                  ? "confirm-password-error"
+                  : undefined
+              }
+            />
+            {state.errors?.confirmPassword && (
+              <p
+                id="confirm-password-error"
+                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                role="alert"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {state.errors.confirmPassword[0]}
+              </p>
+            )}
+          </div>
+
+          <div className="pt-2">
+            <SubmitButton />
+          </div>
+        </form>
 
         <div className="relative" aria-hidden="true">
           <div className="absolute inset-0 flex items-center">
@@ -225,7 +226,7 @@ export default function SignUpForm() {
             Sign in
           </Link>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
