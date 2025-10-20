@@ -6,6 +6,331 @@ import StagePlan from "@/components/stage-plan/stage-plan";
 import Link from "next/link";
 
 import "./headeache-techrider.css";
+import { MemberCard, TBandMember } from "@/components/member-card/member-card";
+
+export const bandMembers: TBandMember[] = [
+  {
+    id: "danya",
+    name: "Danya",
+    icon: "🥁",
+    role: "Drums",
+    equipment: [
+      {
+        name: "Bass drum",
+        quantity: "× 1",
+        examples: {
+          title: "Recommended Brands",
+          items: [
+            'DW Performance Series 22"',
+            'Yamaha Stage Custom 22"',
+            'Pearl Export 22"',
+            'Tama Superstar 22"',
+          ],
+        },
+      },
+      {
+        name: "Snare",
+        quantity: "× 1",
+        examples: {
+          title: "Recommended Models",
+          items: [
+            'Ludwig Supraphonic 14"×6.5"',
+            'Pearl Sensitone Steel 14"×5"',
+            'Yamaha Recording Custom 14"×5.5"',
+            'DW Collector\'s Maple 14"×6"',
+          ],
+        },
+      },
+      {
+        name: 'High tom 12"',
+        quantity: "× 1",
+      },
+      {
+        name: 'Mid tom 14"',
+        quantity: "× 1",
+      },
+      {
+        name: "Floor tom",
+        quantity: "× 1",
+        examples: {
+          title: "Typical Sizes",
+          items: [
+            '16"×16" (standard)',
+            '14"×14" (compact)',
+            '18"×16" (deep tone)',
+          ],
+        },
+      },
+      {
+        name: "Hi-hat stand",
+        quantity: "× 1",
+      },
+      {
+        name: "Boom cymbal stands",
+        quantity: "× 2",
+      },
+      {
+        name: "Snare stand",
+        quantity: "× 1",
+      },
+      {
+        name: "Floor monitor (wedge)",
+        examples: {
+          title: "Professional Options",
+          items: [
+            'QSC K12.2 (12", 2000W)',
+            'Yamaha DXR12 (12", 1100W)',
+            'JBL PRX412M (12", 1200W)',
+            'EV ELX112P (12", 1000W)',
+          ],
+        },
+      },
+      {
+        name: "Wireless in-ear monitoring system",
+        quantity: "(ear monitors provided)",
+        examples: {
+          title: "Compatible Systems",
+          items: [
+            "Shure PSM 300 / PSM 900",
+            "Sennheiser EW IEM G4",
+            "Audio-Technica M3",
+            "Frequency range: 520-865 MHz",
+          ],
+        },
+      },
+      {
+        name: "Drum rug",
+        examples: {
+          title: "Recommended Size",
+          items: ["Minimum 6' × 8' (183cm × 244cm)", "Non-slip rubber backing"],
+        },
+      },
+    ],
+  },
+  {
+    id: "kyrylo",
+    name: "Kyrylo",
+    icon: "🎸",
+    role: "Bass",
+    equipment: [
+      {
+        name: "Bass combo amp/stack",
+        examples: {
+          title: "Recommended Amps",
+          items: [
+            "Ampeg SVT-410HLF + SVT-3 Pro",
+            "Fender Rumble 500 combo",
+            "Gallien-Krueger MB212",
+            "Markbass CMD 121H combo",
+            "Minimum 300W recommended",
+          ],
+        },
+      },
+      {
+        name: "Spare Jack-to-Jack cable >5m",
+        quantity: "× 2",
+        examples: {
+          title: "Professional Cables",
+          items: ["Length: 3-6m minimum"],
+        },
+      },
+      {
+        name: "Floor monitor (wedge)",
+        examples: {
+          title: "Professional Options",
+          items: [
+            'QSC K12.2 (12", 2000W)',
+            'Yamaha DXR12 (12", 1100W)',
+            'JBL PRX412M (12", 1200W)',
+          ],
+        },
+      },
+      {
+        name: "Bass guitar stand",
+      },
+      {
+        name: "Power outlet / extension cord",
+        examples: {
+          title: "Requirements",
+          items: [
+            "Standard AC power (220-240V EU / 110-120V US)",
+            "5m+ extension cord if needed",
+            "Grounded outlets preferred",
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "kristina",
+    name: "Kristina",
+    icon: "🎤",
+    role: "Guitar / Vocals",
+    equipment: [
+      {
+        name: "Guitar combo amplifier",
+        quantity: "(Fender / VOX / Roland)",
+        examples: {
+          title: "Recommended Models",
+          items: [
+            "Fender Hot Rod Deluxe (40W)",
+            "VOX AC30 (30W)",
+            "Roland JC-120 Jazz Chorus",
+            "Fender Blues Deluxe (40W)",
+            "Minimum 30W tube / 50W solid state",
+          ],
+        },
+      },
+      {
+        name: "Guitar stand",
+      },
+      {
+        name: "Microphone stand",
+        examples: {
+          title: "Stand Types",
+          items: [
+            "Boom stand with adjustable arm",
+            "Height: adjustable to 1.5-2m",
+            "Heavy base for stability",
+          ],
+        },
+      },
+      {
+        name: "Microphone",
+        examples: {
+          title: "Vocal Microphones",
+          items: [
+            "Shure SM58 (industry standard)",
+            "Shure Beta 58A (brighter tone)",
+            "Sennheiser e935 (clear highs)",
+            "Sennheiser e945 (supercardioid)",
+            "Audio-Technica ATM710",
+          ],
+        },
+      },
+      {
+        name: "Spare Jack-to-Jack cable >5m",
+        quantity: "× 2",
+        examples: {
+          title: "Professional Cables",
+          items: [
+            "Mogami Gold 15ft / 4.5m (6.35mm)",
+            "Planet Waves American Stage 15ft",
+            "Fender Professional Series 15ft",
+            "D'Addario Circuit Breaker 15ft",
+            "Length: 3-5m (10-15ft) minimum",
+          ],
+        },
+      },
+      {
+        name: "Floor monitor (wedge)",
+        examples: {
+          title: "Professional Options",
+          items: [
+            'QSC K12.2 (12", 2000W)',
+            'Yamaha DXR12 (12", 1100W)',
+            'JBL PRX412M (12", 1200W)',
+          ],
+        },
+      },
+      {
+        name: "Wireless in-ear monitoring system",
+        quantity: "(ear monitors provided)",
+        examples: {
+          title: "Compatible Systems",
+          items: [
+            "Shure PSM 300 / PSM 900",
+            "Sennheiser EW IEM G4",
+            "Audio-Technica M3",
+          ],
+        },
+      },
+      {
+        name: "Power outlet / extension cord",
+        examples: {
+          title: "Requirements",
+          items: [
+            "Standard AC power (220-240V EU)",
+            "5m+ extension cord if needed",
+            "Grounded outlets preferred",
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "maksym",
+    name: "Maksym",
+    icon: "🎸",
+    role: "Guitar",
+    equipment: [
+      {
+        name: "Guitar combo amplifier",
+        quantity: "(Fender / VOX / Roland)",
+        examples: {
+          title: "Recommended Models",
+          items: [
+            "Fender Hot Rod Deluxe (40W)",
+            "VOX AC30 (30W)",
+            "Roland JC-120 Jazz Chorus",
+            "Fender Blues Deluxe (40W)",
+            "Minimum 30W tube / 50W solid state",
+          ],
+        },
+      },
+      {
+        name: "Guitar stand",
+      },
+      {
+        name: "Microphone",
+        examples: {
+          title: "Backing Vocal Mics",
+          items: [
+            "Shure SM58 (industry standard)",
+            "Shure Beta 58A",
+            "Sennheiser e835",
+            "Audio-Technica ATM510",
+          ],
+        },
+      },
+      {
+        name: "Spare Jack-to-Jack cable >5m",
+        quantity: "× 2",
+        examples: {
+          title: "Professional Cables",
+          items: [
+            "Mogami Gold 15ft / 4.5m (6.35mm)",
+            "Planet Waves American Stage 15ft",
+            "Fender Professional Series 15ft",
+            "Length: 3-5m (10-15ft) minimum",
+          ],
+        },
+      },
+      {
+        name: "Floor monitor (wedge)",
+        examples: {
+          title: "Professional Options",
+          items: [
+            'QSC K12.2 (12", 2000W)',
+            'Yamaha DXR12 (12", 1100W)',
+            'JBL PRX412M (12", 1200W)',
+          ],
+        },
+      },
+      {
+        name: "Power outlet / extension cord",
+        examples: {
+          title: "Requirements",
+          items: [
+            "Standard AC power (220-240V EU)",
+            "5m+ extension cord if needed",
+            "Grounded outlets preferred",
+          ],
+        },
+      },
+    ],
+  },
+];
 
 export default async function TechRider() {
   const supabase = await createServerClientService();
@@ -134,425 +459,9 @@ export default async function TechRider() {
         <h2 className="section-title">Technical Requirements</h2>
 
         <div className="tech-grid">
-          <div className="member-card" id="danya">
-            <div className="member-header">
-              <span className="member-icon">🥁</span>
-              <div className="member-info">
-                <h3>Danya</h3>
-                <p className="member-role">Drums</p>
-              </div>
-            </div>
-            <ul className="equipment-list">
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Bass drum <span className="quantity">× 1</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Recommended Brands</p>
-                  <ul className="examples-list">
-                    <li>DW Performance Series 22"</li>
-                    <li>Yamaha Stage Custom 22"</li>
-                    <li>Pearl Export 22"</li>
-                    <li>Tama Superstar 22"</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Snare <span className="quantity">× 1</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Recommended Models</p>
-                  <ul className="examples-list">
-                    <li>Ludwig Supraphonic 14"×6.5"</li>
-                    <li>Pearl Sensitone Steel 14"×5"</li>
-                    <li>Yamaha Recording Custom 14"×5.5"</li>
-                    <li>DW Collector's Maple 14"×6"</li>
-                  </ul>
-                </div>
-              </details>
-              <li className="equipment-simple">
-                <span>
-                  High tom 12" <span className="quantity">× 1</span>
-                </span>
-              </li>
-              <li className="equipment-simple">
-                <span>
-                  Mid tom 14" <span className="quantity">× 1</span>
-                </span>
-              </li>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Floor tom <span className="quantity">× 1</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Typical Sizes</p>
-                  <ul className="examples-list">
-                    <li>16"×16" (standard)</li>
-                    <li>14"×14" (compact)</li>
-                    <li>18"×16" (deep tone)</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Hi-hat stand <span className="quantity">× 1</span>
-                  </span>
-                </summary>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Boom cymbal stands <span className="quantity">× 2</span>
-                  </span>
-                </summary>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Snare stand <span className="quantity">× 1</span>
-                  </span>
-                </summary>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Floor monitor (wedge)</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Options</p>
-                  <ul className="examples-list">
-                    <li>QSC K12.2 (12", 2000W)</li>
-                    <li>Yamaha DXR12 (12", 1100W)</li>
-                    <li>JBL PRX412M (12", 1200W)</li>
-                    <li>EV ELX112P (12", 1000W)</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Wireless in-ear monitoring system
-                    <span className="quantity">(ear monitors provided)</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Compatible Systems</p>
-                  <ul className="examples-list">
-                    <li>Shure PSM 300 / PSM 900</li>
-                    <li>Sennheiser EW IEM G4</li>
-                    <li>Audio-Technica M3</li>
-                    <li>Frequency range: 520-865 MHz</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Drum rug</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Recommended Size</p>
-                  <ul className="examples-list">
-                    <li>Minimum 6' × 8' (183cm × 244cm)</li>
-                    <li>Non-slip rubber backing</li>
-                  </ul>
-                </div>
-              </details>
-            </ul>
-          </div>
-
-          <div className="member-card" id="kyrylo">
-            <div className="member-header">
-              <span className="member-icon">🎸</span>
-              <div className="member-info">
-                <h3>Kyrylo</h3>
-                <p className="member-role">Bass</p>
-              </div>
-            </div>
-            <ul className="equipment-list">
-              <details className="equipment-item">
-                <summary>
-                  <span>Bass combo amp/stack</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Recommended Amps</p>
-                  <ul className="examples-list">
-                    <li>Ampeg SVT-410HLF + SVT-3 Pro</li>
-                    <li>Fender Rumble 500 combo</li>
-                    <li>Gallien-Krueger MB212</li>
-                    <li>Markbass CMD 121H combo</li>
-                    <li>Minimum 300W recommended</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Spare Jack-to-Jack cable &gt;5m{" "}
-                    <span className="quantity">× 2</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Cables</p>
-                  <ul className="examples-list">
-                    <li>Length: 3-6m minimum</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Floor monitor (wedge)</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Options</p>
-                  <ul className="examples-list">
-                    <li>QSC K12.2 (12", 2000W)</li>
-                    <li>Yamaha DXR12 (12", 1100W)</li>
-                    <li>JBL PRX412M (12", 1200W)</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Bass guitar stand</span>
-                </summary>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Power outlet / extension cord</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Requirements</p>
-                  <ul className="examples-list">
-                    <li>Standard AC power (220-240V EU / 110-120V US)</li>
-                    <li>5m+ extension cord if needed</li>
-                    <li>Grounded outlets preferred</li>
-                  </ul>
-                </div>
-              </details>
-            </ul>
-          </div>
-
-          <div className="member-card" id="kristina">
-            <div className="member-header">
-              <span className="member-icon">🎤</span>
-              <div className="member-info">
-                <h3>Kristina</h3>
-                <p className="member-role">Guitar / Vocals</p>
-              </div>
-            </div>
-            <ul className="equipment-list">
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Guitar combo amplifier{" "}
-                    <span className="quantity">(Fender / VOX / Roland)</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Recommended Models</p>
-                  <ul className="examples-list">
-                    <li>Fender Hot Rod Deluxe (40W)</li>
-                    <li>VOX AC30 (30W)</li>
-                    <li>Roland JC-120 Jazz Chorus</li>
-                    <li>Fender Blues Deluxe (40W)</li>
-                    <li>Minimum 30W tube / 50W solid state</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Guitar stand</span>
-                </summary>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Microphone stand</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Stand Types</p>
-                  <ul className="examples-list">
-                    <li>Boom stand with adjustable arm</li>
-                    <li>Height: adjustable to 1.5-2m</li>
-                    <li>Heavy base for stability</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Microphone</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Vocal Microphones</p>
-                  <ul className="examples-list">
-                    <li>Shure SM58 (industry standard)</li>
-                    <li>Shure Beta 58A (brighter tone)</li>
-                    <li>Sennheiser e935 (clear highs)</li>
-                    <li>Sennheiser e945 (supercardioid)</li>
-                    <li>Audio-Technica ATM710</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Spare Jack-to-Jack cable &gt;5m{" "}
-                    <span className="quantity">× 2</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Cables</p>
-                  <ul className="examples-list">
-                    <li>Mogami Gold 15ft / 4.5m (6.35mm)</li>
-                    <li>Planet Waves American Stage 15ft</li>
-                    <li>Fender Professional Series 15ft</li>
-                    <li>D'Addario Circuit Breaker 15ft</li>
-                    <li>Length: 3-5m (10-15ft) minimum</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Floor monitor (wedge)</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Options</p>
-                  <ul className="examples-list">
-                    <li>QSC K12.2 (12", 2000W)</li>
-                    <li>Yamaha DXR12 (12", 1100W)</li>
-                    <li>JBL PRX412M (12", 1200W)</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Wireless in-ear monitoring system
-                    <span className="quantity">(ear monitors provided)</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Compatible Systems</p>
-                  <ul className="examples-list">
-                    <li>Shure PSM 300 / PSM 900</li>
-                    <li>Sennheiser EW IEM G4</li>
-                    <li>Audio-Technica M3</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Power outlet / extension cord</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Requirements</p>
-                  <ul className="examples-list">
-                    <li>Standard AC power (220-240V EU)</li>
-                    <li>5m+ extension cord if needed</li>
-                    <li>Grounded outlets preferred</li>
-                  </ul>
-                </div>
-              </details>
-            </ul>
-          </div>
-
-          <div className="member-card" id="maksym">
-            <div className="member-header">
-              <span className="member-icon">🎸</span>
-              <div className="member-info">
-                <h3>Maksym</h3>
-                <p className="member-role">Guitar</p>
-              </div>
-            </div>
-            <ul className="equipment-list">
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Guitar combo amplifier{" "}
-                    <span className="quantity">(Fender / VOX / Roland)</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Recommended Models</p>
-                  <ul className="examples-list">
-                    <li>Fender Hot Rod Deluxe (40W)</li>
-                    <li>VOX AC30 (30W)</li>
-                    <li>Roland JC-120 Jazz Chorus</li>
-                    <li>Fender Blues Deluxe (40W)</li>
-                    <li>Minimum 30W tube / 50W solid state</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Guitar stand</span>
-                </summary>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Microphone</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Backing Vocal Mics</p>
-                  <ul className="examples-list">
-                    <li>Shure SM58 (industry standard)</li>
-                    <li>Shure Beta 58A</li>
-                    <li>Sennheiser e835</li>
-                    <li>Audio-Technica ATM510</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>
-                    Spare Jack-to-Jack cable &gt;5m{" "}
-                    <span className="quantity">× 2</span>
-                  </span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Cables</p>
-                  <ul className="examples-list">
-                    <li>Mogami Gold 15ft / 4.5m (6.35mm)</li>
-                    <li>Planet Waves American Stage 15ft</li>
-                    <li>Fender Professional Series 15ft</li>
-                    <li>Length: 3-5m (10-15ft) minimum</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Floor monitor (wedge)</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Professional Options</p>
-                  <ul className="examples-list">
-                    <li>QSC K12.2 (12", 2000W)</li>
-                    <li>Yamaha DXR12 (12", 1100W)</li>
-                    <li>JBL PRX412M (12", 1200W)</li>
-                  </ul>
-                </div>
-              </details>
-              <details className="equipment-item">
-                <summary>
-                  <span>Power outlet / extension cord</span>
-                </summary>
-                <div className="examples">
-                  <p className="examples-title">Requirements</p>
-                  <ul className="examples-list">
-                    <li>Standard AC power (220-240V EU)</li>
-                    <li>5m+ extension cord if needed</li>
-                    <li>Grounded outlets preferred</li>
-                  </ul>
-                </div>
-              </details>
-            </ul>
-          </div>
+          {bandMembers.map((member) => (
+            <MemberCard key={member.id} member={member} />
+          ))}
         </div>
       </section>
 

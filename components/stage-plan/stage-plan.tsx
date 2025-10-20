@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
+
 import { AmpIcon } from "../stage-plan-icons/amp-icon/amp-icon";
 import { DrumkitIcon } from "../stage-plan-icons/drumkit-icon/drumkit-icon";
 import { MonitorIcon } from "../stage-plan-icons/monitor-icon/monitop-icon";
 import MicStandIcon from "../stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "../stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "../stage-plan-icons/di-box-icon/di-box-icon";
+
 import { StageNode, StageNodeComponent } from "../stage-node/stage-node";
 
 interface Vec2 {
