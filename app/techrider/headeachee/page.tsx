@@ -4,7 +4,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 import StagePlan from "@/components/stage-plan/stage-plan";
-import { signOutAction } from "./actions/sign-out-action/sign-out-action";
+import Link from "next/link";
+
+import "./headeache-techrider.css";
 
 export default async function TechRider() {
   const supabase = await createClient();
@@ -16,6 +18,7 @@ export default async function TechRider() {
   if (!user) {
     redirect("/login");
   }
+
   return (
     <>
       <nav>
@@ -24,7 +27,6 @@ export default async function TechRider() {
             headachee
           </a>
           <ul className="nav-links">
-            {/* <li><a href="#home">Home</a></li> */}
             <li className="dropdown">
               <button
                 className="dropdown-toggle"
@@ -108,18 +110,18 @@ export default async function TechRider() {
               <a href="#contact">Contact</a>
             </li>
 
-            <li>
-              <form action={signOutAction}>
-                <input type="hidden" name="redirectTo" value="/login" />
-                <button
+            {user && (
+              <li>
+                <Link
+                  href="/dashboard/my-projects"
                   type="submit"
-                  className="px-3 cursor-pointer py-1.5 rounded-md border border-slate-700 text-slate-200 hover:bg-slate-800 transition-colors"
-                  aria-label="Sign out"
+                  className="px-3 cursor-pointer py-1.5 rounded-md text-slate-200 hover:bg-green-800 transition-colors"
+                  aria-label="Home"
                 >
-                  Sign out
-                </button>
-              </form>
-            </li>
+                  Home
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </nav>

@@ -11,13 +11,16 @@ export default function AuthLayout({ children }: IAuthLayoutProps) {
       <header className="sticky top-0 z-50 border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm">
         <nav aria-label="Primary">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
+            <div
+              id="AuthLayoutHeader"
+              className="flex justify-between items-center h-16"
+            >
               <Link
                 href="/"
-                aria-label="headachee home"
-                className="text-2xl text-green-500 font-bold transition-all duration-200 hover:text-green-400"
+                aria-label="TechRider Builder home"
+                className="text-2xl font-bold bg-gradient-to-r from-white to-green-700 bg-clip-text text-transparent transition-all duration-200 hover:to-green-600"
               >
-                headachee
+                TechRider Builder
               </Link>
 
               <ul className="flex items-center gap-6">
