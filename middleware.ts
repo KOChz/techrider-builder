@@ -2,27 +2,38 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export const runtime = "edge";
-
 export type TDatabase = Record<string, never>;
 
 const PROTECTED_ROUTES = ["/dashboard", "/profile", "/settings"];
 const AUTH_ROUTES = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request,
-  });
+  const { pathname } = request.nextUrl;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.error("Missing Supabase environment variables");
-    return response;
+    console.warn("Supabase credentials not configured");
+
+    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+      pathname.startsWith(route)
+    );
+
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    return NextResponse.next();
   }
 
   try {
+    let response = NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
+
     const supabase = createServerClient<TDatabase>(
       supabaseUrl,
       supabaseAnonKey,
@@ -33,15 +44,11 @@ export async function middleware(request: NextRequest) {
           },
           setAll(cookiesToSet) {
             cookiesToSet.forEach(({ name, value, options }) => {
-              request.cookies.set({ name, value, ...options });
-            });
-
-            response = NextResponse.next({
-              request,
-            });
-
-            cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set({ name, value, ...options });
+              response.cookies.set({
+                name,
+                value,
+                ...options,
+              });
             });
           },
         },
@@ -51,8 +58,6 @@ export async function middleware(request: NextRequest) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-
-    const { pathname } = request.nextUrl;
 
     const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
     const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
@@ -69,8 +74,17 @@ export async function middleware(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Middleware error:", error);
-    return response;
+    console.error("Middleware authentication error:", error);
+
+    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+      pathname.startsWith(route)
+    );
+
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    return NextResponse.next();
   }
 }
 
