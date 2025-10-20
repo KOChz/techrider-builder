@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
     const {
       data: { user },
       error,
-    } = await supabase.auth.getUser();
+    } = (await supabase.auth.getUser()) as any;
 
     // Handle auth errors gracefully
     if (error) {
