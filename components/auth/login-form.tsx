@@ -179,7 +179,7 @@ export default function LoginForm() {
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-4 bg-white text-slate-500">
-              New to headachee?
+              New to TechRider Builder?
             </span>
           </div>
         </div>
