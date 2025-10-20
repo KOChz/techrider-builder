@@ -1,27 +1,29 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export async function createClient() {
-  const cookieStore = await cookies();
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+export interface CookieOptions {
+  path?: string;
+  domain?: string;
+  maxAge?: number;
+  expires?: Date;
+  httpOnly?: boolean;
+  secure?: boolean;
+  sameSite?: "lax" | "strict" | "none";
+}
+declare module "@supabase/ssr" {
+  export function createServerClient(
+    supabaseUrl: string,
+    supabaseKey: string,
+    options: {
       cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Server Component - cookies can only be modified in Server Actions/Route Handlers
-          }
-        },
-      },
+        getAll(): Array<{ name: string; value: string }>;
+        setAll(
+          cookies: Array<{
+            name: string;
+            value: string;
+            options: CookieOptions;
+          }>
+        ): void;
+      };
     }
-  );
+  ): SupabaseClient;
 }
