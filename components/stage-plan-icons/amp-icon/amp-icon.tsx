@@ -35,7 +35,6 @@ export const AmpIcon = React.memo(
           width={50 + hitboxPadding * 2}
           height={50 + hitboxPadding * 2}
           fill="transparent"
-          pointerEvents="all"
         />
 
         <defs>

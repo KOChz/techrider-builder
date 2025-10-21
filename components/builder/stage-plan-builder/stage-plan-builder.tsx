@@ -261,7 +261,7 @@ export default function StagePlanBuilder() {
     mouseAngle: 0,
   });
 
-  // NEW: selection state for rename UX
+  // selection state for rename UX
   const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null); // NEW
   const selectedNode =
     selectedNodeId != null
@@ -376,17 +376,15 @@ export default function StagePlanBuilder() {
     (e: React.PointerEvent) => {
       const target = e.target as SVGElement;
 
+      // Early exit for delete actions
       const path = (e.nativeEvent as PointerEvent).composedPath() as Element[];
       if (
         path.some((el) =>
           (el as Element)?.classList?.contains?.("delete-handle")
         )
       ) {
-        return;
+        return; // Delete handler will handle this via onPointerDownCapture
       }
-
-      // Don't start drag/rotate when targeting delete handle
-      if (target.closest(".delete-handle")) return;
 
       const nodeElement = target.closest(".stage-node") as SVGGElement | null;
 
@@ -395,7 +393,7 @@ export default function StagePlanBuilder() {
         const node = nodes.find((n) => n.id === nodeId);
         if (!node) return;
 
-        setSelectedNodeId(nodeId); // NEW: select on any node interaction
+        setSelectedNodeId(nodeId);
 
         const canvasPos = screenToCanvas(e.clientX, e.clientY);
         const isRotationHandle =
@@ -412,6 +410,7 @@ export default function StagePlanBuilder() {
             canvasPos.y
           );
           setRotationStart({ angle: node.angle, mouseAngle });
+          (target as any).style.cursor = "grabbing";
         } else {
           setIsDragging(true);
           setDraggedNodeId(nodeId);
@@ -419,7 +418,7 @@ export default function StagePlanBuilder() {
         }
         e.preventDefault();
       } else {
-        setSelectedNodeId(null); // NEW: deselect on empty canvas
+        setSelectedNodeId(null);
         setIsPanning(true);
         panStartRef.current = { x: e.clientX, y: e.clientY };
       }
@@ -651,6 +650,7 @@ export default function StagePlanBuilder() {
                 key={node.id}
                 node={node}
                 isHovered={hoveredNodeId === node.id}
+                isRotating={isRotating && draggedNodeId === node.id}
                 onMouseEnter={() => armedEnter(node.id)}
                 onMouseLeave={armedLeave}
                 onDelete={handleDeleteNode}

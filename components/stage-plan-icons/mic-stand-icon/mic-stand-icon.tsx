@@ -48,7 +48,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           width={hitboxWidth}
           height={hitboxHeight}
           fill="transparent"
-          pointerEvents="all"
         />
 
         {/* Base tripod legs - matte black powder coat */}

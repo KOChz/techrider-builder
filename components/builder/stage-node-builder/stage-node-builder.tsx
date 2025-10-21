@@ -25,20 +25,20 @@ export interface StageNodeBuilder {
 export interface StageNodeBuilderProps {
   node: StageNodeBuilder;
   isHovered: boolean;
+  isRotating: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onDelete?: (nodeId: number) => void;
 }
 
-// Keep the handle radius aligned with your visual component styling
 const CONTROL_R = 18;
-
-// Stop shrinking the hitbox. We want the corridor to the handles included.
+const ROTATION_HITBOX_R = 28; // Larger hitbox for easier targeting
 const HITBOX_SCALE_FACTOR = 1;
 
 export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   node,
   isHovered,
+  isRotating,
   onMouseEnter,
   onMouseLeave,
   onDelete,
@@ -46,7 +46,6 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   const config = equipmentConfig[node.type];
   const scale = node.scale || 1;
 
-  // Text nodes: simple path with unified hitbox around the handle
   if (node.type === "text") {
     const handleY = -30;
 
@@ -58,14 +57,12 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         onPointerEnter={onMouseEnter}
         onPointerLeave={onMouseLeave}
       >
-        {/* Unified hitbox incl. handle */}
         <rect
           x={-120}
-          y={handleY - CONTROL_R - 8}
+          y={handleY - ROTATION_HITBOX_R - 8}
           width={240}
-          height={CONTROL_R + 8 + 28} // handle corridor + text area
+          height={ROTATION_HITBOX_R + 8 + 28}
           fill="transparent"
-          pointerEvents="all"
         />
 
         <text
@@ -82,24 +79,45 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
           {node.label}
         </text>
 
-        {/* rotation / handle targets */}
+        {/* Rotation feedback line */}
+        {(isHovered || isRotating) && (
+          <line
+            x1={0}
+            y1={0}
+            x2={0}
+            y2={handleY}
+            stroke={isRotating ? "#60a5fa" : "#4b5563"}
+            strokeWidth={isRotating ? 2 : 1}
+            strokeDasharray={isRotating ? "0" : "4 4"}
+            pointerEvents="none"
+            opacity={0.6}
+          />
+        )}
+
+        {/* Rotation arc during rotation */}
+        {isRotating && (
+          <circle
+            cx={0}
+            cy={0}
+            r={Math.abs(handleY) * 0.5}
+            fill="none"
+            stroke="#60a5fa"
+            strokeWidth={1}
+            strokeDasharray="6 6"
+            pointerEvents="none"
+            opacity={0.3}
+          />
+        )}
+
         <circle
           className="rotation-hitbox cursor-grab"
           cx={0}
           cy={handleY}
-          r={CONTROL_R}
+          r={ROTATION_HITBOX_R}
           fill="transparent"
         />
 
-        {/* Visuals rendered with pointerEvents=none, we handle events via overlays */}
-        <g
-          pointerEvents="none"
-          onClick={(e) => {
-            e.preventDefault(); // stop text selection / drag heuristics
-            e.stopPropagation(); // don't let SVG handler see this
-            onDelete?.(node.id);
-          }}
-        >
+        <g pointerEvents="none">
           <StageNodeDeleteHandle
             onClick={() => {
               onDelete?.(node.id);
@@ -110,30 +128,18 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
           />
         </g>
 
-        {/* Delete overlay (captures pointer, keeps hover alive, stops drag) */}
         <circle
           className="delete-handle"
           cx={0}
           cy={handleY}
           r={CONTROL_R}
-          // Paint one alpha'd pixel so it's always hittable
           fill="#000"
           fillOpacity={0.001}
-          // Capture phase => runs before the SVG's onPointerDown
-          // onPointerDownCapture={(e) => {
-          // e.preventDefault(); // stop text selection / drag heuristics
-          // e.stopPropagation(); // don't let SVG handler see this
-          // onDelete?.(node.id);
-          // }}
-          onClick={(e) => {
-            console.log("click");
-          }}
         />
       </g>
     );
   }
 
-  // Non-text nodes
   const isMicStand = node.type === "mic-stand";
   const baseW = (isMicStand ? config.width * 3 : config.width) * scale;
   const baseH = config.height * scale;
@@ -141,11 +147,9 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   const bodyW = baseW * HITBOX_SCALE_FACTOR;
   const bodyH = baseH * HITBOX_SCALE_FACTOR;
 
-  // Placement of the top handle
   const handleY = -(config.height * scale) / 3.5 - 25;
 
-  // Unified hitbox that covers the body + corridor to handles
-  const topY = Math.min(handleY - CONTROL_R - 6, -bodyH / 2);
+  const topY = Math.min(handleY - ROTATION_HITBOX_R - 6, -bodyH / 2);
   const bottomY = bodyH / 2;
   const unifiedHitboxY = topY;
   const unifiedHitboxH = bottomY - topY;
@@ -159,27 +163,53 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
       onPointerLeave={onMouseLeave}
       style={{ cursor: "move" }}
     >
-      {/* Unified hitbox ensures no dead zone between body and controls */}
       <rect
         x={-bodyW / 2}
         y={unifiedHitboxY}
         width={bodyW}
         height={unifiedHitboxH}
         fill="transparent"
-        pointerEvents="visiblePainted" // ensures painted-only; your rect is transparent, so it won't steal hits
+        pointerEvents="visiblePainted"
       />
 
-      {/* Render the symbol. Keep visuals non-interactive; overlay rect handles pointer hits */}
+      {/* Rotation feedback line - shows rotation axis */}
+      {(isHovered || isRotating) && (
+        <line
+          x1={0}
+          y1={0}
+          x2={0}
+          y2={handleY}
+          stroke={isRotating ? "#96D9C0" : "#4b5563"}
+          strokeWidth={isRotating ? 2 : 1}
+          strokeDasharray={isRotating ? "0" : "4 4"}
+          pointerEvents="none"
+          opacity={0.6}
+        />
+      )}
+
+      {/* Rotation arc during rotation - shows rotation range */}
+      {isRotating && (
+        <circle
+          cx={0}
+          cy={0}
+          r={Math.abs(handleY)}
+          fill="none"
+          stroke="#96D9C0"
+          strokeWidth={1}
+          strokeDasharray="6 6"
+          pointerEvents="none"
+          opacity={0.3}
+        />
+      )}
+
       <use
         href={`#${node.type}`}
         x={-(config.width * scale) / 2}
         y={-(config.height * scale) / 2}
         width={config.width * scale}
         height={config.height * scale}
-        pointerEvents="none"
       />
 
-      {/* Labels are decorative */}
       <text
         className="node-text select-none"
         y={config.labelOffset}
@@ -191,7 +221,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         {node.label}
       </text>
       <text
-        className="node-coords"
+        className="node-coords select-none"
         y={config.labelOffset + 15}
         fontSize="10"
         fill="#999"
@@ -201,18 +231,17 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         ({Math.round(node.x)}, {Math.round(node.y)}) • {Math.round(node.angle)}°
       </text>
 
-      {/* Rotation target */}
+      {/* Larger rotation hitbox for easier targeting */}
       <circle
         className="rotation-hitbox"
         cx={0}
         cy={handleY}
-        r={CONTROL_R}
+        r={ROTATION_HITBOX_R}
         fill="transparent"
         style={{ cursor: "grab" }}
       />
 
-      {/* Visual handles with pointerEvents disabled */}
-      <g pointerEvents="none">
+      <g>
         <StageNodeHandle cx={0} cy={handleY} isVisible={isHovered} />
         <StageNodeDeleteHandle
           onClick={() => {
@@ -224,24 +253,13 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         />
       </g>
 
-      {/* Overlay delete target to keep hover alive and intercept clicks */}
       <circle
-        className="delete-handle z-40"
+        className="rotation-hitbox z-40"
         cx={0}
         cy={handleY}
         r={CONTROL_R}
-        // Paint one alpha'd pixel so it's always hittable
         fill="#000"
         fillOpacity={0.001}
-        // Capture phase => runs before the SVG's onPointerDown
-        // onPointerDownCapture={(e) => {
-        //   e.preventDefault(); // stop text selection / drag heuristics
-        //   e.stopPropagation(); // don't let SVG handler see this
-        //   onDelete?.(node.id);
-        // }}
-        onClick={() => {
-          console.log("click");
-        }}
       />
     </g>
   );

@@ -54,7 +54,6 @@ export function DrumkitIcon({
         width={50 + hitboxPadding * 2}
         height={50 + hitboxPadding * 2}
         fill="transparent"
-        pointerEvents="all"
       />
 
       {/* Drumstick holders */}

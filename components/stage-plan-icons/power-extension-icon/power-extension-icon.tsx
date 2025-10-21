@@ -76,7 +76,6 @@ const PowerExtensionIcon = React.forwardRef<
           width={hitboxWidth}
           height={hitboxHeight}
           fill="transparent"
-          pointerEvents="all"
         />
 
         <defs>

@@ -33,7 +33,6 @@ export const MonitorIcon = React.memo(
           width={50 + hitboxPadding * 2}
           height={50 + hitboxPadding * 2}
           fill="transparent"
-          pointerEvents="all"
         />
         <defs>
           <linearGradient id={gBody} x1="0%" y1="0%" x2="0%" y2="100%">
