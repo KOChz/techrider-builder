@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { FolderIcon } from "lucide-react";
 import { ProjectCardActions } from "./project-card-actions";
+import { useRouter } from "next/navigation";
 
 interface IProjectCardProps {
   href: string;
   title: string;
   description: string;
-  onEdit?: () => void;
   onDelete?: () => void;
 }
 
@@ -16,9 +16,10 @@ export function ProjectCard({
   href,
   title,
   description,
-  onEdit,
   onDelete,
 }: IProjectCardProps) {
+  const router = useRouter();
+
   return (
     <Link
       href={href}
@@ -36,8 +37,13 @@ export function ProjectCard({
           <p className="mt-1 text-sm text-slate-500">{description}</p>
         </div>
 
-        {(onEdit || onDelete) && (
-          <ProjectCardActions onEdit={onEdit} onDelete={onDelete} />
+        {onDelete && (
+          <ProjectCardActions
+            onEdit={() => {
+              router.push("/dashboard/edit-project/headeachee");
+            }}
+            onDelete={onDelete}
+          />
         )}
       </div>
     </Link>

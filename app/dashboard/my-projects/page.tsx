@@ -12,7 +12,6 @@ export default function MyProjectsPage() {
           href="/techrider/headeachee"
           title="headeachee"
           description="Tech rider project"
-          onEdit={() => {}}
           onDelete={() => {}}
         />
       </div>
