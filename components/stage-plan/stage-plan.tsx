@@ -484,9 +484,9 @@ export default function StagePlan() {
   return (
     <div
       id="stage-plan"
-      className="w-full h-screen bg-[#1a1a1a] text-white font-sans"
+      className="w-full h-screen justify-center flex bg-[#1a1a1a] text-white font-sans"
     >
-      <div className="p-5">
+      <div className="p-5 md:w-5xl">
         <h2 className="mb-2.5">Stage Plan</h2>
         <p className="mb-5 text-[#999]">
           To zoom press control button and scroll
