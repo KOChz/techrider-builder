@@ -699,40 +699,42 @@ export default function StagePlanBuilder() {
           <button onClick={handleReset} style={buttonStyle}>
             Reset View
           </button>
-        </div>
 
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            gap: "20px",
-            fontSize: "14px",
-            color: "#999",
-          }}
-        >
-          <div>
-            Zoom:{" "}
-            <span style={{ color: "#4CAF50" }}>{Math.round(zoom * 100)}%</span>
-          </div>
-          <div>
-            Pan:{" "}
-            <span style={{ color: "#4CAF50" }}>
-              {Math.round(viewBox.x)}, {Math.round(viewBox.y)}
-            </span>
-          </div>
-          <div>
-            Mouse:{" "}
-            <span style={{ color: "#4CAF50" }}>
-              {Math.round(mouse.x)}, {Math.round(mouse.y)}
-            </span>
-          </div>
-          <div>
-            Selected:{" "}
-            <span style={{ color: "#4CAF50" }}>
-              {selectedNode
-                ? `#${selectedNode.id} • ${selectedNode.label}`
-                : "—"}
-            </span>
+          <div
+            style={{
+              marginTop: "20px",
+              display: "flex",
+              gap: "20px",
+              fontSize: "14px",
+              color: "#999",
+            }}
+          >
+            <div>
+              Zoom:{" "}
+              <span style={{ color: "#4CAF50" }}>
+                {Math.round(zoom * 100)}%
+              </span>
+            </div>
+            <div>
+              Pan:{" "}
+              <span style={{ color: "#4CAF50" }}>
+                {Math.round(viewBox.x)}, {Math.round(viewBox.y)}
+              </span>
+            </div>
+            <div>
+              Mouse:{" "}
+              <span style={{ color: "#4CAF50" }}>
+                {Math.round(mouse.x)}, {Math.round(mouse.y)}
+              </span>
+            </div>
+            <div>
+              Selected:{" "}
+              <span style={{ color: "#4CAF50" }}>
+                {selectedNode
+                  ? `#${selectedNode.id} • ${selectedNode.label}`
+                  : "—"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
