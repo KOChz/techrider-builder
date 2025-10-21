@@ -7,6 +7,7 @@ interface IDrumkitIconProps extends SVGProps<SVGSVGElement> {
   height?: number | string;
   title?: string;
   description?: string;
+  hitboxPadding?: number;
 }
 
 export function DrumkitIcon({
@@ -15,6 +16,7 @@ export function DrumkitIcon({
   title = "Drumkit",
   description = "A musical drumkit illustration",
   className,
+  hitboxPadding = 5,
   ...restProps
 }: IDrumkitIconProps): React.JSX.Element {
   const baseId = useId();
@@ -45,6 +47,15 @@ export function DrumkitIcon({
     >
       {title ? <title id={titleId}>{title}</title> : null}
       {description ? <desc id={descId}>{description}</desc> : null}
+
+      <rect
+        x={-hitboxPadding}
+        y={-hitboxPadding}
+        width={50 + hitboxPadding * 2}
+        height={50 + hitboxPadding * 2}
+        fill="transparent"
+        pointerEvents="all"
+      />
 
       {/* Drumstick holders */}
       <path d="M783.744 200.64h38.528V908.16h-38.528z" fill="#C2C7E5" />

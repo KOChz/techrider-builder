@@ -27,6 +27,8 @@ export interface StageNodeBuilderProps {
   onDelete?: (nodeId: number) => void;
 }
 
+const HITBOX_SCALE_FACTOR = 0.85;
+
 export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   node,
   isHovered,
@@ -80,6 +82,14 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
 
   const handleY = -(config.height * scale) / 3.5 - 25;
 
+  const isMicStand = node.type === "mic-stand";
+  const baseHitboxWidth = isMicStand
+    ? config.width * scale * 3
+    : config.width * scale;
+
+  const hitboxWidth = baseHitboxWidth * HITBOX_SCALE_FACTOR;
+  const hitboxHeight = config.height * scale * HITBOX_SCALE_FACTOR;
+
   return (
     <g
       className="stage-node"
@@ -89,12 +99,23 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
       onMouseLeave={onMouseLeave}
       style={{ cursor: "move" }}
     >
+      <rect
+        x={-hitboxWidth / 2}
+        y={-hitboxHeight / 2}
+        width={hitboxWidth}
+        height={hitboxHeight}
+        fill="transparent"
+        stroke="transparent"
+        pointerEvents="all"
+      />
+
       <use
         xlinkHref={`#${node.type}`}
         x={-(config.width * scale) / 2}
         y={-(config.height * scale) / 2}
         width={config.width * scale}
         height={config.height * scale}
+        pointerEvents="none"
       />
       <text
         className="node-text"
@@ -102,6 +123,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         fontSize="14"
         fill="#fff"
         textAnchor="middle"
+        pointerEvents="none"
       >
         {node.label}
       </text>
@@ -111,6 +133,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         fontSize="10"
         fill="#999"
         textAnchor="middle"
+        pointerEvents="none"
       >
         ({Math.round(node.x)}, {Math.round(node.y)}) • {Math.round(node.angle)}°
       </text>

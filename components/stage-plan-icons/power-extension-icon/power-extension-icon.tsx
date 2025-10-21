@@ -7,6 +7,7 @@ export type PowerExtensionIconProps = React.SVGProps<SVGSVGElement> & {
   titleId?: string;
   /** Toggle LED/switch visuals */
   isOn?: boolean;
+  hitboxPadding?: number;
 };
 
 const PowerExtensionIcon = React.forwardRef<
@@ -14,7 +15,13 @@ const PowerExtensionIcon = React.forwardRef<
   PowerExtensionIconProps
 >(
   (
-    { title = "Power extension strip", titleId, isOn = true, ...props },
+    {
+      title = "Power extension strip",
+      titleId,
+      isOn = true,
+      hitboxPadding = 5,
+      ...props
+    },
     ref
   ) => {
     const autoId = React.useId();
@@ -40,6 +47,15 @@ const PowerExtensionIcon = React.forwardRef<
         {...props}
       >
         {title ? <title id={a11yId}>{title}</title> : null}
+
+        <rect
+          x={-hitboxPadding}
+          y={-hitboxPadding}
+          width={50 + hitboxPadding * 2}
+          height={50 + hitboxPadding * 2}
+          fill="transparent"
+          pointerEvents="all"
+        />
 
         <defs>
           <linearGradient

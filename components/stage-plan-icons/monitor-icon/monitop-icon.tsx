@@ -4,11 +4,12 @@ import * as React from "react";
 
 export type MonitorIconProps = React.SVGProps<SVGSVGElement> & {
   title?: string;
+  hitboxPadding?: number;
 };
 
 export const MonitorIcon = React.memo(
   React.forwardRef<SVGSVGElement, MonitorIconProps>(function MonitorIcon(
-    { title = "Monitor", className, ...props },
+    { title = "Monitor", className, hitboxPadding = 5, ...props },
     ref
   ) {
     const uid = React.useId();
@@ -26,6 +27,14 @@ export const MonitorIcon = React.memo(
         {...props}
       >
         <title>{title}</title>
+        <rect
+          x={-hitboxPadding}
+          y={-hitboxPadding}
+          width={50 + hitboxPadding * 2}
+          height={50 + hitboxPadding * 2}
+          fill="transparent"
+          pointerEvents="all"
+        />
         <defs>
           <linearGradient id={gBody} x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#3a3a3a" stopOpacity={1} />

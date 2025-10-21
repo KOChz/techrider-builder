@@ -7,7 +7,8 @@ import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
 import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
 import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
-import { MonitorIcon } from "lucide-react";
+import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-icon";
+
 import {
   StageNodeBuilder,
   StageNodeBuilderComponent,
@@ -236,6 +237,7 @@ const SvgSymbols: React.FC = () => (
     {/* Amplifier Symbol */}
     <AmpIcon />
 
+    {/* Monitor Symbol */}
     <MonitorIcon />
 
     {/* Microphone Stand Symbol */}

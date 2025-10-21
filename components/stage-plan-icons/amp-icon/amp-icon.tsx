@@ -2,11 +2,14 @@
 
 import * as React from "react";
 
-export type AmpIconProps = React.SVGProps<SVGSVGElement> & { title?: string };
+export type AmpIconProps = React.SVGProps<SVGSVGElement> & {
+  title?: string;
+  hitboxPadding?: number;
+};
 
 export const AmpIcon = React.memo(
   React.forwardRef<SVGSVGElement, AmpIconProps>(function AmpIcon(
-    { title = "Amp", className, ...props },
+    { title = "Amp", className, hitboxPadding = 5, ...props },
     ref
   ) {
     const uid = React.useId();
@@ -25,6 +28,16 @@ export const AmpIcon = React.memo(
         {...props}
       >
         <title>{title}</title>
+
+        <rect
+          x={-hitboxPadding}
+          y={-hitboxPadding}
+          width={50 + hitboxPadding * 2}
+          height={50 + hitboxPadding * 2}
+          fill="transparent"
+          pointerEvents="all"
+        />
+
         <defs>
           <linearGradient id={gBody} x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#2a2a2a" stopOpacity="1" />

@@ -5,23 +5,51 @@ import * as React from "react";
 export type MicStandIconProps = React.SVGProps<SVGSVGElement> & {
   title?: string;
   titleId?: string;
+  horizontalPadding?: number;
+  verticalPadding?: number;
 };
 
 const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
-  ({ title = "Mic stand", titleId, ...props }, ref) => {
+  (
+    {
+      title = "Mic stand",
+      titleId,
+      horizontalPadding = 150,
+      verticalPadding = 50,
+      ...props
+    },
+    ref
+  ) => {
     const autoId = React.useId();
     const a11yId = title ? titleId ?? `${autoId}-title` : undefined;
+
+    const ICON_WIDTH = 50;
+    const ICON_HEIGHT = 120;
+
+    const hitboxX = -horizontalPadding;
+    const hitboxY = -verticalPadding;
+    const hitboxWidth = ICON_WIDTH + horizontalPadding * 2;
+    const hitboxHeight = ICON_HEIGHT + verticalPadding * 2;
 
     return (
       <svg
         id="mic-stand"
         ref={ref}
-        viewBox="0 0 50 120"
+        viewBox={`0 0 ${ICON_WIDTH} ${ICON_HEIGHT}`}
         role="img"
         aria-labelledby={a11yId}
         {...props}
       >
         {title ? <title id={a11yId}>{title}</title> : null}
+
+        <rect
+          x={hitboxX}
+          y={hitboxY}
+          width={hitboxWidth}
+          height={hitboxHeight}
+          fill="transparent"
+          pointerEvents="all"
+        />
 
         {/* Base tripod legs - matte black powder coat */}
         <line
