@@ -6,42 +6,33 @@ import type { NextRequest } from "next/server";
  * Handles OAuth callback from Supabase Auth
  * Exchanges the auth code for a session and redirects to the app
  *
- * @returns Redirect to destination on success, or login page with error on failure
+ * @param request - Next.js request object
+ * @returns Redirect response to destination on success, or login page with error on failure
  */
 export async function GET(request: NextRequest) {
-  console.log("🚀 ~ GET ~ request:", request);
-  const requestUrl = new URL(request.url) || process.env.NEXT_PUBLIC_SITE_URL;
-  console.log("🚀 ~ GET ~ requestUrl:", requestUrl);
+  const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next") ?? "/";
   const error = requestUrl.searchParams.get("error");
   const errorDescription = requestUrl.searchParams.get("error_description");
 
-  // Get the actual origin - critical for production environments
+  // Get the actual origin for production environments (Vercel, etc.)
   const forwardedHost = request.headers.get("x-forwarded-host");
   const forwardedProto = request.headers.get("x-forwarded-proto");
 
   const origin = forwardedHost
-    ? `${forwardedProto || "https"}://${forwardedHost}`
+    ? `${forwardedProto ?? "https"}://${forwardedHost}`
     : requestUrl.origin;
 
-  console.log("🔍 Callback Debug:", {
-    requestUrl: request.url,
-    forwardedHost,
-    forwardedProto,
-    calculatedOrigin: origin,
-    next,
-  });
-
   if (error) {
-    console.error("❌ OAuth provider error:", { error, errorDescription });
+    console.error("OAuth provider error:", { error, errorDescription });
     return NextResponse.redirect(
-      `${origin}/login?error=${encodeURIComponent(errorDescription || error)}`
+      `${origin}/login?error=${encodeURIComponent(errorDescription ?? error)}`
     );
   }
 
   if (!code) {
-    console.error("❌ No auth code provided");
+    console.error("No auth code provided in callback");
     return NextResponse.redirect(`${origin}/login?error=auth_code_missing`);
   }
 
@@ -52,18 +43,15 @@ export async function GET(request: NextRequest) {
     );
 
     if (exchangeError) {
-      console.error("❌ Session exchange error:", exchangeError.message);
+      console.error("Session exchange failed:", exchangeError.message);
       return NextResponse.redirect(
         `${origin}/login?error=${encodeURIComponent(exchangeError.message)}`
       );
     }
 
-    const redirectUrl = `${origin}${next}`;
-    console.log("✅ Auth success, redirecting to:", redirectUrl);
-
-    return NextResponse.redirect(redirectUrl);
+    return NextResponse.redirect(`${origin}${next}`);
   } catch (err) {
-    console.error("❌ Unexpected callback error:", err);
+    console.error("Unexpected callback error:", err);
     return NextResponse.redirect(`${origin}/login?error=callback_failed`);
   }
 }
