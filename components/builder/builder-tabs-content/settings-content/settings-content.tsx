@@ -40,7 +40,7 @@ export function SettingsContent() {
             value={settings.name}
             onChange={handleNameChange}
             placeholder="Enter project name"
-            className="px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
           />
         </div>
 
