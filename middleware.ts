@@ -10,6 +10,7 @@ const authRoutes = ["/login", "/signup"];
 const publicRoutes = ["/auth/callback", "/auth/confirm"];
 
 export async function middleware(request: NextRequest) {
+  console.log("🚀 ~ middleware ~ request:", request);
   const path = request.nextUrl.pathname;
 
   // Skip middleware for auth callback routes - they handle their own auth
