@@ -3,6 +3,8 @@ import { createServerClientService } from "@/lib/supabase/server";
 import AuthLayout from "@/components/auth/auth-layout";
 import SignUpForm from "@/components/auth/signup-form";
 
+import "./styles.css";
+
 export default async function SignUpPage() {
   const supabase = await createServerClientService();
   const {
