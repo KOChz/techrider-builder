@@ -24,6 +24,7 @@ export interface StageNodeBuilderProps {
   isHovered: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  onDelete?: (nodeId: number) => void;
 }
 
 export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
@@ -31,6 +32,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   isHovered,
   onMouseEnter,
   onMouseLeave,
+  onDelete,
 }) => {
   const config = equipmentConfig[node.type];
   const scale = node.scale || 1;
@@ -66,7 +68,12 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
           fill="transparent"
           style={{ cursor: "grab" }}
         />
-        <StageNodeDeleteHandle cx={0} cy={handleY} isVisible={isHovered} />
+        <StageNodeDeleteHandle
+          onClick={() => onDelete?.(node.id)}
+          cx={0}
+          cy={handleY}
+          isVisible={isHovered}
+        />
       </g>
     );
   }
@@ -116,7 +123,12 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         style={{ cursor: "grab" }}
       />
       <StageNodeHandle cx={0} cy={handleY} isVisible={isHovered} />
-      <StageNodeDeleteHandle cx={0} cy={handleY} isVisible={isHovered} />
+      <StageNodeDeleteHandle
+        onClick={() => onDelete?.(node.id)}
+        cx={0}
+        cy={handleY}
+        isVisible={isHovered}
+      />
     </g>
   );
 };

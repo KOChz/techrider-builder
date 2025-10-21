@@ -370,6 +370,12 @@ export default function StagePlanBuilder() {
     (e: React.MouseEvent) => {
       const target = e.target as SVGElement;
       const isRotationHandle = target.classList.contains("rotation-hitbox");
+      const isDeleteHandle = target.classList.contains("delete-handle");
+
+      if (isDeleteHandle) {
+        return;
+      }
+
       const nodeElement = target.closest(".stage-node");
 
       if (nodeElement) {
@@ -465,6 +471,11 @@ export default function StagePlanBuilder() {
     setDraggedNodeId(null);
   }, []);
 
+  const handleDeleteNode = useCallback((nodeId: number) => {
+    console.log("🚀 ~ StagePlanBuilder ~ nodeId:", nodeId);
+    setNodes((prev) => prev.filter((node) => node.id !== nodeId));
+  }, []);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -549,6 +560,7 @@ export default function StagePlanBuilder() {
                 isHovered={hoveredNodeId === node.id}
                 onMouseEnter={() => setHoveredNodeId(node.id)}
                 onMouseLeave={() => setHoveredNodeId(null)}
+                onDelete={handleDeleteNode}
               />
             ))}
           </svg>
