@@ -1,10 +1,22 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/profile", "/settings"];
+const protectedRoutes = [
+  "/dashboard/create-new",
+  "/dashboard/profile",
+  "/dashboard/settings",
+];
 const authRoutes = ["/login", "/signup"];
+const publicRoutes = ["/auth/callback", "/auth/confirm"];
 
 export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  // Skip middleware for auth callback routes - they handle their own auth
+  if (publicRoutes.some((route) => path.startsWith(route))) {
+    return NextResponse.next();
+  }
+
   try {
     let response = NextResponse.next({
       request: {
@@ -12,7 +24,7 @@ export async function middleware(request: NextRequest) {
       },
     });
 
-    if (request.nextUrl.pathname === "/") {
+    if (path === "/") {
       return NextResponse.redirect(
         new URL("/dashboard/my-projects", request.url)
       );
@@ -55,7 +67,6 @@ export async function middleware(request: NextRequest) {
       return response;
     }
 
-    const path = request.nextUrl.pathname;
     const isProtectedRoute = protectedRoutes.some((route) =>
       path.startsWith(route)
     );
@@ -68,8 +79,9 @@ export async function middleware(request: NextRequest) {
     }
 
     if (user && isAuthRoute) {
-      const redirectUrl = new URL("/dashboard/my-projects", request.url);
-      return NextResponse.redirect(redirectUrl);
+      return NextResponse.redirect(
+        new URL("/dashboard/my-projects", request.url)
+      );
     }
 
     return response;
