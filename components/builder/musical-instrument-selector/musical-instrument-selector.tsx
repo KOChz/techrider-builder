@@ -55,7 +55,7 @@ export function MusicalInstrumentSelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 text-3xl flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-green-500 focus:border-green-500 focus:outline-none transition-colors bg-white"
+        className="w-16 h-16 cursor-pointer text-3xl flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-green-500 focus:border-green-500 focus:outline-none transition-colors bg-white"
         aria-label="Select musical instrument icon"
       >
         {value || "🎸"}
@@ -69,7 +69,7 @@ export function MusicalInstrumentSelector({
                 key={emoji}
                 type="button"
                 onClick={() => handleSelect(emoji)}
-                className={`w-12 h-12 text-2xl flex items-center justify-center rounded-lg hover:bg-green-50 transition-colors ${
+                className={`w-12 cursor-pointer h-12 text-2xl flex items-center justify-center rounded-lg hover:bg-green-50 transition-colors ${
                   value === emoji ? "bg-green-100 ring-2 ring-green-500" : ""
                 }`}
                 title={label}
