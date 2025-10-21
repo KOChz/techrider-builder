@@ -340,7 +340,7 @@ export default async function TechRider() {
   } = await supabase.auth.getUser();
 
   return (
-    <>
+    <div className="techrider-page">
       <nav>
         <div className="nav-container">
           <a href="#home" className="logo">
@@ -479,6 +479,6 @@ export default async function TechRider() {
           © 2025 headachee. All rights reserved.
         </p>
       </footer>
-    </>
+    </div>
   );
 }

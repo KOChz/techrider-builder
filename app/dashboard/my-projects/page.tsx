@@ -12,7 +12,7 @@ export default function MyProjectsPage() {
           className="group relative bg-white rounded-2xl border border-slate-200 p-6 transition-all duration-200 hover:border-green-500 hover:shadow-sm hover:bg-slate-50"
         >
           <div className="flex items-start gap-3">
-            <div className="rounded-lg bg-blue-50 p-2 text-green-700 transition-colors group-hover:bg-blue-100">
+            <div className="rounded-lg bg-green-50 p-2 text-green-700 transition-colors group-hover:bg-green-100">
               <FolderIcon className="h-5 w-5" />
             </div>
 

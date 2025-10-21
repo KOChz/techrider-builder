@@ -5,7 +5,7 @@ import { useState } from "react";
 import { StagePlanContent } from "../builder-tabs-content/stage-plan-content";
 import { SettingsContent } from "../builder-tabs-content/settings-content/settings-content";
 import { MembersContent } from "../builder-tabs-content/members-content/members-content";
-import { BandInfoContent } from "../builder-tabs-content/band-info-content/band-info-content";
+import { BandInfoContent } from "../builder-tabs-content/dand-info-content/band-info-content";
 
 type TTabId = "band-info" | "members" | "stage-plan" | "settings";
 

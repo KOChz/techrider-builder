@@ -16,7 +16,7 @@ export function ErrorContent() {
         <p className="text-gray-600">{message}</p>
         <Link
           href="/auth/login"
-          className="inline-block rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="inline-block rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
         >
           Return to Login
         </Link>

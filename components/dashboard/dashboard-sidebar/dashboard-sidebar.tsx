@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOutAction } from "@/app/actions/sign-out-action/sign-out-action";
 
 const navigationItems = [
@@ -73,20 +73,23 @@ const navigationItems = [
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-gray-100 border-r border-slate-300 hidden lg:flex lg:flex-col">
       <div className="flex-1 overflow-y-auto p-4">
-        <div aria-label="Main navigation">
-          <div className="space-y-1">
+        <nav aria-label="Main navigation">
+          <div className="space-y-1 list-none">
             {navigationItems.map((item) => {
               const isActive = pathname === item.href;
 
               return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                <div key={item.href}>
+                  <div
+                    onClick={() => {
+                      router.push(item.href);
+                    }}
+                    className={`flex cursor-pointer items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                       isActive
                         ? "bg-green-700 text-white shadow-sm"
                         : "text-slate-700 hover:bg-slate-200"
@@ -95,12 +98,12 @@ export function DashboardSidebar() {
                   >
                     {item.icon}
                     <span className="text-sm font-medium">{item.name}</span>
-                  </Link>
-                </li>
+                  </div>
+                </div>
               );
             })}
           </div>
-        </div>
+        </nav>
       </div>
 
       <div className="flex-shrink-0 p-4 border-t border-slate-300 bg-gray-50">

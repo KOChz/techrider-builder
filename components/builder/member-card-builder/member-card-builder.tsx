@@ -24,11 +24,13 @@ export type TBandMember = {
 interface IMemberCardBuilderProps {
   initialMember?: TBandMember;
   onChange?: (member: TBandMember) => void;
+  onRemove?: () => void;
 }
 
 export function MemberCardBuilder({
   initialMember,
   onChange,
+  onRemove,
 }: IMemberCardBuilderProps) {
   const [member, setMember] = useState<TBandMember>(
     initialMember || {
@@ -139,16 +141,25 @@ export function MemberCardBuilder({
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="relative max-w-lg text-sm p-6 bg-white rounded-lg border border-gray-200">
+      {onRemove && (
+        <button
+          onClick={onRemove}
+          className="absolute cursor-pointer -top-3 cursor-pointer text-lg -right-3 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+          aria-label="Remove member"
+        >
+          ×
+        </button>
+      )}
+
       <div className="space-y-6">
-        {/* Member Basic Info */}
         <div className="space-y-4">
           <div className="flex items-center gap-4">
             <input
               type="text"
               value={member.icon}
               onChange={(e) => updateMember({ icon: e.target.value })}
-              className="w-16 h-16 text-3xl text-center border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+              className="w-16 h-16 placeholder-slate-500 text-3xl text-center border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none"
               placeholder="🎸"
             />
             <div className="flex-1 space-y-2">
@@ -156,27 +167,26 @@ export function MemberCardBuilder({
                 type="text"
                 value={member.name}
                 onChange={(e) => updateMember({ name: e.target.value })}
-                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="w-full placeholder-slate-500 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none"
                 placeholder="Member Name"
               />
               <input
                 type="text"
                 value={member.role}
                 onChange={(e) => updateMember({ role: e.target.value })}
-                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="w-full placeholder-slate-500 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none"
                 placeholder="Role"
               />
             </div>
           </div>
         </div>
 
-        {/* Equipment List */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h4 className="text-lg font-semibold text-gray-800">Equipment</h4>
             <button
               onClick={addEquipmentItem}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+              className="px-4 cursor-pointer py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
             >
               + Add Equipment
             </button>
@@ -196,7 +206,7 @@ export function MemberCardBuilder({
                       name: e.target.value,
                     })
                   }
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:outline-none"
+                  className="flex-1 placeholder-slate-500 px-3 py-2 border border-gray-300 rounded focus:border-green-500 focus:outline-none"
                   placeholder="Equipment name"
                 />
                 <input
@@ -207,20 +217,19 @@ export function MemberCardBuilder({
                       quantity: e.target.value,
                     })
                   }
-                  className="w-24 px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:outline-none"
+                  className="w-24 placeholder-slate-500 px-3 py-2 border border-gray-300 rounded focus:border-green-500 focus:outline-none"
                   placeholder="Qty"
                 />
                 <button
                   onClick={() => removeEquipmentItem(equipmentIndex)}
-                  className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                  className="px-3 cursor-pointer py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
                 >
                   Remove
                 </button>
               </div>
 
-              {/* Examples Section */}
               {item.examples ? (
-                <div className="pl-4 space-y-2 border-l-4 border-blue-200">
+                <div className="pl-4 space-y-2 border-l-4 border-green-200">
                   <div className="flex gap-2 items-center">
                     <input
                       type="text"
@@ -228,7 +237,7 @@ export function MemberCardBuilder({
                       onChange={(e) =>
                         updateExamplesTitle(equipmentIndex, e.target.value)
                       }
-                      className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded focus:border-blue-500 focus:outline-none"
+                      className="flex-1 placeholder-slate-500 px-3 py-1 text-sm border border-gray-300 rounded focus:border-green-500 focus:outline-none"
                       placeholder="Examples title"
                     />
                     <button
@@ -252,7 +261,7 @@ export function MemberCardBuilder({
                               e.target.value
                             )
                           }
-                          className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded focus:border-blue-500 focus:outline-none"
+                          className="flex-1 placeholder-slate-500 px-3 py-1 text-sm border border-gray-300 rounded focus:border-green-500 focus:outline-none"
                           placeholder="Example item"
                         />
                         <button
@@ -277,7 +286,7 @@ export function MemberCardBuilder({
               ) : (
                 <button
                   onClick={() => addExamplesToItem(equipmentIndex)}
-                  className="px-3 py-1 text-sm bg-blue-400 text-white rounded hover:bg-blue-500 transition-colors"
+                  className="px-3 py-1 text-sm cursor-pointer bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                 >
                   + Add Examples Section
                 </button>
