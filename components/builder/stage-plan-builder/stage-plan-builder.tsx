@@ -613,12 +613,10 @@ export default function StagePlanBuilder() {
   return (
     <div
       id="stage-plan"
-      className="w-full h-screen bg-[#1a1a1a] text-white font-sans"
+      className="w-full h-dvh min-h-[770px] bg-[#1a1a1a] text-white font-sans"
     >
-      <div style={{ padding: "20px" }}>
-        <p style={{ margin: "0 0 20px 0", color: "#999" }}>
-          To zoom press control and scroll
-        </p>
+      <div className="p-5">
+        <p className="text-gray-400 mb-2">To zoom press control and scroll</p>
 
         <div className="flex gap-3 items-center mb-3 flex-wrap">
           <EquipmentSelect
@@ -667,7 +665,7 @@ export default function StagePlanBuilder() {
           style={{
             position: "relative",
             width: "100%",
-            height: "70vh",
+            height: "70dvh",
             background: "#0a0a0a",
             border: "1px solid #333",
           }}
@@ -772,30 +770,10 @@ export default function StagePlanBuilder() {
             Reset View
           </button>
 
-          <div className="mt-5 select-none flex gap-5 text-sm text-gray-400">
+          <div className="mt-5 select-none flex gap-5 text-sm text-grey-400">
             <div>
               Zoom:{" "}
-              <span className="text-green-500">{Math.round(zoom * 100)}%</span>
-            </div>
-            <div className="select-none">
-              Pan:{" "}
-              <span className="text-green-500">
-                {Math.round(viewBox.x)}, {Math.round(viewBox.y)}
-              </span>
-            </div>
-            <div className="select-none">
-              Mouse:{" "}
-              <span className="text-green-500">
-                {Math.round(mouse.x)}, {Math.round(mouse.y)}
-              </span>
-            </div>
-            <div className="select-none">
-              Selected:{" "}
-              <span className="text-green-500">
-                {selectedNode
-                  ? `#${selectedNode.id} • ${selectedNode.label}`
-                  : "—"}
-              </span>
+              <span className="text-green-700">{Math.round(zoom * 100)}%</span>
             </div>
           </div>
         </div>
