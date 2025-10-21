@@ -11,6 +11,7 @@ export async function signInWithGoogleAction() {
   const supabase = await createServerClientService();
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  console.log("🚀 ~ signInWithGoogleAction ~ baseUrl:", baseUrl);
   const redirectUrl = `${baseUrl}/auth/callback`;
 
   const { data, error } = await supabase.auth.signInWithOAuth({

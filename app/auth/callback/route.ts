@@ -10,8 +10,11 @@ import type { NextRequest } from "next/server";
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
+  console.log("🚀 ~ GET ~ request:", request);
+  console.log("🚀 ~ GET ~ origin:", origin);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
+  console.log("🚀 ~ GET ~ next:", next);
   const error = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
 
