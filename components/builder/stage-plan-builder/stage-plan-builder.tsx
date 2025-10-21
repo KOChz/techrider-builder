@@ -13,19 +13,18 @@ import {
   StageNodeBuilder,
   StageNodeBuilderComponent,
 } from "../stage-node-builder/stage-node-builder";
+import EquipmentSelect from "../equipment-select/equipment-select";
 
 interface Vec2 {
   x: number;
   y: number;
 }
-
 interface ViewBox {
   x: number;
   y: number;
   width: number;
   height: number;
 }
-
 interface EquipmentConfig {
   width: number;
   height: number;
@@ -35,7 +34,6 @@ interface EquipmentConfig {
 // ============================================================================
 // EQUIPMENT CONFIGURATION
 // ============================================================================
-
 export const equipmentConfig: Record<
   StageNodeBuilder["type"],
   EquipmentConfig
@@ -52,7 +50,6 @@ export const equipmentConfig: Record<
 // ============================================================================
 // INITIAL STAGE NODES
 // ============================================================================
-
 const initialNodes: StageNodeBuilder[] = [
   {
     id: 1,
@@ -212,10 +209,8 @@ const initialNodes: StageNodeBuilder[] = [
 // ============================================================================
 // SVG SYMBOLS COMPONENT
 // ============================================================================
-
 const SvgSymbols: React.FC = () => (
   <defs>
-    {/* Grid patterns */}
     <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
       <line x1="0" y1="0" x2="0" y2="50" stroke="#2a2a2a" strokeWidth="0.5" />
       <line x1="0" y1="0" x2="50" y2="0" stroke="#2a2a2a" strokeWidth="0.5" />
@@ -231,22 +226,12 @@ const SvgSymbols: React.FC = () => (
       <line x1="0" y1="0" x2="200" y2="0" stroke="#3a3a3a" strokeWidth="1" />
     </pattern>
 
-    {/* Drumkit Symbol */}
+    {/* Components must render <symbol id="..."> */}
     <DrumkitIcon />
-
-    {/* Amplifier Symbol */}
     <AmpIcon />
-
-    {/* Monitor Symbol */}
     <MonitorIcon />
-
-    {/* Microphone Stand Symbol */}
     <MicStandIcon />
-
-    {/* Power Extension Symbol */}
     <PowerExtensionIcon />
-
-    {/* DI Box Symbol */}
     <DIBoxIcon />
   </defs>
 );
@@ -261,20 +246,41 @@ export default function StagePlanBuilder() {
   });
   const [zoom, setZoom] = useState(1);
   const [mouse, setMouse] = useState<Vec2>({ x: 0, y: 0 });
+
   const [isPanning, setIsPanning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+
   const [draggedNodeId, setDraggedNodeId] = useState<number | null>(null);
   const [hoveredNodeId, setHoveredNodeId] = useState<number | null>(null);
+
   const [dragOffset, setDragOffset] = useState<Vec2>({ x: 0, y: 0 });
   const [rotationStart, setRotationStart] = useState({
     angle: 0,
     mouseAngle: 0,
   });
 
+  // NEW: selection state for rename UX
+  const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null); // NEW
+  const selectedNode =
+    selectedNodeId != null
+      ? nodes.find((n) => n.id === selectedNodeId) ?? null
+      : null; // NEW
+
   const svgRef = useRef<SVGSVGElement>(null);
   const panStartRef = useRef<Vec2>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // --- hover stabilization ---------------------------------------------------
+  const leaveTimer = useRef<number | null>(null);
+  const armedEnter = useCallback((id: number) => {
+    if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
+    setHoveredNodeId(id);
+  }, []);
+  const armedLeave = useCallback(() => {
+    if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
+    leaveTimer.current = window.setTimeout(() => setHoveredNodeId(null), 50);
+  }, []);
 
   const screenToCanvas = useCallback(
     (screenX: number, screenY: number): Vec2 => {
@@ -290,15 +296,11 @@ export default function StagePlanBuilder() {
   );
 
   const calculateAngle = (
-    centerX: number,
-    centerY: number,
-    pointX: number,
-    pointY: number
-  ): number => {
-    const dx = pointX - centerX;
-    const dy = pointY - centerY;
-    return (Math.atan2(dy, dx) * 180) / Math.PI;
-  };
+    cx: number,
+    cy: number,
+    px: number,
+    py: number
+  ): number => (Math.atan2(py - cy, px - cx) * 180) / Math.PI;
 
   const normalizeAngle = (angle: number): number => {
     angle = angle % 360;
@@ -307,6 +309,7 @@ export default function StagePlanBuilder() {
     return angle;
   };
 
+  // --- zoom controls --------------------------------------------------------
   const handleZoomIn = useCallback(() => {
     setZoom((prev) => {
       const newZoom = Math.min(prev * 1.2, 10);
@@ -336,19 +339,18 @@ export default function StagePlanBuilder() {
   const handleReset = useCallback(() => {
     setViewBox({ x: -500, y: -500, width: 1000, height: 1000 });
     setZoom(1);
+    setSelectedNodeId(null); // NEW: clear selection on reset
   }, []);
 
+  // Wheel zoom (native listener for passive: false)
   const handleWheel = useCallback(
     (e: WheelEvent) => {
-      // Change from React.WheelEvent to WheelEvent
       e.preventDefault();
       e.stopPropagation();
 
       const normalizedDelta =
         Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 100);
-
       const zoomFactor = 1 - normalizedDelta / 2000;
-
       const canvasPos = screenToCanvas(e.clientX, e.clientY);
 
       setZoom((prev) => {
@@ -368,26 +370,38 @@ export default function StagePlanBuilder() {
     [screenToCanvas]
   );
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+  // --- pointer flows --------------------------------------------------------
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
       const target = e.target as SVGElement;
-      const isRotationHandle = target.classList.contains("rotation-hitbox");
-      const isDeleteHandle = target.classList.contains("delete-handle");
 
-      if (isDeleteHandle) {
+      const path = (e.nativeEvent as PointerEvent).composedPath() as Element[];
+      if (
+        path.some((el) =>
+          (el as Element)?.classList?.contains?.("delete-handle")
+        )
+      ) {
         return;
       }
 
-      const nodeElement = target.closest(".stage-node");
+      // Don't start drag/rotate when targeting delete handle
+      if (target.closest(".delete-handle")) return;
+
+      const nodeElement = target.closest(".stage-node") as SVGGElement | null;
 
       if (nodeElement) {
-        const nodeId = parseInt(nodeElement.getAttribute("data-id") || "0");
+        const nodeId = parseInt(nodeElement.getAttribute("data-id") || "0", 10);
         const node = nodes.find((n) => n.id === nodeId);
         if (!node) return;
 
-        const canvasPos = screenToCanvas(e.clientX, e.clientY);
+        setSelectedNodeId(nodeId); // NEW: select on any node interaction
 
-        if (isRotationHandle || e.altKey) {
+        const canvasPos = screenToCanvas(e.clientX, e.clientY);
+        const isRotationHandle =
+          target.classList.contains("rotation-hitbox") ||
+          !!target.closest(".rotation-hitbox");
+
+        if (isRotationHandle || (e as any).altKey) {
           setIsRotating(true);
           setDraggedNodeId(nodeId);
           const mouseAngle = calculateAngle(
@@ -404,6 +418,7 @@ export default function StagePlanBuilder() {
         }
         e.preventDefault();
       } else {
+        setSelectedNodeId(null); // NEW: deselect on empty canvas
         setIsPanning(true);
         panStartRef.current = { x: e.clientX, y: e.clientY };
       }
@@ -411,8 +426,8 @@ export default function StagePlanBuilder() {
     [nodes, screenToCanvas]
   );
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent) => {
       const canvasPos = screenToCanvas(e.clientX, e.clientY);
       setMouse(canvasPos);
 
@@ -466,7 +481,7 @@ export default function StagePlanBuilder() {
     ]
   );
 
-  const handleMouseUp = useCallback(() => {
+  const handlePointerUp = useCallback(() => {
     setIsPanning(false);
     setIsDragging(false);
     setIsRotating(false);
@@ -476,18 +491,64 @@ export default function StagePlanBuilder() {
   const handleDeleteNode = useCallback((nodeId: number) => {
     console.log("🚀 ~ StagePlanBuilder ~ nodeId:", nodeId);
     setNodes((prev) => prev.filter((node) => node.id !== nodeId));
+    setSelectedNodeId((prev) => (prev === nodeId ? null : prev)); // NEW: clear selection if deleted
   }, []);
+
+  type PickableType =
+    | "drumkit"
+    | "amp"
+    | "monitor"
+    | "mic-stand"
+    | "power-extension"
+    | "di-box";
+  const [picker, setPicker] = useState<PickableType>("drumkit");
+
+  function addNodeOfType(t: PickableType) {
+    const cx = viewBox.x + viewBox.width / 2;
+    const cy = viewBox.y + viewBox.height / 2;
+    const nextId =
+      nodes.length > 0 ? Math.max(...nodes.map((n) => n.id)) + 1 : 1;
+
+    const labelByType: Record<PickableType, string> = {
+      drumkit: "Drumkit",
+      amp: "Amp",
+      monitor: "Monitor",
+      "mic-stand": "Mic Stand",
+      "power-extension": "Power Strip",
+      "di-box": "DI Box",
+    };
+
+    setNodes((prev) => [
+      ...prev,
+      {
+        id: nextId,
+        x: cx,
+        y: cy,
+        label: labelByType[t],
+        type: t as any,
+        angle: 0,
+        scale: 1,
+      },
+    ]);
+    setSelectedNodeId(nextId); // NEW: select freshly added node for immediate rename
+  }
+
+  // NEW: update label helper
+  const updateSelectedLabel = useCallback(
+    (next: string) => {
+      if (selectedNodeId == null) return;
+      setNodes((prev) =>
+        prev.map((n) => (n.id === selectedNodeId ? { ...n, label: next } : n))
+      );
+    },
+    [selectedNodeId]
+  );
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
-    // Must use native addEventListener with passive: false
     container.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      container.removeEventListener("wheel", handleWheel);
-    };
+    return () => container.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
   return (
@@ -505,6 +566,65 @@ export default function StagePlanBuilder() {
         <p style={{ margin: "0 0 20px 0", color: "#999" }}>
           Interactive stage layout - pan, zoom, and drag equipment positions
         </p>
+
+        {/* Toolbar: picker + rename control */}
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            alignItems: "center",
+            marginBottom: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <EquipmentSelect
+            value={picker}
+            onChange={setPicker}
+            onAdd={addNodeOfType}
+          />
+
+          {/* NEW: Name editor for the selected node */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              background: "#0f172a",
+              border: "1px solid #334155",
+              padding: "14px 10px",
+              borderRadius: 8,
+              minWidth: 260,
+            }}
+            className="select-none"
+            aria-live="polite"
+          >
+            <label
+              htmlFor="node-name"
+              style={{ fontSize: 12, color: "#9ca3af" }}
+            >
+              Name
+            </label>
+            <input
+              id="node-name"
+              type="text"
+              placeholder="Select an item, then rename"
+              disabled={!selectedNode}
+              value={selectedNode?.label ?? ""}
+              onChange={(e) => updateSelectedLabel(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") (e.target as HTMLInputElement).blur();
+              }}
+              style={{
+                flex: 1,
+                background: "transparent",
+                color: selectedNode ? "#e5e7eb" : "#6b7280",
+                border: "none",
+                outline: "none",
+                padding: "6px 8px",
+              }}
+            />
+          </div>
+        </div>
 
         <div
           ref={containerRef}
@@ -524,12 +644,14 @@ export default function StagePlanBuilder() {
               cursor: isPanning ? "grabbing" : "default",
             }}
             viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
           >
             <SvgSymbols />
+
+            {/* grid + axes */}
             <rect
               x={-5000}
               y={-5000}
@@ -559,8 +681,8 @@ export default function StagePlanBuilder() {
                 key={node.id}
                 node={node}
                 isHovered={hoveredNodeId === node.id}
-                onMouseEnter={() => setHoveredNodeId(node.id)}
-                onMouseLeave={() => setHoveredNodeId(null)}
+                onMouseEnter={() => armedEnter(node.id)}
+                onMouseLeave={armedLeave}
                 onDelete={handleDeleteNode}
               />
             ))}
@@ -602,6 +724,14 @@ export default function StagePlanBuilder() {
             Mouse:{" "}
             <span style={{ color: "#4CAF50" }}>
               {Math.round(mouse.x)}, {Math.round(mouse.y)}
+            </span>
+          </div>
+          <div>
+            Selected:{" "}
+            <span style={{ color: "#4CAF50" }}>
+              {selectedNode
+                ? `#${selectedNode.id} • ${selectedNode.label}`
+                : "—"}
             </span>
           </div>
         </div>

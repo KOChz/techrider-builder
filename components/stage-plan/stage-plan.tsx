@@ -465,7 +465,10 @@ export default function StagePlan() {
     >
       <div style={{ padding: "20px" }}>
         <h2 style={{ margin: "0 0 10px 0" }}>Stage Plan</h2>
-        <p style={{ margin: "0 0 20px 0", color: "#999" }}>
+        <p
+          style={{ margin: "0 0 20px 0", color: "#999" }}
+          className="select-none"
+        >
           Interactive stage layout - pan, zoom, and drag equipment positions
         </p>
 

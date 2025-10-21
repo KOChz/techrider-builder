@@ -7,7 +7,12 @@ export type PowerExtensionIconProps = React.SVGProps<SVGSVGElement> & {
   titleId?: string;
   /** Toggle LED/switch visuals */
   isOn?: boolean;
+  /** @deprecated use horizontalPadding / verticalPadding */
   hitboxPadding?: number;
+  /** Extra hit area left+right */
+  horizontalPadding?: number;
+  /** Extra hit area top+bottom */
+  verticalPadding?: number;
 };
 
 const PowerExtensionIcon = React.forwardRef<
@@ -19,7 +24,9 @@ const PowerExtensionIcon = React.forwardRef<
       title = "Power extension strip",
       titleId,
       isOn = true,
-      hitboxPadding = 5,
+      hitboxPadding, // deprecated
+      horizontalPadding,
+      verticalPadding,
       ...props
     },
     ref
@@ -27,6 +34,20 @@ const PowerExtensionIcon = React.forwardRef<
     const autoId = React.useId();
     const a11yId = title ? titleId ?? `${autoId}-title` : undefined;
 
+    // --- dimensions ---------------------------------------------------------
+    const ICON_WIDTH = 200;
+    const ICON_HEIGHT = 40;
+
+    // Support new API first; fall back to legacy `hitboxPadding`
+    const padX = horizontalPadding ?? hitboxPadding ?? 200; // wide like MicStand
+    const padY = verticalPadding ?? hitboxPadding ?? 50;
+
+    const hitboxX = -padX;
+    const hitboxY = -padY;
+    const hitboxWidth = ICON_WIDTH + padX * 2;
+    const hitboxHeight = ICON_HEIGHT + padY * 2;
+
+    // --- paints -------------------------------------------------------------
     const powerStripGradientId = `${autoId}-powerStripGradient`;
     const outletGradientId = `${autoId}-outletGradient`;
 
@@ -40,7 +61,7 @@ const PowerExtensionIcon = React.forwardRef<
       <svg
         id="power-extension"
         ref={ref}
-        viewBox="0 0 160 40"
+        viewBox={`0 0 ${ICON_WIDTH} ${ICON_HEIGHT}`}
         role="img"
         aria-labelledby={a11yId}
         focusable="false"
@@ -48,11 +69,12 @@ const PowerExtensionIcon = React.forwardRef<
       >
         {title ? <title id={a11yId}>{title}</title> : null}
 
+        {/* Expanded hover/click hitbox */}
         <rect
-          x={-hitboxPadding}
-          y={-hitboxPadding}
-          width={50 + hitboxPadding * 2}
-          height={50 + hitboxPadding * 2}
+          x={hitboxX}
+          y={hitboxY}
+          width={hitboxWidth}
+          height={hitboxHeight}
           fill="transparent"
           pointerEvents="all"
         />

@@ -20,7 +20,7 @@ export function BandInfoContent() {
           </label>
           <textarea
             className="w-full placeholder-slate-500 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="This is section for notes for any technical stuff notes"
+            placeholder="This is section for for any technical stuff notes"
             rows={4}
           />
         </div>
