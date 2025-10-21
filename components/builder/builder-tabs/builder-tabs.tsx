@@ -18,7 +18,7 @@ const TABS: ITab[] = [
   { id: "band-info", label: "Band Info" },
   { id: "members", label: "Members" },
   { id: "stage-plan", label: "Stage Plan" },
-  { id: "settings", label: "Settings" },
+  { id: "settings", label: "Project Settings" },
 ];
 
 export default function ProjectCreationTabs() {
