@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: IAuthLayoutProps) {
               <Link
                 href="/"
                 aria-label="TechRider Builder home"
-                className="text-2xl font-bold bg-gradient-to-r from-white to-green-700 bg-clip-text text-transparent transition-all duration-200 hover:to-green-600"
+                className="text-2xl font-bold bg-linear-to-r from-white to-green-700 bg-clip-text text-transparent transition-all duration-200 hover:to-green-600"
               >
                 TechRider Builder
               </Link>

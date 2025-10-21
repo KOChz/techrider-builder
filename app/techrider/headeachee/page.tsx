@@ -435,7 +435,7 @@ export default async function TechRider() {
                 <Link
                   href="/dashboard/my-projects"
                   type="submit"
-                  className="px-3 cursor-pointer py-1.5 rounded-md text-slate-200 hover:bg-green-800 transition-colors"
+                  className="px-3 cursor-pointer py-1.5 rounded-md text-slate-200 hover:bg-green-500/20 transition-colors"
                   aria-label="Home"
                 >
                   Home
