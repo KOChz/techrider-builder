@@ -38,5 +38,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  return NextResponse.redirect(`${origin}${next}`);
+  const redirectLink = `${origin}${next}`;
+  console.log("🚀 ~ GET ~ redirectLink:", redirectLink);
+
+  return NextResponse.redirect(redirectLink);
 }
