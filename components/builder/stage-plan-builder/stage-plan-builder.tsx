@@ -343,9 +343,12 @@ export default function StagePlanBuilder() {
     setSelectedNodeId(null); // NEW: clear selection on reset
   }, []);
 
-  // Wheel zoom (native listener for passive: false)
   const handleWheel = useCallback(
     (e: WheelEvent) => {
+      if (!e.ctrlKey) {
+        return;
+      }
+
       e.preventDefault();
       e.stopPropagation();
 
@@ -662,41 +665,41 @@ export default function StagePlanBuilder() {
         <div className="mt-5 flex gap-5">
           <button
             onClick={handleZoomIn}
-            className="cursor-pointer rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
           >
             Zoom In (+)
           </button>
           <button
             onClick={handleZoomOut}
-            className="cursor-pointer rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
           >
             Zoom Out (−)
           </button>
           <button
             onClick={handleReset}
-            className="cursor-pointer rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
           >
             Reset View
           </button>
 
-          <div className="mt-5 flex gap-5 text-sm text-gray-400">
+          <div className="mt-5 select-none flex gap-5 text-sm text-gray-400">
             <div>
               Zoom:{" "}
               <span className="text-green-500">{Math.round(zoom * 100)}%</span>
             </div>
-            <div>
+            <div className="select-none">
               Pan:{" "}
               <span className="text-green-500">
                 {Math.round(viewBox.x)}, {Math.round(viewBox.y)}
               </span>
             </div>
-            <div>
+            <div className="select-none">
               Mouse:{" "}
               <span className="text-green-500">
                 {Math.round(mouse.x)}, {Math.round(mouse.y)}
               </span>
             </div>
-            <div>
+            <div className="select-none">
               Selected:{" "}
               <span className="text-green-500">
                 {selectedNode
