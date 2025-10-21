@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 
-import { AmpIcon } from "../stage-plan-icons/amp-icon/amp-icon";
-import { DrumkitIcon } from "../stage-plan-icons/drumkit-icon/drumkit-icon";
-import { MonitorIcon } from "../stage-plan-icons/monitor-icon/monitop-icon";
-import MicStandIcon from "../stage-plan-icons/mic-stand-icon/mic-stand-icon";
-import PowerExtensionIcon from "../stage-plan-icons/power-extension-icon/power-extension-icon";
-import DIBoxIcon from "../stage-plan-icons/di-box-icon/di-box-icon";
-
-import { StageNode, StageNodeComponent } from "../stage-node/stage-node";
+import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
+import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
+import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
+import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
+import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
+import { MonitorIcon } from "lucide-react";
+import {
+  StageNodeBuilder,
+  StageNodeBuilderComponent,
+} from "../stage-node-builder/stage-node-builder";
 
 interface Vec2 {
   x: number;
@@ -33,7 +35,10 @@ interface EquipmentConfig {
 // EQUIPMENT CONFIGURATION
 // ============================================================================
 
-export const equipmentConfig: Record<StageNode["type"], EquipmentConfig> = {
+export const equipmentConfig: Record<
+  StageNodeBuilder["type"],
+  EquipmentConfig
+> = {
   drumkit: { width: 200, height: 180, labelOffset: 100 },
   amp: { width: 80, height: 100, labelOffset: 60 },
   monitor: { width: 70, height: 50, labelOffset: 35 },
@@ -47,7 +52,7 @@ export const equipmentConfig: Record<StageNode["type"], EquipmentConfig> = {
 // INITIAL STAGE NODES
 // ============================================================================
 
-const initialNodes: StageNode[] = [
+const initialNodes: StageNodeBuilder[] = [
   {
     id: 1,
     x: 0,
@@ -244,8 +249,8 @@ const SvgSymbols: React.FC = () => (
   </defs>
 );
 
-export default function StagePlan() {
-  const [nodes, setNodes] = useState<StageNode[]>(initialNodes);
+export default function StagePlanBuilder() {
+  const [nodes, setNodes] = useState<StageNodeBuilder[]>(initialNodes);
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -500,
     y: -500,
@@ -267,6 +272,7 @@ export default function StagePlan() {
 
   const svgRef = useRef<SVGSVGElement>(null);
   const panStartRef = useRef<Vec2>({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const screenToCanvas = useCallback(
     (screenX: number, screenY: number): Vec2 => {
@@ -331,13 +337,20 @@ export default function StagePlan() {
   }, []);
 
   const handleWheel = useCallback(
-    (e: React.WheelEvent) => {
+    (e: WheelEvent) => {
+      // Change from React.WheelEvent to WheelEvent
       e.preventDefault();
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      e.stopPropagation();
+
+      const normalizedDelta =
+        Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 100);
+
+      const zoomFactor = 1 - normalizedDelta / 2000;
+
       const canvasPos = screenToCanvas(e.clientX, e.clientY);
 
       setZoom((prev) => {
-        const newZoom = Math.max(0.1, Math.min(prev * delta, 10));
+        const newZoom = Math.max(0.1, Math.min(prev * zoomFactor, 10));
         const actualDelta = newZoom / prev;
 
         setViewBox((vb) => ({
@@ -452,6 +465,18 @@ export default function StagePlan() {
     setDraggedNodeId(null);
   }, []);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Must use native addEventListener with passive: false
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [handleWheel]);
+
   return (
     <div
       id="stage-plan"
@@ -470,6 +495,7 @@ export default function StagePlan() {
         </p>
 
         <div
+          ref={containerRef}
           style={{
             position: "relative",
             width: "100%",
@@ -486,7 +512,6 @@ export default function StagePlan() {
               cursor: isPanning ? "grabbing" : "default",
             }}
             viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-            onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -518,7 +543,7 @@ export default function StagePlan() {
             />
 
             {nodes.map((node) => (
-              <StageNodeComponent
+              <StageNodeBuilderComponent
                 key={node.id}
                 node={node}
                 isHovered={hoveredNodeId === node.id}

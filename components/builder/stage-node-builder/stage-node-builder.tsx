@@ -1,8 +1,8 @@
-import { StageNodeDeleteHandle } from "../stage-node-delete-handle/stage-node-delete-handle";
-import { StageNodeHandle } from "../stage-node-handle/stage-node-handle";
-import { equipmentConfig } from "../stage-plan/stage-plan";
+import { StageNodeDeleteHandle } from "@/components/stage-node-delete-handle/stage-node-delete-handle";
+import { StageNodeHandle } from "@/components/stage-node-handle/stage-node-handle";
+import { equipmentConfig } from "@/components/stage-plan/stage-plan";
 
-export interface StageNode {
+export interface StageNodeBuilder {
   id: number;
   x: number;
   y: number;
@@ -19,14 +19,14 @@ export interface StageNode {
   scale: number;
 }
 
-export interface StageNodeProps {
-  node: StageNode;
+export interface StageNodeBuilderProps {
+  node: StageNodeBuilder;
   isHovered: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
 
-export const StageNodeComponent: React.FC<StageNodeProps> = ({
+export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   node,
   isHovered,
   onMouseEnter,
@@ -66,7 +66,7 @@ export const StageNodeComponent: React.FC<StageNodeProps> = ({
           fill="transparent"
           style={{ cursor: "grab" }}
         />
-        <StageNodeHandle cx={0} cy={handleY} isVisible={isHovered} />
+        <StageNodeDeleteHandle cx={0} cy={handleY} isVisible={isHovered} />
       </g>
     );
   }
@@ -116,6 +116,7 @@ export const StageNodeComponent: React.FC<StageNodeProps> = ({
         style={{ cursor: "grab" }}
       />
       <StageNodeHandle cx={0} cy={handleY} isVisible={isHovered} />
+      <StageNodeDeleteHandle cx={0} cy={handleY} isVisible={isHovered} />
     </g>
   );
 };

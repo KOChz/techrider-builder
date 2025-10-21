@@ -1,4 +1,4 @@
-import StagePlan from "@/components/stage-plan/stage-plan";
+import StagePlanBuilder from "../stage-plan-builder/stage-plan-builder";
 
 export function StagePlanContent() {
   return (
@@ -7,7 +7,7 @@ export function StagePlanContent() {
       <p className="text-sm text-gray-600">
         Create your stage setup and positioning
       </p>
-      <StagePlan />
+      <StagePlanBuilder />
     </div>
   );
 }
