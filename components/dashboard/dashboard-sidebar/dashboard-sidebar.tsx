@@ -108,7 +108,7 @@ export function DashboardSidebar() {
           <input type="hidden" name="redirectTo" value="/login" />
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-slate-700 rounded-lg hover:bg-slate-200 transition-all duration-200 font-medium text-sm"
+            className="w-full cursor-pointer flex items-center justify-center gap-2 px-4 py-3 text-slate-700 rounded-lg hover:bg-slate-200 transition-all duration-200 font-medium text-sm"
           >
             <svg
               className="w-5 h-5 flex-shrink-0"

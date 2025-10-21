@@ -11,7 +11,7 @@ export function DashboardHeader({ user }: IDashboardHeaderProps) {
   return (
     <header className="sticky top-0 h-16 bg-white border-b border-slate-200 z-20">
       <div className="h-full px-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-900">
+        <h1 className="text-3xl font-bold bg-linear-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
           TechRider Builder
         </h1>
 
