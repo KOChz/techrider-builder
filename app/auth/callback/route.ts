@@ -58,7 +58,9 @@ import type { NextRequest } from "next/server";
  * @returns Redirect to destination on success, or login page with error on failure
  */
 export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
+  console.log("🚀 ~ GET ~ request:", request);
+  const requestUrl = new URL(request.url) || process.env.NEXT_PUBLIC_SITE_URL;
+  console.log("🚀 ~ GET ~ requestUrl:", requestUrl);
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next") ?? "/";
   const error = requestUrl.searchParams.get("error");
