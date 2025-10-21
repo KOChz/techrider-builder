@@ -5,8 +5,8 @@ import { createServerClientService } from "@/lib/supabase/server";
 import StagePlan from "@/components/stage-plan/stage-plan";
 import Link from "next/link";
 
-import "./headeache-techrider.css";
 import { MemberCard, TBandMember } from "@/components/member-card/member-card";
+import "./headeache-techrider.css";
 
 export const bandMembers: TBandMember[] = [
   {
