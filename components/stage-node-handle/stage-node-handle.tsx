@@ -15,8 +15,8 @@ export const StageNodeHandle: React.FC<IStageNodeHandleProps> = ({
 }) => {
   return (
     <g
+      className="pointer-events-none"
       opacity={isVisible ? 0.8 : 0}
-      style={{ pointerEvents: "none" }}
       transform={`translate(${cx}, ${cy})`}
     >
       {/* Background circle */}

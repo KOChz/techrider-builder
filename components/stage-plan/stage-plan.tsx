@@ -455,32 +455,15 @@ export default function StagePlan() {
   return (
     <div
       id="stage-plan"
-      style={{
-        width: "100%",
-        height: "100vh",
-        background: "#1a1a1a",
-        color: "#fff",
-        fontFamily: "Arial, sans-serif",
-      }}
+      className="w-full h-screen bg-[#1a1a1a] text-white font-sans"
     >
-      <div style={{ padding: "20px" }}>
-        <h2 style={{ margin: "0 0 10px 0" }}>Stage Plan</h2>
-        <p
-          style={{ margin: "0 0 20px 0", color: "#999" }}
-          className="select-none"
-        >
+      <div className="p-5">
+        <h2 className="mb-2.5">Stage Plan</h2>
+        <p className="mb-5 text-[#999] select-none">
           Interactive stage layout - pan, zoom, and drag equipment positions
         </p>
 
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            height: "70vh",
-            background: "#0a0a0a",
-            border: "1px solid #333",
-          }}
-        >
+        <div className="relative w-full h-[70vh] bg-[#0a0a0a] border border-[#333]">
           <svg
             ref={svgRef}
             style={{
@@ -532,7 +515,7 @@ export default function StagePlan() {
           </svg>
         </div>
 
-        <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
+        <div className="flex gap-5 mt-5 items-center">
           <button onClick={handleZoomIn} style={buttonStyle}>
             Zoom In (+)
           </button>
@@ -542,32 +525,10 @@ export default function StagePlan() {
           <button onClick={handleReset} style={buttonStyle}>
             Reset View
           </button>
-        </div>
 
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            gap: "20px",
-            fontSize: "14px",
-            color: "#999",
-          }}
-        >
           <div>
             Zoom:{" "}
-            <span style={{ color: "#4CAF50" }}>{Math.round(zoom * 100)}%</span>
-          </div>
-          <div>
-            Pan:{" "}
-            <span style={{ color: "#4CAF50" }}>
-              {Math.round(viewBox.x)}, {Math.round(viewBox.y)}
-            </span>
-          </div>
-          <div>
-            Mouse:{" "}
-            <span style={{ color: "#4CAF50" }}>
-              {Math.round(mouse.x)}, {Math.round(mouse.y)}
-            </span>
+            <span className="text-green-700">{Math.round(zoom * 100)}%</span>
           </div>
         </div>
       </div>

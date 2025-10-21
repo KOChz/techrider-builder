@@ -156,12 +156,11 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
 
   return (
     <g
-      className="stage-node !z-40"
+      className="stage-node cursor-move"
       data-id={node.id}
       transform={`translate(${node.x}, ${node.y}) rotate(${node.angle})`}
       onPointerEnter={onMouseEnter}
       onPointerLeave={onMouseLeave}
-      style={{ cursor: "move" }}
     >
       <rect
         x={-bodyW / 2}
@@ -233,12 +232,11 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
 
       {/* Larger rotation hitbox for easier targeting */}
       <circle
-        className="rotation-hitbox"
+        className="rotation-hitbox cursor-grab"
         cx={0}
         cy={handleY}
         r={ROTATION_HITBOX_R}
         fill="transparent"
-        style={{ cursor: "grab" }}
       />
 
       <g>

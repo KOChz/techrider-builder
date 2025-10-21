@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOutAction } from "@/app/actions/sign-out-action/sign-out-action";
+import { cn } from "@/lib/utils/cn";
 
 const navigationItems = [
   {
@@ -89,11 +90,12 @@ export function DashboardSidebar() {
                     onClick={() => {
                       router.push(item.href);
                     }}
-                    className={`flex cursor-pointer items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    className={cn(
+                      "flex cursor-pointer items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
                       isActive
                         ? "bg-green-700 text-white shadow-sm"
-                        : "text-slate-700 hover:bg-slate-200"
-                    }`}
+                        : "text-slate-700 hover:bg-green-600/15"
+                    )}
                     aria-current={isActive ? "page" : undefined}
                   >
                     {item.icon}

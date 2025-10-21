@@ -613,12 +613,14 @@ export default function StagePlanBuilder() {
   return (
     <div
       id="stage-plan"
-      className="w-full h-dvh min-h-[770px] bg-[#1a1a1a] text-white font-sans"
+      className="w-full min-h-screen bg-[#1a1a1a] text-white font-sans"
     >
-      <div className="p-5">
-        <p className="text-gray-400 mb-2">To zoom press control and scroll</p>
+      <div className="p-3 sm:p-5 max-w-full">
+        <p className="text-gray-400 mb-2 text-xs sm:text-sm">
+          To zoom press control and scroll
+        </p>
 
-        <div className="flex gap-3 items-center mb-3 flex-wrap">
+        <div className="flex gap-2 sm:gap-3 items-start sm:items-center mb-3 flex-wrap">
           <EquipmentSelect
             value={picker}
             onChange={setPicker}
@@ -626,10 +628,13 @@ export default function StagePlanBuilder() {
           />
 
           <div
-            className="select-none flex items-center gap-2 bg-slate-900 border border-slate-700 px-2.5 py-3.5 rounded-lg min-w-[260px]"
+            className="select-none flex items-center gap-2 bg-slate-900 border border-slate-700 px-2.5 py-3.5 rounded-lg w-full sm:w-auto sm:min-w-[260px]"
             aria-live="polite"
           >
-            <label htmlFor="node-name" className="text-xs text-gray-400">
+            <label
+              htmlFor="node-name"
+              className="text-xs text-gray-400 shrink-0"
+            >
               Name
             </label>
             <input
@@ -643,7 +648,7 @@ export default function StagePlanBuilder() {
                 if (e.key === "Escape") (e.target as HTMLInputElement).blur();
               }}
               className={cn(
-                "flex-1 bg-transparent border-none outline-none px-2 py-1.5",
+                "flex-1 bg-transparent border-none outline-none px-2 py-1.5 text-sm",
                 selectedNode ? "text-gray-200" : "text-gray-500"
               )}
             />
@@ -662,12 +667,11 @@ export default function StagePlanBuilder() {
 
         <div
           ref={containerRef}
+          className="relative w-full bg-[#0a0a0a] border border-[#333]"
           style={{
-            position: "relative",
-            width: "100%",
-            height: "70dvh",
-            background: "#0a0a0a",
-            border: "1px solid #333",
+            height: "calc(100vh - 280px)",
+            minHeight: "400px",
+            maxHeight: "800px",
           }}
         >
           <svg
@@ -750,27 +754,27 @@ export default function StagePlanBuilder() {
           </svg>
         </div>
 
-        <div className="mt-5 flex gap-5">
+        <div className="mt-3 sm:mt-5 flex flex-wrap gap-2 sm:gap-5">
           <button
             onClick={handleZoomIn}
-            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:bg-[#444] active:bg-[#222]"
           >
             Zoom In (+)
           </button>
           <button
             onClick={handleZoomOut}
-            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:bg-[#444] active:bg-[#222]"
           >
             Zoom Out (−)
           </button>
           <button
             onClick={handleReset}
-            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+            className="cursor-pointer select-none rounded border border-[#555] bg-[#333] px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:bg-[#444] active:bg-[#222]"
           >
             Reset View
           </button>
 
-          <div className="mt-5 select-none flex gap-5 text-sm text-grey-400">
+          <div className="w-full sm:w-auto sm:ml-auto select-none flex items-center gap-2 sm:gap-5 text-xs sm:text-sm text-gray-400">
             <div>
               Zoom:{" "}
               <span className="text-green-700">{Math.round(zoom * 100)}%</span>

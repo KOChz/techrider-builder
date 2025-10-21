@@ -196,13 +196,12 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
 
       {isHovered && (
         <g
-          className="delete-handle"
+          className="delete-handle cursor-pointer"
           transform={`translate(${midX - 5}, ${midY - 20})`}
           onPointerDown={(e) => {
             e.stopPropagation();
             onDelete(measurement.id);
           }}
-          style={{ cursor: "pointer" }}
         >
           <circle cx={0} cy={0} r={12} fill="#ef4444" />
           <line

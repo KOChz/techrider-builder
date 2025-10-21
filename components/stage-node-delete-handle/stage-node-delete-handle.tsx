@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils/cn";
+
 interface IStageNodeDeleteHandleProps {
   cx: number;
   cy: number;
@@ -27,14 +29,14 @@ export const StageNodeDeleteHandle: React.FC<IStageNodeDeleteHandleProps> = ({
 
   return (
     <g
-      className="delete-handle"
       onMouseDown={handleMouseDown}
-      opacity={isVisible ? 0.8 : 0}
-      style={{
-        pointerEvents: isVisible ? "auto" : "none",
-        transition: "opacity 0.2s ease-in-out",
-        cursor: "pointer",
-      }}
+      className={cn(
+        "delete-handle",
+        "transition-opacity duration-200 ease-in-out cursor-pointer",
+        isVisible
+          ? "opacity-80 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+      )}
       transform={`translate(${handleX}, ${handleY})`}
     >
       <circle
@@ -48,7 +50,7 @@ export const StageNodeDeleteHandle: React.FC<IStageNodeDeleteHandleProps> = ({
       />
 
       {/* Native SVG X icon instead of Lucide */}
-      <g className="delete-handle" style={{ pointerEvents: "none" }}>
+      <g className="delete-handle pointer-events-none">
         <line
           x1={-5}
           y1={-5}

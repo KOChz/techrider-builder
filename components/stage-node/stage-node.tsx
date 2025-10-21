@@ -39,12 +39,11 @@ export const StageNodeComponent: React.FC<StageNodeProps> = ({
     const handleY = -30;
     return (
       <g
-        className="stage-node"
+        className="stage-node cursor-move"
         data-id={node.id}
         transform={`translate(${node.x}, ${node.y}) rotate(${node.angle})`}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        style={{ cursor: "move" }}
       >
         <text
           className="node-text"
@@ -59,12 +58,11 @@ export const StageNodeComponent: React.FC<StageNodeProps> = ({
           {node.label}
         </text>
         <circle
-          className="rotation-hitbox"
+          className="rotation-hitbox cursor-grab"
           cx={0}
           cy={handleY}
           r={20}
           fill="transparent"
-          style={{ cursor: "grab" }}
         />
         <StageNodeHandle cx={0} cy={handleY} isVisible={isHovered} />
       </g>
@@ -75,12 +73,11 @@ export const StageNodeComponent: React.FC<StageNodeProps> = ({
 
   return (
     <g
-      className="stage-node"
+      className="stage-node cursor-move"
       data-id={node.id}
       transform={`translate(${node.x}, ${node.y}) rotate(${node.angle})`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      style={{ cursor: "move" }}
     >
       <use
         xlinkHref={`#${node.type}`}
@@ -108,12 +105,11 @@ export const StageNodeComponent: React.FC<StageNodeProps> = ({
         ({Math.round(node.x)}, {Math.round(node.y)}) • {Math.round(node.angle)}°
       </text>
       <circle
-        className="rotation-hitbox"
+        className="rotation-hitbox cursor-grab"
         cx={0}
         cy={handleY}
         r={20}
         fill="transparent"
-        style={{ cursor: "grab" }}
       />
       <StageNodeHandle cx={0} cy={handleY} isVisible={isHovered} />
     </g>
