@@ -475,7 +475,7 @@ export default async function TechRider() {
             kristinaheadachee@gmail.com
           </a>
         </p>
-        <p style={{ marginTop: "var(--spacing-md)", fontSize: "0.85rem" }}>
+        <p className="mt-(--spacing-md) text-[0.85rem]">
           © 2025 headachee. All rights reserved.
         </p>
       </footer>

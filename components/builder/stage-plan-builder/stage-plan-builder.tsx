@@ -14,6 +14,7 @@ import {
   StageNodeBuilderComponent,
 } from "../stage-node-builder/stage-node-builder";
 import EquipmentSelect from "../equipment-select/equipment-select";
+import { cn } from "@/lib/utils/cn";
 
 interface Vec2 {
   x: number;
@@ -554,13 +555,7 @@ export default function StagePlanBuilder() {
   return (
     <div
       id="stage-plan"
-      style={{
-        width: "100%",
-        height: "100vh",
-        background: "#1a1a1a",
-        color: "#fff",
-        fontFamily: "Arial, sans-serif",
-      }}
+      className="w-full h-screen bg-[#1a1a1a] text-white font-sans"
     >
       <div style={{ padding: "20px" }}>
         <p style={{ margin: "0 0 20px 0", color: "#999" }}>
@@ -568,40 +563,19 @@ export default function StagePlanBuilder() {
         </p>
 
         {/* Toolbar: picker + rename control */}
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            alignItems: "center",
-            marginBottom: 12,
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="flex gap-3 items-center mb-3 flex-wrap">
           <EquipmentSelect
             value={picker}
             onChange={setPicker}
             onAdd={addNodeOfType}
           />
 
-          {/* NEW: Name editor for the selected node */}
+          {/* Name editor for the selected node */}
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              background: "#0f172a",
-              border: "1px solid #334155",
-              padding: "14px 10px",
-              borderRadius: 8,
-              minWidth: 260,
-            }}
-            className="select-none"
+            className="select-none flex items-center gap-2 bg-slate-900 border border-slate-700 px-2.5 py-3.5 rounded-lg min-w-[260px]"
             aria-live="polite"
           >
-            <label
-              htmlFor="node-name"
-              style={{ fontSize: 12, color: "#9ca3af" }}
-            >
+            <label htmlFor="node-name" className="text-xs text-gray-400">
               Name
             </label>
             <input
@@ -614,14 +588,10 @@ export default function StagePlanBuilder() {
               onKeyDown={(e) => {
                 if (e.key === "Escape") (e.target as HTMLInputElement).blur();
               }}
-              style={{
-                flex: 1,
-                background: "transparent",
-                color: selectedNode ? "#e5e7eb" : "#6b7280",
-                border: "none",
-                outline: "none",
-                padding: "6px 8px",
-              }}
+              className={cn(
+                "flex-1 bg-transparent border-none outline-none px-2 py-1.5",
+                selectedNode ? "text-gray-200" : "text-gray-500"
+              )}
             />
           </div>
         </div>
@@ -689,47 +659,46 @@ export default function StagePlanBuilder() {
           </svg>
         </div>
 
-        <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
-          <button onClick={handleZoomIn} style={buttonStyle}>
+        <div className="mt-5 flex gap-5">
+          <button
+            onClick={handleZoomIn}
+            className="cursor-pointer rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+          >
             Zoom In (+)
           </button>
-          <button onClick={handleZoomOut} style={buttonStyle}>
+          <button
+            onClick={handleZoomOut}
+            className="cursor-pointer rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+          >
             Zoom Out (−)
           </button>
-          <button onClick={handleReset} style={buttonStyle}>
+          <button
+            onClick={handleReset}
+            className="cursor-pointer rounded border border-[#555] bg-[#333] px-5 py-2.5 text-sm text-white hover:bg-[#444] active:bg-[#222]"
+          >
             Reset View
           </button>
 
-          <div
-            style={{
-              marginTop: "20px",
-              display: "flex",
-              gap: "20px",
-              fontSize: "14px",
-              color: "#999",
-            }}
-          >
+          <div className="mt-5 flex gap-5 text-sm text-gray-400">
             <div>
               Zoom:{" "}
-              <span style={{ color: "#4CAF50" }}>
-                {Math.round(zoom * 100)}%
-              </span>
+              <span className="text-green-500">{Math.round(zoom * 100)}%</span>
             </div>
             <div>
               Pan:{" "}
-              <span style={{ color: "#4CAF50" }}>
+              <span className="text-green-500">
                 {Math.round(viewBox.x)}, {Math.round(viewBox.y)}
               </span>
             </div>
             <div>
               Mouse:{" "}
-              <span style={{ color: "#4CAF50" }}>
+              <span className="text-green-500">
                 {Math.round(mouse.x)}, {Math.round(mouse.y)}
               </span>
             </div>
             <div>
               Selected:{" "}
-              <span style={{ color: "#4CAF50" }}>
+              <span className="text-green-500">
                 {selectedNode
                   ? `#${selectedNode.id} • ${selectedNode.label}`
                   : "—"}
@@ -741,13 +710,3 @@ export default function StagePlanBuilder() {
     </div>
   );
 }
-
-const buttonStyle: React.CSSProperties = {
-  padding: "10px 20px",
-  background: "#333",
-  border: "1px solid #555",
-  color: "#fff",
-  cursor: "pointer",
-  borderRadius: "4px",
-  fontSize: "14px",
-};

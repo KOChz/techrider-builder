@@ -52,12 +52,11 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
 
     return (
       <g
-        className="stage-node"
+        className="stage-node cursor-move"
         data-id={node.id}
         transform={`translate(${node.x}, ${node.y}) rotate(${node.angle})`}
         onPointerEnter={onMouseEnter}
         onPointerLeave={onMouseLeave}
-        style={{ cursor: "move" }}
       >
         {/* Unified hitbox incl. handle */}
         <rect
@@ -85,12 +84,11 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
 
         {/* rotation / handle targets */}
         <circle
-          className="rotation-hitbox"
+          className="rotation-hitbox cursor-grab"
           cx={0}
           cy={handleY}
           r={CONTROL_R}
           fill="transparent"
-          style={{ cursor: "grab" }}
         />
 
         {/* Visuals rendered with pointerEvents=none, we handle events via overlays */}
