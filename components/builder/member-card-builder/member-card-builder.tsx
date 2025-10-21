@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
 
 export type TEquipmentExample = {
   title: string;
@@ -144,8 +145,9 @@ export function MemberCardBuilder({
     <div className="relative max-w-lg text-sm p-6 bg-white rounded-lg border border-gray-200">
       {onRemove && (
         <button
+          type="button"
           onClick={onRemove}
-          className="absolute cursor-pointer -top-3 cursor-pointer text-lg -right-3 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+          className="absolute -top-3 -right-3 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors cursor-pointer text-lg"
           aria-label="Remove member"
         >
           ×
@@ -155,12 +157,9 @@ export function MemberCardBuilder({
       <div className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <input
-              type="text"
+            <MusicalInstrumentSelector
               value={member.icon}
-              onChange={(e) => updateMember({ icon: e.target.value })}
-              className="w-16 h-16 placeholder-slate-500 text-3xl text-center border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none"
-              placeholder="🎸"
+              onChange={(icon) => updateMember({ icon })}
             />
             <div className="flex-1 space-y-2">
               <input
@@ -185,8 +184,9 @@ export function MemberCardBuilder({
           <div className="flex items-center justify-between">
             <h4 className="text-lg font-semibold text-gray-800">Equipment</h4>
             <button
+              type="button"
               onClick={addEquipmentItem}
-              className="px-4 cursor-pointer py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors cursor-pointer"
             >
               + Add Equipment
             </button>
@@ -221,8 +221,9 @@ export function MemberCardBuilder({
                   placeholder="Qty"
                 />
                 <button
+                  type="button"
                   onClick={() => removeEquipmentItem(equipmentIndex)}
-                  className="px-3 cursor-pointer py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                  className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors cursor-pointer"
                 >
                   Remove
                 </button>
@@ -241,8 +242,9 @@ export function MemberCardBuilder({
                       placeholder="Examples title"
                     />
                     <button
+                      type="button"
                       onClick={() => removeExamplesFromItem(equipmentIndex)}
-                      className="px-2 py-1 text-sm bg-gray-400 text-white rounded hover:bg-gray-500 transition-colors"
+                      className="px-2 py-1 text-sm bg-gray-400 text-white rounded hover:bg-gray-500 transition-colors cursor-pointer"
                     >
                       Remove Examples
                     </button>
@@ -265,10 +267,11 @@ export function MemberCardBuilder({
                           placeholder="Example item"
                         />
                         <button
+                          type="button"
                           onClick={() =>
                             removeExampleItem(equipmentIndex, exampleIndex)
                           }
-                          className="px-2 py-1 text-sm bg-red-400 text-white rounded hover:bg-red-500 transition-colors"
+                          className="px-2 py-1 text-sm bg-red-400 text-white rounded hover:bg-red-500 transition-colors cursor-pointer"
                         >
                           ×
                         </button>
@@ -277,16 +280,18 @@ export function MemberCardBuilder({
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => addExampleItem(equipmentIndex)}
-                    className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                    className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition-colors cursor-pointer"
                   >
                     + Add Example
                   </button>
                 </div>
               ) : (
                 <button
+                  type="button"
                   onClick={() => addExamplesToItem(equipmentIndex)}
-                  className="px-3 py-1 text-sm cursor-pointer bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                  className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer"
                 >
                   + Add Examples Section
                 </button>
