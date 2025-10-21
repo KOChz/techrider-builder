@@ -14,6 +14,8 @@ import {
   StageNodeBuilderComponent,
 } from "../stage-node-builder/stage-node-builder";
 import EquipmentSelect from "../equipment-select/equipment-select";
+import { DimensionLine, IMeasurement } from "../dimension-line/dimension-line";
+import { MeasurementControls } from "../measurement-controls/measurement-controls";
 import { cn } from "@/lib/utils/cn";
 
 interface Vec2 {
@@ -32,9 +34,6 @@ interface EquipmentConfig {
   labelOffset: number;
 }
 
-// ============================================================================
-// EQUIPMENT CONFIGURATION
-// ============================================================================
 export const equipmentConfig: Record<
   StageNodeBuilder["type"],
   EquipmentConfig
@@ -48,9 +47,6 @@ export const equipmentConfig: Record<
   "di-box": { width: 60, height: 40, labelOffset: 30 },
 };
 
-// ============================================================================
-// INITIAL STAGE NODES
-// ============================================================================
 const initialNodes: StageNodeBuilder[] = [
   {
     id: 1,
@@ -207,9 +203,6 @@ const initialNodes: StageNodeBuilder[] = [
   },
 ];
 
-// ============================================================================
-// SVG SYMBOLS COMPONENT
-// ============================================================================
 const SvgSymbols: React.FC = () => (
   <defs>
     <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -227,7 +220,6 @@ const SvgSymbols: React.FC = () => (
       <line x1="0" y1="0" x2="200" y2="0" stroke="#3a3a3a" strokeWidth="1" />
     </pattern>
 
-    {/* Components must render <symbol id="..."> */}
     <DrumkitIcon />
     <AmpIcon />
     <MonitorIcon />
@@ -239,6 +231,8 @@ const SvgSymbols: React.FC = () => (
 
 export default function StagePlanBuilder() {
   const [nodes, setNodes] = useState<StageNodeBuilder[]>(initialNodes);
+  const [measurements, setMeasurements] = useState<IMeasurement[]>([]);
+
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -500,
     y: -500,
@@ -254,6 +248,9 @@ export default function StagePlanBuilder() {
 
   const [draggedNodeId, setDraggedNodeId] = useState<number | null>(null);
   const [hoveredNodeId, setHoveredNodeId] = useState<number | null>(null);
+  const [hoveredMeasurementId, setHoveredMeasurementId] = useState<
+    number | null
+  >(null);
 
   const [dragOffset, setDragOffset] = useState<Vec2>({ x: 0, y: 0 });
   const [rotationStart, setRotationStart] = useState({
@@ -261,18 +258,21 @@ export default function StagePlanBuilder() {
     mouseAngle: 0,
   });
 
-  // selection state for rename UX
-  const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null); // NEW
+  const [selectedNodeId, setSelectedNodeId] = useState<number | null>(null);
   const selectedNode =
     selectedNodeId != null
       ? nodes.find((n) => n.id === selectedNodeId) ?? null
-      : null; // NEW
+      : null;
+
+  const [isMeasurementMode, setIsMeasurementMode] = useState(false);
+  const [selectedMeasurementNodes, setSelectedMeasurementNodes] = useState<
+    [number | null, number | null]
+  >([null, null]);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const panStartRef = useRef<Vec2>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // --- hover stabilization ---------------------------------------------------
   const leaveTimer = useRef<number | null>(null);
   const armedEnter = useCallback((id: number) => {
     if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
@@ -310,7 +310,6 @@ export default function StagePlanBuilder() {
     return angle;
   };
 
-  // --- zoom controls --------------------------------------------------------
   const handleZoomIn = useCallback(() => {
     setZoom((prev) => {
       const newZoom = Math.min(prev * 1.2, 10);
@@ -340,7 +339,9 @@ export default function StagePlanBuilder() {
   const handleReset = useCallback(() => {
     setViewBox({ x: -500, y: -500, width: 1000, height: 1000 });
     setZoom(1);
-    setSelectedNodeId(null); // NEW: clear selection on reset
+    setSelectedNodeId(null);
+    setIsMeasurementMode(false);
+    setSelectedMeasurementNodes([null, null]);
   }, []);
 
   const handleWheel = useCallback(
@@ -374,19 +375,17 @@ export default function StagePlanBuilder() {
     [screenToCanvas]
   );
 
-  // --- pointer flows --------------------------------------------------------
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       const target = e.target as SVGElement;
 
-      // Early exit for delete actions
       const path = (e.nativeEvent as PointerEvent).composedPath() as Element[];
       if (
         path.some((el) =>
           (el as Element)?.classList?.contains?.("delete-handle")
         )
       ) {
-        return; // Delete handler will handle this via onPointerDownCapture
+        return;
       }
 
       const nodeElement = target.closest(".stage-node") as SVGGElement | null;
@@ -395,6 +394,33 @@ export default function StagePlanBuilder() {
         const nodeId = parseInt(nodeElement.getAttribute("data-id") || "0", 10);
         const node = nodes.find((n) => n.id === nodeId);
         if (!node) return;
+
+        if (isMeasurementMode) {
+          if (selectedMeasurementNodes[0] === null) {
+            setSelectedMeasurementNodes([nodeId, null]);
+          } else if (
+            selectedMeasurementNodes[1] === null &&
+            selectedMeasurementNodes[0] !== nodeId
+          ) {
+            const nextId =
+              measurements.length > 0
+                ? Math.max(...measurements.map((m) => m.id)) + 1
+                : 1;
+
+            setMeasurements((prev) => [
+              ...prev,
+              {
+                id: nextId,
+                startNodeId: selectedMeasurementNodes[0] || 0,
+                endNodeId: nodeId,
+              },
+            ]);
+
+            setSelectedMeasurementNodes([null, null]);
+            setIsMeasurementMode(false);
+          }
+          return;
+        }
 
         setSelectedNodeId(nodeId);
 
@@ -422,11 +448,20 @@ export default function StagePlanBuilder() {
         e.preventDefault();
       } else {
         setSelectedNodeId(null);
+        if (isMeasurementMode) {
+          setSelectedMeasurementNodes([null, null]);
+        }
         setIsPanning(true);
         panStartRef.current = { x: e.clientX, y: e.clientY };
       }
     },
-    [nodes, screenToCanvas]
+    [
+      nodes,
+      screenToCanvas,
+      isMeasurementMode,
+      selectedMeasurementNodes,
+      measurements,
+    ]
   );
 
   const handlePointerMove = useCallback(
@@ -492,9 +527,31 @@ export default function StagePlanBuilder() {
   }, []);
 
   const handleDeleteNode = useCallback((nodeId: number) => {
-    console.log("🚀 ~ StagePlanBuilder ~ nodeId:", nodeId);
     setNodes((prev) => prev.filter((node) => node.id !== nodeId));
-    setSelectedNodeId((prev) => (prev === nodeId ? null : prev)); // NEW: clear selection if deleted
+    setSelectedNodeId((prev) => (prev === nodeId ? null : prev));
+    setMeasurements((prev) =>
+      prev.filter((m) => m.startNodeId !== nodeId && m.endNodeId !== nodeId)
+    );
+  }, []);
+
+  const handleDeleteMeasurement = useCallback((measurementId: number) => {
+    setMeasurements((prev) => prev.filter((m) => m.id !== measurementId));
+  }, []);
+
+  const handleUpdateCustomDistance = useCallback(
+    (measurementId: number, distance: string) => {
+      setMeasurements((prev) =>
+        prev.map((m) =>
+          m.id === measurementId ? { ...m, customDistance: distance } : m
+        )
+      );
+    },
+    []
+  );
+
+  const toggleMeasurementMode = useCallback(() => {
+    setIsMeasurementMode((prev) => !prev);
+    setSelectedMeasurementNodes([null, null]);
   }, []);
 
   type PickableType =
@@ -533,10 +590,9 @@ export default function StagePlanBuilder() {
         scale: 1,
       },
     ]);
-    setSelectedNodeId(nextId); // NEW: select freshly added node for immediate rename
+    setSelectedNodeId(nextId);
   }
 
-  // NEW: update label helper
   const updateSelectedLabel = useCallback(
     (next: string) => {
       if (selectedNodeId == null) return;
@@ -561,10 +617,9 @@ export default function StagePlanBuilder() {
     >
       <div style={{ padding: "20px" }}>
         <p style={{ margin: "0 0 20px 0", color: "#999" }}>
-          Interactive stage layout - pan, zoom, and drag equipment positions
+          To zoom press control and scroll
         </p>
 
-        {/* Toolbar: picker + rename control */}
         <div className="flex gap-3 items-center mb-3 flex-wrap">
           <EquipmentSelect
             value={picker}
@@ -572,7 +627,6 @@ export default function StagePlanBuilder() {
             onAdd={addNodeOfType}
           />
 
-          {/* Name editor for the selected node */}
           <div
             className="select-none flex items-center gap-2 bg-slate-900 border border-slate-700 px-2.5 py-3.5 rounded-lg min-w-[260px]"
             aria-live="polite"
@@ -598,6 +652,16 @@ export default function StagePlanBuilder() {
           </div>
         </div>
 
+        <div className="mb-3">
+          <MeasurementControls
+            isMeasurementMode={isMeasurementMode}
+            onToggleMeasurementMode={toggleMeasurementMode}
+            measurements={measurements}
+            nodes={nodes}
+            selectedMeasurementNodes={selectedMeasurementNodes}
+          />
+        </div>
+
         <div
           ref={containerRef}
           style={{
@@ -613,7 +677,11 @@ export default function StagePlanBuilder() {
             style={{
               width: "100%",
               height: "100%",
-              cursor: isPanning ? "grabbing" : "default",
+              cursor: isPanning
+                ? "grabbing"
+                : isMeasurementMode
+                ? "crosshair"
+                : "default",
             }}
             viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
             onPointerDown={handlePointerDown}
@@ -623,7 +691,6 @@ export default function StagePlanBuilder() {
           >
             <SvgSymbols />
 
-            {/* grid + axes */}
             <rect
               x={-5000}
               y={-5000}
@@ -659,6 +726,29 @@ export default function StagePlanBuilder() {
                 onDelete={handleDeleteNode}
               />
             ))}
+
+            {measurements.map((measurement) => {
+              const startNode = nodes.find(
+                (n) => n.id === measurement.startNodeId
+              );
+              const endNode = nodes.find((n) => n.id === measurement.endNodeId);
+
+              if (!startNode || !endNode) return null;
+
+              return (
+                <DimensionLine
+                  key={measurement.id}
+                  measurement={measurement}
+                  startNode={startNode}
+                  endNode={endNode}
+                  isHovered={hoveredMeasurementId === measurement.id}
+                  onHover={() => setHoveredMeasurementId(measurement.id)}
+                  onLeave={() => setHoveredMeasurementId(null)}
+                  onDelete={handleDeleteMeasurement}
+                  onUpdateCustomDistance={handleUpdateCustomDistance}
+                />
+              );
+            })}
           </svg>
         </div>
 
