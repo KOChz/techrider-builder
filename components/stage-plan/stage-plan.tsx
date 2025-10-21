@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 
 import { AmpIcon } from "../stage-plan-icons/amp-icon/amp-icon";
 import { DrumkitIcon } from "../stage-plan-icons/drumkit-icon/drumkit-icon";
@@ -299,58 +299,57 @@ export default function StagePlan() {
     return angle;
   };
 
-  const handleZoomIn = useCallback(() => {
-    setZoom((prev) => {
-      const newZoom = Math.min(prev * 1.2, 10);
-      const delta = newZoom / prev;
-      setViewBox((vb) => ({
-        ...vb,
-        width: vb.width / delta,
-        height: vb.height / delta,
-      }));
-      return newZoom;
-    });
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    setZoom((prev) => {
-      const newZoom = Math.max(prev / 1.2, 0.1);
-      const delta = newZoom / prev;
-      setViewBox((vb) => ({
-        ...vb,
-        width: vb.width / delta,
-        height: vb.height / delta,
-      }));
-      return newZoom;
-    });
-  }, []);
-
   const handleReset = useCallback(() => {
     setViewBox({ x: -500, y: -500, width: 1000, height: 1000 });
     setZoom(1);
   }, []);
 
+  const ZOOM_MIN = 0.1;
+  const ZOOM_MAX = 10;
+  const ZOOM_SENSITIVITY = 0.0015; // smaller = slower; try 0.001–0.002
+  const BUTTON_STEP = 1.06; // was 1.2; smaller = slower
+
+  // helper to apply zoom anchored at a point
+  const zoomTo = useCallback((scale: number, anchor: Vec2) => {
+    setZoom((prev) => {
+      const next = Math.max(ZOOM_MIN, Math.min(prev * scale, ZOOM_MAX));
+      const actual = next / prev;
+      setViewBox((vb) => ({
+        x: anchor.x - (anchor.x - vb.x) / actual,
+        y: anchor.y - (anchor.y - vb.y) / actual,
+        width: vb.width / actual,
+        height: vb.height / actual,
+      }));
+      return next;
+    });
+  }, []);
+
+  const handleZoomIn = useCallback(() => {
+    const center = {
+      x: viewBox.x + viewBox.width / 2,
+      y: viewBox.y + viewBox.height / 2,
+    };
+    zoomTo(BUTTON_STEP, center);
+  }, [viewBox, zoomTo]);
+
+  const handleZoomOut = useCallback(() => {
+    const center = {
+      x: viewBox.x + viewBox.width / 2,
+      y: viewBox.y + viewBox.height / 2,
+    };
+    zoomTo(1 / BUTTON_STEP, center);
+  }, [viewBox, zoomTo]);
+
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
       e.preventDefault();
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      const canvasPos = screenToCanvas(e.clientX, e.clientY);
-
-      setZoom((prev) => {
-        const newZoom = Math.max(0.1, Math.min(prev * delta, 10));
-        const actualDelta = newZoom / prev;
-
-        setViewBox((vb) => ({
-          x: canvasPos.x - (canvasPos.x - vb.x) / actualDelta,
-          y: canvasPos.y - (canvasPos.y - vb.y) / actualDelta,
-          width: vb.width / actualDelta,
-          height: vb.height / actualDelta,
-        }));
-
-        return newZoom;
-      });
+      e.stopPropagation(); // ensure it never bubbles to page
+      const anchor = screenToCanvas(e.clientX, e.clientY);
+      const scale = Math.exp(-e.deltaY * 0.0015);
+      zoomTo(scale, anchor);
     },
-    [screenToCanvas]
+    [screenToCanvas, zoomTo]
   );
 
   const handleMouseDown = useCallback(
@@ -452,6 +451,36 @@ export default function StagePlan() {
     setDraggedNodeId(null);
   }, []);
 
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el) return;
+
+    const preventPageScroll = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) e.preventDefault(); // block page scroll/zoom
+    };
+
+    // Safari pinch zoom uses gesture* events
+    const blockGesture = (e: Event) => e.preventDefault();
+
+    el.addEventListener("wheel", preventPageScroll, { passive: false });
+    el.addEventListener("gesturestart", blockGesture as EventListener, {
+      passive: false,
+    });
+    el.addEventListener("gesturechange", blockGesture as EventListener, {
+      passive: false,
+    });
+    el.addEventListener("gestureend", blockGesture as EventListener, {
+      passive: false,
+    });
+
+    return () => {
+      el.removeEventListener("wheel", preventPageScroll);
+      el.removeEventListener("gesturestart", blockGesture as EventListener);
+      el.removeEventListener("gesturechange", blockGesture as EventListener);
+      el.removeEventListener("gestureend", blockGesture as EventListener);
+    };
+  }, []);
+
   return (
     <div
       id="stage-plan"
@@ -459,13 +488,14 @@ export default function StagePlan() {
     >
       <div className="p-5">
         <h2 className="mb-2.5">Stage Plan</h2>
-        <p className="mb-5 text-[#999] select-none">
-          Interactive stage layout - pan, zoom, and drag equipment positions
+        <p className="mb-5 text-[#999]">
+          To zoom press control button and scroll
         </p>
 
         <div className="relative w-full h-[70vh] bg-[#0a0a0a] border border-[#333]">
           <svg
             ref={svgRef}
+            className="touch-none select-none"
             style={{
               width: "100%",
               height: "100%",
