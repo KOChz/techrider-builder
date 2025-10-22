@@ -22,6 +22,12 @@ interface IDimensionLineProps {
   onUpdateCustomDistance: (id: number, distance: string) => void;
 }
 
+type TXHTMLDivProps = React.HTMLAttributes<HTMLDivElement> & {
+  xmlns?: string;
+};
+
+const XHTMLDiv: React.FC<TXHTMLDivProps> = (props) => <div {...props} />;
+
 export const DimensionLine: React.FC<IDimensionLineProps> = ({
   measurement,
   startNode,
@@ -59,7 +65,6 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
 
   const startEditing = () => {
     setIsEditingDistance(true);
-    // Show just the value part for easier editing (remove "units" if present)
     const currentValue =
       measurement.customDistance || String(Math.round(distance));
     setEditValue(currentValue);
@@ -70,7 +75,6 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
     setIsEditingDistance(false);
 
     if (trimmedValue) {
-      // If user enters just a number without "units", append it for consistency
       const valueToSave = trimmedValue.match(/^\d+$/)
         ? `${trimmedValue} units`
         : trimmedValue;
@@ -86,11 +90,6 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
   useEffect(() => {
     setEditValue(measurement.customDistance || "");
   }, [measurement.id, measurement.customDistance]);
-
-  type XHTMLDivProps = React.HTMLAttributes<HTMLDivElement> & {
-    xmlns?: string;
-  };
-  const XHTMLDiv: React.FC<XHTMLDivProps> = (props) => <div {...props} />;
 
   return (
     <g className="dimension-line" onMouseEnter={onHover} onMouseLeave={onLeave}>
@@ -170,6 +169,7 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
           width={140}
           height={36}
           onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
           <XHTMLDiv xmlns="http://www.w3.org/1999/xhtml">
             <input
@@ -186,6 +186,7 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
                   cancelEditing();
                 }
               }}
+              onClick={(e) => e.stopPropagation()}
               onPointerDown={(e) => e.stopPropagation()}
               autoFocus
               className="h-full w-full rounded border border-green-500 bg-slate-800 px-2 text-center text-sm text-white outline-none"
@@ -193,48 +194,64 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
           </XHTMLDiv>
         </foreignObject>
       ) : (
-        <text
-          x={midX}
-          y={midY}
-          fill={isHovered ? "#60a5fa" : "#10b981"}
-          fontSize="14"
-          fontWeight="bold"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          className="cursor-pointer select-none"
-          onPointerDown={(e) => {
+        <g
+          onClick={(e) => {
             e.stopPropagation();
             startEditing();
           }}
-          pointerEvents="visiblePainted"
+          onPointerDown={(e) => e.stopPropagation()}
+          style={{ cursor: "pointer" }}
+          pointerEvents="bounding-box"
         >
-          <tspan
+          <rect
+            x={midX - 60}
+            y={midY - 15}
+            width={120}
+            height={30}
+            fill="transparent"
+            pointerEvents="all"
+          />
+
+          <text
             x={midX}
-            dy="0"
-            style={{
-              paintOrder: "stroke",
-              stroke: "#000",
-              strokeWidth: "3px",
-              strokeLinecap: "butt",
-              strokeLinejoin: "miter",
-            }}
+            y={midY}
+            fill={isHovered ? "#60a5fa" : "#10b981"}
+            fontSize="14"
+            fontWeight="bold"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            className="select-none"
+            pointerEvents="none"
           >
-            {displayDistance}
-          </tspan>
-          <tspan x={midX} dy="0">
-            {displayDistance}
-          </tspan>
-        </text>
+            <tspan
+              x={midX}
+              dy="0"
+              style={{
+                paintOrder: "stroke",
+                stroke: "#000",
+                strokeWidth: "3px",
+                strokeLinecap: "butt",
+                strokeLinejoin: "miter",
+              }}
+            >
+              {displayDistance}
+            </tspan>
+            <tspan x={midX} dy="0">
+              {displayDistance}
+            </tspan>
+          </text>
+        </g>
       )}
 
-      {isHovered && (
+      {isHovered && !isEditingDistance && (
         <g
           className="delete-handle cursor-pointer"
           transform={`translate(${midX - 5}, ${midY - 20})`}
-          onPointerDown={(e) => {
+          onClick={(e) => {
             e.stopPropagation();
             onDelete(measurement.id);
           }}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <circle cx={0} cy={0} r={12} fill="#ef4444" />
           <line
