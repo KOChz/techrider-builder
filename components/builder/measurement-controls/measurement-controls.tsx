@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { StageNodeBuilder } from "../stage-node-builder/stage-node-builder";
+import { TStageNodeBuilder } from "../stage-node-builder/stage-node-builder";
 import { cn } from "@/lib/utils/cn";
-import { IMeasurement } from "../dimension-line/dimension-line";
+import { TMeasurement } from "../dimension-line/dimension-line";
 
 interface IMeasurementControlsProps {
   isMeasurementMode: boolean;
   onToggleMeasurementMode: () => void;
-  measurements: IMeasurement[];
-  nodes: StageNodeBuilder[];
+  measurements: TMeasurement[];
+  nodes: TStageNodeBuilder[];
   selectedMeasurementNodes: [number | null, number | null];
 }
 

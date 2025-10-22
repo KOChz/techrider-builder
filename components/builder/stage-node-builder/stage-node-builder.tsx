@@ -4,26 +4,20 @@ import React from "react";
 import { StageNodeDeleteHandle } from "@/components/stage-node-delete-handle/stage-node-delete-handle";
 import { StageNodeHandle } from "@/components/stage-node-handle/stage-node-handle";
 import { equipmentConfig } from "@/components/stage-plan/stage-plan";
+import { TStageNodeType } from "../equipment-select/equipment-select";
 
-export interface StageNodeBuilder {
+export interface TStageNodeBuilder {
   id: number;
   x: number;
   y: number;
   label: string;
-  type:
-    | "drumkit"
-    | "amp"
-    | "monitor"
-    | "mic-stand"
-    | "power-extension"
-    | "di-box"
-    | "text";
-  angle: number;
-  scale: number;
+  type: TStageNodeType;
+  angle: number; // degrees
+  scale: number; // scalar
 }
 
 export interface StageNodeBuilderProps {
-  node: StageNodeBuilder;
+  node: TStageNodeBuilder;
   isHovered: boolean;
   isRotating: boolean;
   onMouseEnter: () => void;

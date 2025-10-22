@@ -1,17 +1,24 @@
 "use client";
 
 import * as React from "react";
+import z from "zod";
 
-type EquipmentType =
-  | "drumkit"
-  | "amp"
-  | "monitor"
-  | "mic-stand"
-  | "power-extension"
-  | "di-box";
+export const STAGE_NODE_TYPES = [
+  "drumkit",
+  "amp",
+  "monitor",
+  "mic-stand",
+  "power-extension",
+  "di-box",
+  "text",
+] as const;
 
-// NOTE: exclude "text" on purpose—no SVG symbol.
-const EQUIPMENT_OPTIONS: { value: EquipmentType; label: string }[] = [
+export const zStageNodeType = z.enum(STAGE_NODE_TYPES);
+
+export type TStageNodeType = z.infer<typeof zStageNodeType>;
+
+// exclude "text" on purpose—no SVG symbol.
+const EQUIPMENT_OPTIONS: { value: TStageNodeType; label: string }[] = [
   { value: "drumkit", label: "Drumkit" },
   { value: "amp", label: "Amp" },
   { value: "monitor", label: "Monitor" },
@@ -21,9 +28,9 @@ const EQUIPMENT_OPTIONS: { value: EquipmentType; label: string }[] = [
 ];
 
 export type EquipmentSelectProps = {
-  value: EquipmentType;
-  onChange: (value: EquipmentType) => void;
-  onAdd?: (value: EquipmentType) => void; // optional CTA hook
+  value: TStageNodeType;
+  onChange: (value: TStageNodeType) => void;
+  onAdd?: (value: TStageNodeType) => void; // optional CTA hook
   disabled?: boolean;
   id?: string;
 };

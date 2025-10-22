@@ -3,14 +3,14 @@
 import { useState } from "react";
 import {
   MemberCardBuilder,
-  TBandMember,
+  TBandMemberBuilder,
 } from "../../member-card-builder/member-card-builder";
 
 export function MembersContent() {
-  const [members, setMembers] = useState<TBandMember[]>([]);
+  const [members, setMembers] = useState<TBandMemberBuilder[]>([]);
 
   const handleAddMember = () => {
-    const newMember: TBandMember = {
+    const newMember: TBandMemberBuilder = {
       id: crypto.randomUUID(),
       name: "",
       icon: "🎸",
@@ -24,7 +24,7 @@ export function MembersContent() {
     setMembers((prev) => prev.filter((member) => member.id !== memberId));
   };
 
-  const handleMemberChange = (updatedMember: TBandMember) => {
+  const handleMemberChange = (updatedMember: TBandMemberBuilder) => {
     setMembers((prev) =>
       prev.map((member) =>
         member.id === updatedMember.id ? updatedMember : member

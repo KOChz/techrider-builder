@@ -8,23 +8,23 @@ export type TEquipmentExample = {
   items: string[];
 };
 
-export type TEquipmentItem = {
+export type TEquipmentItemBuilder = {
   name: string;
   quantity?: string;
   examples?: TEquipmentExample;
 };
 
-export type TBandMember = {
+export type TBandMemberBuilder = {
   id: string;
   name: string;
   icon: string;
   role: string;
-  equipment: TEquipmentItem[];
+  equipment: TEquipmentItemBuilder[];
 };
 
 interface IMemberCardBuilderProps {
-  initialMember?: TBandMember;
-  onChange?: (member: TBandMember) => void;
+  initialMember?: TBandMemberBuilder;
+  onChange?: (member: TBandMemberBuilder) => void;
   onRemove?: () => void;
 }
 
@@ -33,7 +33,7 @@ export function MemberCardBuilder({
   onChange,
   onRemove,
 }: IMemberCardBuilderProps) {
-  const [member, setMember] = useState<TBandMember>(
+  const [member, setMember] = useState<TBandMemberBuilder>(
     initialMember || {
       id: crypto.randomUUID(),
       name: "",
@@ -43,14 +43,14 @@ export function MemberCardBuilder({
     }
   );
 
-  const updateMember = (updates: Partial<TBandMember>) => {
+  const updateMember = (updates: Partial<TBandMemberBuilder>) => {
     const updatedMember = { ...member, ...updates };
     setMember(updatedMember);
     onChange?.(updatedMember);
   };
 
   const addEquipmentItem = () => {
-    const newEquipment: TEquipmentItem = {
+    const newEquipment: TEquipmentItemBuilder = {
       name: "",
       quantity: "",
     };
@@ -67,7 +67,7 @@ export function MemberCardBuilder({
 
   const updateEquipmentItem = (
     index: number,
-    updates: Partial<TEquipmentItem>
+    updates: Partial<TEquipmentItemBuilder>
   ) => {
     const updatedEquipment = member.equipment.map((item, i) =>
       i === index ? { ...item, ...updates } : item

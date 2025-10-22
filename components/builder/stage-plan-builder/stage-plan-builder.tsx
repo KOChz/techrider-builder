@@ -10,11 +10,13 @@ import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-ic
 import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-icon";
 
 import {
-  StageNodeBuilder,
+  TStageNodeBuilder,
   StageNodeBuilderComponent,
 } from "../stage-node-builder/stage-node-builder";
-import EquipmentSelect from "../equipment-select/equipment-select";
-import { DimensionLine, IMeasurement } from "../dimension-line/dimension-line";
+import EquipmentSelect, {
+  TStageNodeType,
+} from "../equipment-select/equipment-select";
+import { DimensionLine, TMeasurement } from "../dimension-line/dimension-line";
 import { MeasurementControls } from "../measurement-controls/measurement-controls";
 import { cn } from "@/lib/utils/cn";
 
@@ -35,7 +37,7 @@ interface EquipmentConfig {
 }
 
 export const equipmentConfig: Record<
-  StageNodeBuilder["type"],
+  TStageNodeBuilder["type"],
   EquipmentConfig
 > = {
   drumkit: { width: 200, height: 180, labelOffset: 100 },
@@ -47,7 +49,7 @@ export const equipmentConfig: Record<
   "di-box": { width: 60, height: 40, labelOffset: 30 },
 };
 
-const initialNodes: StageNodeBuilder[] = [
+const initialNodes: TStageNodeBuilder[] = [
   {
     id: 1,
     x: 0,
@@ -230,8 +232,8 @@ const SvgSymbols: React.FC = () => (
 );
 
 export default function StagePlanBuilder() {
-  const [nodes, setNodes] = useState<StageNodeBuilder[]>(initialNodes);
-  const [measurements, setMeasurements] = useState<IMeasurement[]>([]);
+  const [nodes, setNodes] = useState<TStageNodeBuilder[]>(initialNodes);
+  const [measurements, setMeasurements] = useState<TMeasurement[]>([]);
 
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -500,
@@ -554,28 +556,22 @@ export default function StagePlanBuilder() {
     setSelectedMeasurementNodes([null, null]);
   }, []);
 
-  type PickableType =
-    | "drumkit"
-    | "amp"
-    | "monitor"
-    | "mic-stand"
-    | "power-extension"
-    | "di-box";
-  const [picker, setPicker] = useState<PickableType>("drumkit");
+  const [picker, setPicker] = useState<TStageNodeType>("drumkit");
 
-  function addNodeOfType(t: PickableType) {
+  function addNodeOfType(t: TStageNodeType) {
     const cx = viewBox.x + viewBox.width / 2;
     const cy = viewBox.y + viewBox.height / 2;
     const nextId =
       nodes.length > 0 ? Math.max(...nodes.map((n) => n.id)) + 1 : 1;
 
-    const labelByType: Record<PickableType, string> = {
+    const labelByType: Record<TStageNodeType, string> = {
       drumkit: "Drumkit",
       amp: "Amp",
       monitor: "Monitor",
       "mic-stand": "Mic Stand",
       "power-extension": "Power Strip",
       "di-box": "DI Box",
+      text: "Text",
     };
 
     setNodes((prev) => [

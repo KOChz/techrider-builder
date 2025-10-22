@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { StageNodeBuilder } from "../stage-node-builder/stage-node-builder";
+import { TStageNodeBuilder } from "../stage-node-builder/stage-node-builder";
 
-export interface IMeasurement {
+export type TMeasurement = {
   id: number;
   startNodeId: number;
   endNodeId: number;
   customDistance?: string;
   offsetAngle?: number;
-}
+};
 
 interface IDimensionLineProps {
-  measurement: IMeasurement;
-  startNode: StageNodeBuilder;
-  endNode: StageNodeBuilder;
+  measurement: TMeasurement;
+  startNode: TStageNodeBuilder;
+  endNode: TStageNodeBuilder;
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
