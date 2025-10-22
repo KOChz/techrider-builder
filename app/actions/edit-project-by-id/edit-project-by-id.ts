@@ -106,7 +106,6 @@ export async function editProjectById(
 
     if (input.name !== undefined) {
       updateData.name = input.name;
-      // Generate new slug when name changes
       updateData.slug = await slugify(input.name);
     }
     if (input.notes !== undefined) updateData.notes = input.notes;

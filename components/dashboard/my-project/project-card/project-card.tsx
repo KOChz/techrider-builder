@@ -6,14 +6,30 @@ import { ProjectCardActions } from "./project-card-actions";
 import { useRouter } from "next/navigation";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
 import { slugify } from "@/lib/utils/slugify";
+import { deleteProject } from "@/app/actions/delete-project/delete-project";
+import toast from "react-hot-toast";
 
 interface IProjectCardProps {
   onDelete?: () => void;
   project: TProjectWithRelations;
 }
 
-export function ProjectCard({ onDelete, project }: IProjectCardProps) {
+export function ProjectCard({ project }: IProjectCardProps) {
   const router = useRouter();
+
+  async function onDelete() {
+    try {
+      const res = await deleteProject({
+        projectId: project.id,
+        revalidate: { path: "/dashboard/my-projects" },
+      });
+
+      res.deletedProjectId && toast.success("Project successfully deleted!");
+    } catch (error) {
+      toast.error("Error while deleting project...");
+      console.log("Error in onDelete:", error);
+    }
+  }
 
   return (
     <Link
