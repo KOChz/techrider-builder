@@ -2,9 +2,9 @@
 
 import { useProjectCreationStore } from "@/stores/use-project-creation-store";
 import StagePlanBuilder from "../stage-plan-builder/stage-plan-builder";
-import { TStagePlanConfig } from "@/types/stage-plan-builder";
+import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
 
-export function StagePlanContent() {
+export function StagePlanBuilderContent() {
   const { stagePlanConfig, setStagePlanConfig } = useProjectCreationStore();
 
   const handleConfigChange = (config: TStagePlanConfig) => {
@@ -17,7 +17,10 @@ export function StagePlanContent() {
       <p className="text-sm text-gray-600">
         Create your stage setup and positioning
       </p>
-      <StagePlanBuilder value={stagePlanConfig} onChange={handleConfigChange} />
+      <StagePlanBuilder
+        config={stagePlanConfig}
+        onConfigChange={handleConfigChange}
+      />
     </div>
   );
 }

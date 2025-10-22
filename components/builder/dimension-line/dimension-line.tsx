@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TStageNodeBuilder } from "../stage-node-builder/stage-node-builder";
 
 export type TMeasurement = {
   id: number;
-  startNodeId: number;
-  endNodeId: number;
+  startNodeId: string;
+  endNodeId: string;
   customDistance?: string;
   offsetAngle?: number;
 };
@@ -33,7 +33,7 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
   onUpdateCustomDistance,
 }) => {
   const [isEditingDistance, setIsEditingDistance] = useState(false);
-  const [editValue, setEditValue] = useState(measurement.customDistance || "");
+  const [editValue, setEditValue] = useState("");
 
   const dx = endNode.x - startNode.x;
   const dy = endNode.y - startNode.y;
@@ -52,33 +52,45 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
   const midX = (startX + endX) / 2;
   const midY = (startY + endY) / 2;
 
-  const displayDistance = measurement.customDistance
-    ? measurement.customDistance
-    : `${Math.round(distance)} units`;
+  const displayDistance =
+    measurement.customDistance || `${Math.round(distance)} units`;
 
   const arrowSize = 12;
 
-  const handleDistanceClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const startEditing = () => {
     setIsEditingDistance(true);
-    setEditValue(measurement.customDistance || String(Math.round(distance)));
+    // Show just the value part for easier editing (remove "units" if present)
+    const currentValue =
+      measurement.customDistance || String(Math.round(distance));
+    setEditValue(currentValue);
   };
 
-  const handleDistanceBlur = () => {
+  const commitDistance = () => {
+    const trimmedValue = editValue.trim();
     setIsEditingDistance(false);
-    if (editValue.trim()) {
-      onUpdateCustomDistance(measurement.id, editValue.trim());
+
+    if (trimmedValue) {
+      // If user enters just a number without "units", append it for consistency
+      const valueToSave = trimmedValue.match(/^\d+$/)
+        ? `${trimmedValue} units`
+        : trimmedValue;
+      onUpdateCustomDistance(measurement.id, valueToSave);
     }
   };
 
-  const handleDistanceKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleDistanceBlur();
-    } else if (e.key === "Escape") {
-      setIsEditingDistance(false);
-      setEditValue(measurement.customDistance || "");
-    }
+  const cancelEditing = () => {
+    setIsEditingDistance(false);
+    setEditValue("");
   };
+
+  useEffect(() => {
+    setEditValue(measurement.customDistance || "");
+  }, [measurement.id, measurement.customDistance]);
+
+  type XHTMLDivProps = React.HTMLAttributes<HTMLDivElement> & {
+    xmlns?: string;
+  };
+  const XHTMLDiv: React.FC<XHTMLDivProps> = (props) => <div {...props} />;
 
   return (
     <g className="dimension-line" onMouseEnter={onHover} onMouseLeave={onLeave}>
@@ -152,16 +164,33 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
       />
 
       {isEditingDistance ? (
-        <foreignObject x={midX - 60} y={midY - 15} width={120} height={30}>
-          <input
-            type="text"
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            onBlur={handleDistanceBlur}
-            onKeyDown={handleDistanceKeyDown}
-            autoFocus
-            className="w-full h-full bg-slate-800 border border-green-500 rounded px-2 text-white text-center text-sm outline-none"
-          />
+        <foreignObject
+          x={midX - 70}
+          y={midY - 18}
+          width={140}
+          height={36}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <XHTMLDiv xmlns="http://www.w3.org/1999/xhtml">
+            <input
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={commitDistance}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  commitDistance();
+                } else if (e.key === "Escape") {
+                  e.preventDefault();
+                  cancelEditing();
+                }
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+              autoFocus
+              className="h-full w-full rounded border border-green-500 bg-slate-800 px-2 text-center text-sm text-white outline-none"
+            />
+          </XHTMLDiv>
         </foreignObject>
       ) : (
         <text
@@ -173,7 +202,11 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
           textAnchor="middle"
           dominantBaseline="middle"
           className="cursor-pointer select-none"
-          onClick={handleDistanceClick}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+            startEditing();
+          }}
+          pointerEvents="visiblePainted"
         >
           <tspan
             x={midX}

@@ -12,8 +12,8 @@ export interface TStageNodeBuilder {
   y: number;
   label: string;
   type: TStageNodeType;
-  angle: number; // degrees
-  scale: number; // scalar
+  angle: number;
+  scale: number;
 }
 
 export interface StageNodeBuilderProps {
@@ -23,10 +23,11 @@ export interface StageNodeBuilderProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onDelete?: (nodeId: string) => void;
+  onPointerDown?: (e: React.PointerEvent) => void;
 }
 
 const CONTROL_R = 18;
-const ROTATION_HITBOX_R = 28; // Larger hitbox for easier targeting
+const ROTATION_HITBOX_R = 28;
 const HITBOX_SCALE_FACTOR = 1;
 
 export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
@@ -36,6 +37,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   onMouseEnter,
   onMouseLeave,
   onDelete,
+  onPointerDown,
 }) => {
   const config = equipmentConfig[node.type];
   const scale = node.scale || 1;
@@ -50,6 +52,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         transform={`translate(${node.x}, ${node.y}) rotate(${node.angle})`}
         onPointerEnter={onMouseEnter}
         onPointerLeave={onMouseLeave}
+        onPointerDown={onPointerDown}
       >
         <rect
           x={-120}
@@ -60,7 +63,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         />
 
         <text
-          className="node-text"
+          className="node-text select-none"
           y={0}
           fontSize="28"
           letterSpacing="2"
@@ -73,7 +76,6 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
           {node.label}
         </text>
 
-        {/* Rotation feedback line */}
         {(isHovered || isRotating) && (
           <line
             x1={0}
@@ -88,7 +90,6 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
           />
         )}
 
-        {/* Rotation arc during rotation */}
         {isRotating && (
           <circle
             cx={0}
@@ -155,6 +156,7 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
       transform={`translate(${node.x}, ${node.y}) rotate(${node.angle})`}
       onPointerEnter={onMouseEnter}
       onPointerLeave={onMouseLeave}
+      onPointerDown={onPointerDown}
     >
       <rect
         x={-bodyW / 2}
@@ -165,7 +167,6 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         pointerEvents="visiblePainted"
       />
 
-      {/* Rotation feedback line - shows rotation axis */}
       {(isHovered || isRotating) && (
         <line
           x1={0}
@@ -180,7 +181,6 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         />
       )}
 
-      {/* Rotation arc during rotation - shows rotation range */}
       {isRotating && (
         <circle
           cx={0}
@@ -224,7 +224,6 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         ({Math.round(node.x)}, {Math.round(node.y)}) • {Math.round(node.angle)}°
       </text>
 
-      {/* Larger rotation hitbox for easier targeting */}
       <circle
         className="rotation-hitbox cursor-grab"
         cx={0}

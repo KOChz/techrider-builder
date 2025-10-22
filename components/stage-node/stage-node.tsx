@@ -1,3 +1,4 @@
+import { TStageNodeType } from "../builder/equipment-select/equipment-select";
 import { StageNodeDeleteHandle } from "../stage-node-delete-handle/stage-node-delete-handle";
 import { StageNodeHandle } from "../stage-node-handle/stage-node-handle";
 import { equipmentConfig } from "../stage-plan/stage-plan";
@@ -7,14 +8,7 @@ export interface StageNode {
   x: number;
   y: number;
   label: string;
-  type:
-    | "drumkit"
-    | "amp"
-    | "monitor"
-    | "mic-stand"
-    | "power-extension"
-    | "di-box"
-    | "text";
+  type: TStageNodeType;
   angle: number;
   scale: number;
 }

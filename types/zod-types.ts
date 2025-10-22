@@ -13,8 +13,8 @@ export const zStageNode = z.object({
 
 export const measurement = z.object({
   id: z.number().int(),
-  startNodeId: z.number().int(),
-  endNodeId: z.number().int(),
+  startNodeId: z.string(),
+  endNodeId: z.string(),
   customDistance: z.string().optional(),
 });
 

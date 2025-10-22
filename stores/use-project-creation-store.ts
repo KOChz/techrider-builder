@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { TStagePlanConfig } from "@/types/stage-plan-builder";
+import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 
 interface IProjectCreationState {

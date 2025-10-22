@@ -10,15 +10,6 @@ export default function CreateNewProjectPage() {
       </h2>
       <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-8">
         <ProjectCreationTabs />
-
-        <div className="flex w-full justify-between">
-          <Link
-            href="/dashboard/my-projects"
-            className="hover:bg-red-700/15 inline-block w-auto cursor-pointer rounded-lg border border-red-700/50 px-12 py-2 transition-all duration-200"
-          >
-            Cancel
-          </Link>
-        </div>
       </div>
     </div>
   );

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 
-import { StagePlanContent } from "../builder-tabs-content/stage-plan-content";
+import { StagePlanBuilderContent } from "../builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "../builder-tabs-content/settings-content/settings-content";
 import { MembersContent } from "../builder-tabs-content/members-content/members-content";
 import { BandInfoContent } from "../builder-tabs-content/dand-info-content/band-info-content";
 import { useCreateProject } from "@/hooks/use-create-project";
+import Link from "next/link";
 
 type TTabId = "band-info" | "members" | "stage-plan" | "settings";
 
@@ -33,7 +34,7 @@ export default function ProjectCreationTabs() {
       case "members":
         return <MembersContent />;
       case "stage-plan":
-        return <StagePlanContent />;
+        return <StagePlanBuilderContent />;
       case "settings":
         return <SettingsContent />;
       default:
@@ -93,7 +94,14 @@ export default function ProjectCreationTabs() {
         </div>
       )}
 
-      <div className="mt-6 flex justify-end gap-3">
+      <div className="mt-6 flex justify-between gap-3">
+        <Link
+          href="/dashboard/my-projects"
+          className="hover:bg-red-700/15 inline-block w-auto cursor-pointer rounded-lg border border-red-700/50 px-12 py-2 transition-all duration-200"
+        >
+          Cancel
+        </Link>
+
         <button
           type="button"
           onClick={createProject}
