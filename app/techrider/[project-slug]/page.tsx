@@ -123,12 +123,10 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         <h3>Get in Touch</h3>
         <p>For bookings and technical questions:</p>
         <p>
-          <a href="mailto:kristinaheadachee@gmail.com">
-            kristinaheadachee@gmail.com
-          </a>
+          <a href={user?.email}>{user?.email}</a>
         </p>
         <p className="mt-(--spacing-md) text-[0.85rem]">
-          © 2025 headachee. All rights reserved.
+          © 2025 {project.name}. All rights reserved.
         </p>
       </footer>
     </div>
