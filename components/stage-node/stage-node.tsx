@@ -1,10 +1,9 @@
-import { TStageNodeType } from "../builder/equipment-select/equipment-select";
-import { StageNodeDeleteHandle } from "../stage-node-delete-handle/stage-node-delete-handle";
+import { TStageNodeType } from "@/schemas/stage-plan";
 import { StageNodeHandle } from "../stage-node-handle/stage-node-handle";
 import { equipmentConfig } from "../stage-plan/stage-plan";
 
 export interface StageNode {
-  id: number;
+  id: string;
   x: number;
   y: number;
   label: string;

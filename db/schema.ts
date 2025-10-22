@@ -2,7 +2,6 @@ import { TEquipmentItemBuilder } from "@/components/builder/member-card-builder/
 import { TStagePlanConfig } from "@/schemas/stage-plan";
 import { relations, sql } from "drizzle-orm";
 import {
-  pgSchema,
   pgTable,
   uuid,
   text,

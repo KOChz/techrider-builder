@@ -18,7 +18,7 @@ export const zStageNode = z.object({
   x: z.number(),
   y: z.number(),
   label: z.string(),
-  type: zStageNodeType, // ✅ actual Zod schema
+  type: zStageNodeType,
   angle: z.number(),
   scale: z.number(),
 });

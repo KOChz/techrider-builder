@@ -1,3 +1,5 @@
+import { TProjectMember } from "@/db/schema";
+
 export type TEquipmentExample = {
   title: string;
   items: string[];
@@ -18,12 +20,12 @@ export type TBandMember = {
 };
 
 interface IMemberCardProps {
-  member: TBandMember;
+  member: TProjectMember;
 }
 
 export function MemberCard({ member }: IMemberCardProps) {
   return (
-    <div className="member-card" id={member.id}>
+    <div className="member-card" id={member.name}>
       <div className="member-header">
         <span className="member-icon">{member.icon}</span>
         <div className="member-info">

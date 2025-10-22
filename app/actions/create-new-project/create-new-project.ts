@@ -13,8 +13,9 @@ import {
   type TProject,
   type TProjectMember,
 } from "@/db/schema";
-import { stagePlanConfigSchema } from "@/types/zod-types";
+import { stagePlanConfigSchema, TStagePlanConfig } from "@/types/zod-types";
 import { TSupabaseUserMetadata } from "@/types/user-types";
+import { slugify } from "@/lib/utils/slugify";
 
 const equipmentExampleSchema = z.object({
   title: z.string(),
@@ -37,8 +38,8 @@ const memberInputSchema = z.object({
 const inputSchema = z.object({
   name: z.string().min(1),
   notes: z.string().optional(),
-  isPublic: z.boolean().optional(), // DB default true
-  stagePlanConfig: stagePlanConfigSchema.optional(), // ✅ your schema
+  isPublic: z.boolean().optional(),
+  stagePlanConfig: stagePlanConfigSchema.optional(),
   members: z.array(memberInputSchema).optional(),
   revalidate: z
     .object({ path: z.string().optional(), tag: z.string().optional() })
@@ -107,13 +108,14 @@ export async function createNewProject(raw: TCreateNewProjectInput) {
         ownerId: user.id,
         name: input.name,
         isPublic: input.isPublic ?? undefined,
+        slug: slugify(input.name),
         stagePlanConfig:
           input.stagePlanConfig ??
           ({
             nodes: [],
             measurements: [],
             version: 1,
-          } as z.infer<typeof stagePlanConfigSchema>),
+          } as TStagePlanConfig),
       })
       .returning();
 

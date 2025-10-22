@@ -18,8 +18,8 @@ interface IDimensionLineProps {
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
-  onDelete: (id: number) => void;
-  onUpdateCustomDistance: (id: number, distance: string) => void;
+  onDelete?: (id: number) => void;
+  onUpdateCustomDistance?: (id: number, distance: string) => void;
 }
 
 type TXHTMLDivProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -78,7 +78,7 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
       const valueToSave = trimmedValue.match(/^\d+$/)
         ? `${trimmedValue} units`
         : trimmedValue;
-      onUpdateCustomDistance(measurement.id, valueToSave);
+      onUpdateCustomDistance?.(measurement.id, valueToSave);
     }
   };
 
@@ -249,7 +249,7 @@ export const DimensionLine: React.FC<IDimensionLineProps> = ({
           transform={`translate(${midX - 5}, ${midY - 20})`}
           onClick={(e) => {
             e.stopPropagation();
-            onDelete(measurement.id);
+            onDelete?.(measurement.id);
           }}
           onPointerDown={(e) => e.stopPropagation()}
         >
