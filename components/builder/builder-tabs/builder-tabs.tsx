@@ -43,7 +43,7 @@ export default function ProjectCreationTabs() {
     <div className="w-full">
       <div className="border-b border-gray-200">
         <div
-          className="flex space-x-1 cursor-pointer"
+          className="flex cursor-pointer space-x-1"
           role="tablist"
           aria-label="Project tabs"
         >
