@@ -224,7 +224,7 @@ export function MemberCardBuilder({
                 <button
                   type="button"
                   onClick={() => removeEquipmentItem(equipmentIndex)}
-                  className="relative -top-4 right-2 h-5 w-5 cursor-pointer rounded-3xl bg-red-500 p-1 text-white transition-colors hover:bg-red-600 md:-right-6 md:-top-7"
+                  className="relative -right-5 -top-4 h-5 w-5 cursor-pointer rounded-3xl bg-red-500 p-1 text-white transition-colors hover:bg-red-600 md:-right-6 md:-top-7"
                 >
                   <X size={12} />
                 </button>
