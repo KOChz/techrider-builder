@@ -708,7 +708,7 @@ export default function StagePlanBuilder({
           />
 
           <div
-            className="flex w-full select-none items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-3.5 sm:w-auto sm:min-w-[260px]"
+            className="flex w-full select-none items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-4 sm:w-auto sm:min-w-[260px]"
             aria-live="polite"
           >
             <label

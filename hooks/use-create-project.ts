@@ -6,6 +6,7 @@ import {
   createNewProject,
   TCreateNewProjectInput,
 } from "@/app/actions/create-new-project/create-new-project";
+import toast from "react-hot-toast";
 
 interface IUseCreateProjectReturn {
   isCreating: boolean;
@@ -57,7 +58,9 @@ export function useCreateProject(): IUseCreateProjectReturn {
       const result = await createNewProject(input);
 
       resetForm();
-      router.push(`/projects/${result.project.id}`);
+      router.push(`/dashboard/my-projects`);
+
+      toast.success("Your project successfully created!");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to create project";
