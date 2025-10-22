@@ -97,5 +97,16 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/settings/:path*"],
+  matcher: [
+    "/",
+    "/login",
+    "/signup",
+    "/dashboard/:path*",
+    "/profile/:path*",
+    "/settings/:path*",
+  ],
+
+  // matcher: [
+  //   "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public|api/webhooks).*)",
+  // ],
 };
