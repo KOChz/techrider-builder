@@ -13,15 +13,15 @@ import {
   StageNodeBuilderComponent,
   TStageNodeBuilder,
 } from "../stage-node-builder/stage-node-builder";
-import EquipmentSelect, {
-  TStageNodeType,
-} from "../equipment-select/equipment-select";
+
 import { DimensionLine, TMeasurement } from "../dimension-line/dimension-line";
 import { MeasurementControls } from "../measurement-controls/measurement-controls";
 import { cn } from "@/lib/utils/cn";
 
 import { v4 as uuidv4 } from "uuid";
 import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
+import { TStageNodeType } from "@/schemas/stage-plan";
+import EquipmentSelect from "../equipment-select/equipment-select";
 
 interface Vec2 {
   x: number;
