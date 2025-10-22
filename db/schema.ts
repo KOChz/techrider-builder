@@ -14,13 +14,8 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-const auth = pgSchema("auth");
-export const authUsers = auth.table("users", { id: uuid("id").primaryKey() });
-
 export const profiles = pgTable("profiles", {
-  id: uuid("id")
-    .primaryKey()
-    .references(() => authUsers.id, { onDelete: "cascade" }),
+  id: uuid("id").primaryKey().notNull(),
   email: text("email"),
   displayName: text("display_name"),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -51,12 +46,15 @@ export const projects = pgTable(
       .defaultNow()
       .notNull(),
 
+    slug: text("slug").notNull().unique(),
+
     notes: text("notes"),
   },
   (t) => ({
     ownerIdx: index("projects_owner_idx").on(t.ownerId),
     publicIdx: index("projects_is_public_idx").on(t.isPublic),
     createdIdx: index("projects_created_at_idx").on(t.createdAt),
+    slugIdx: index("slug_idx").on(t.slug),
   })
 );
 

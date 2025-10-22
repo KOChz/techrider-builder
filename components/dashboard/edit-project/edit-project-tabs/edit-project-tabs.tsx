@@ -13,6 +13,7 @@ import { useProjectStore } from "@/stores/use-project-creation-store";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
 import { TStagePlanConfig } from "@/schemas/stage-plan";
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
+import { useEditProject } from "@/hooks/use-edit-project";
 
 type TTabId = "band-info" | "members" | "stage-plan" | "settings";
 
@@ -34,7 +35,9 @@ export default function EditProjectTabs({
   project: TProjectWithRelations;
 }) {
   const [activeTab, setActiveTab] = useState<TTabId>("band-info");
-  const { isCreating, error, createProject } = useCreateProject();
+  const { isEditing, error, editProject } = useEditProject({
+    project,
+  });
 
   const initializeWithProject = useProjectStore(
     (state) => state.initializeWithProject
@@ -131,11 +134,11 @@ export default function EditProjectTabs({
 
         <button
           type="button"
-          onClick={createProject}
-          disabled={isCreating}
+          onClick={editProject}
+          disabled={isEditing}
           className="cursor-pointer rounded-md bg-green-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isCreating ? "Saving..." : "Save"}
+          {isEditing ? "Saving..." : "Save"}
         </button>
       </div>
     </div>

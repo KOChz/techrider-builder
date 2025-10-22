@@ -1,12 +1,12 @@
-import React from "react";
+import Link from "next/link";
+
+import StagePlan from "@/components/stage-plan/stage-plan";
+import { MemberCard, TBandMember } from "@/components/member-card/member-card";
 
 import { createServerClientService } from "@/lib/supabase/server";
 
-import StagePlan from "@/components/stage-plan/stage-plan";
-import Link from "next/link";
-
-import { MemberCard, TBandMember } from "@/components/member-card/member-card";
 import "./project.css";
+import { getProjectByName } from "@/app/actions/get-project-by-name/get-project-by-name";
 
 export const bandMembers: TBandMember[] = [
   {
@@ -332,7 +332,17 @@ export const bandMembers: TBandMember[] = [
   },
 ];
 
-export default async function ProjectPage() {
+interface IProjectPageProps {
+  params: Promise<{
+    "project-name": string;
+  }>;
+}
+
+export default async function ProjectPage({ params }: IProjectPageProps) {
+  const { "project-name": projectName } = await params;
+
+  const { project } = await getProjectByName({ projectName });
+
   const supabase = await createServerClientService();
 
   const {
@@ -344,8 +354,9 @@ export default async function ProjectPage() {
       <nav>
         <div className="nav-container">
           <a href="#home" className="logo">
-            headachee
+            {project.name}
           </a>
+
           <ul className="nav-links">
             <li className="dropdown">
               <button
@@ -361,57 +372,20 @@ export default async function ProjectPage() {
                 role="menu"
                 aria-labelledby="techRiderToggle"
               >
-                <a
-                  href="#danya"
-                  id="dropdown-danya"
-                  className="dropdown-item"
-                  role="menuitem"
-                >
-                  <span className="dropdown-icon">🥁</span>
-                  <div className="dropdown-info">
-                    <span className="dropdown-name">Danya</span>
-                    <span className="dropdown-role">Drums</span>
-                  </div>
-                </a>
-
-                <a
-                  href="#kyrylo"
-                  id="dropdown-kyrylo"
-                  className="dropdown-item"
-                  role="menuitem"
-                >
-                  <span className="dropdown-icon">🎸</span>
-                  <div className="dropdown-info">
-                    <span className="dropdown-name">Kyrylo</span>
-                    <span className="dropdown-role">Bass</span>
-                  </div>
-                </a>
-
-                <a
-                  href="#kristina"
-                  id="dropdown-kristina"
-                  className="dropdown-item"
-                  role="menuitem"
-                >
-                  <span className="dropdown-icon">🎤</span>
-                  <div className="dropdown-info">
-                    <span className="dropdown-name">Kristina</span>
-                    <span className="dropdown-role">Guitar / Vocals</span>
-                  </div>
-                </a>
-
-                <a
-                  href="#maksym"
-                  id="dropdown-maksym"
-                  className="dropdown-item"
-                  role="menuitem"
-                >
-                  <span className="dropdown-icon">🎸</span>
-                  <div className="dropdown-info">
-                    <span className="dropdown-name">Maksym</span>
-                    <span className="dropdown-role">Guitar</span>
-                  </div>
-                </a>
+                {project.members.map((member) => (
+                  <a
+                    href={`#${member.name}`}
+                    id={`dropdown-${member.name}`}
+                    className="dropdown-item"
+                    role="menuitem"
+                  >
+                    <span className="dropdown-icon">{member.icon}</span>
+                    <div className="dropdown-info">
+                      <span className="dropdown-name">{member.name}</span>
+                      <span className="dropdown-role">{member.role}</span>
+                    </div>
+                  </a>
+                ))}
 
                 <a
                   href="#stage-plan"
