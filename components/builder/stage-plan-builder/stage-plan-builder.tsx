@@ -806,7 +806,13 @@ export default function StagePlanBuilder({
                 onMouseEnter={() => armedEnter(node.id)}
                 onMouseLeave={armedLeave}
                 onDelete={handleDeleteNode}
-                // No per-node onPointerDown; svg-level handler manages hit testing
+                onUpdateLabel={(nodeId, newLabel) => {
+                  setNodes(
+                    nodes.map((n) =>
+                      n.id === nodeId ? { ...n, label: newLabel } : n
+                    )
+                  );
+                }}
               />
             ))}
 

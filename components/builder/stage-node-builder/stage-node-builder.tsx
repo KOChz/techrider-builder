@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StageNodeDeleteHandle } from "@/components/stage-node-delete-handle/stage-node-delete-handle";
 import { StageNodeHandle } from "@/components/stage-node-handle/stage-node-handle";
 import { equipmentConfig } from "@/components/stage-plan/stage-plan";
@@ -24,7 +24,14 @@ export interface StageNodeBuilderProps {
   onMouseLeave: () => void;
   onDelete?: (nodeId: string) => void;
   onPointerDown?: (e: React.PointerEvent) => void;
+  onUpdateLabel?: (nodeId: string, newLabel: string) => void;
 }
+
+type TXHTMLDivProps = React.HTMLAttributes<HTMLDivElement> & {
+  xmlns?: string;
+};
+
+const XHTMLDiv: React.FC<TXHTMLDivProps> = (props) => <div {...props} />;
 
 const CONTROL_R = 18;
 const ROTATION_HITBOX_R = 28;
@@ -38,9 +45,36 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
   onMouseLeave,
   onDelete,
   onPointerDown,
+  onUpdateLabel,
 }) => {
+  const [isEditingLabel, setIsEditingLabel] = useState(false);
+  const [editValue, setEditValue] = useState("");
+
   const config = equipmentConfig[node.type];
   const scale = node.scale || 1;
+
+  const startEditing = () => {
+    setIsEditingLabel(true);
+    setEditValue(node.label);
+  };
+
+  const commitLabel = () => {
+    const trimmedValue = editValue.trim();
+    setIsEditingLabel(false);
+
+    if (trimmedValue && trimmedValue !== node.label) {
+      onUpdateLabel?.(node.id, trimmedValue);
+    }
+  };
+
+  const cancelEditing = () => {
+    setIsEditingLabel(false);
+    setEditValue("");
+  };
+
+  useEffect(() => {
+    setEditValue(node.label);
+  }, [node.id, node.label]);
 
   if (node.type === "text") {
     const handleY = -30;
@@ -62,19 +96,71 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
           fill="transparent"
         />
 
-        <text
-          className="node-text select-none"
-          y={0}
-          fontSize="28"
-          letterSpacing="2"
-          fill="#9a9a9a"
-          opacity="0.7"
-          fontWeight="600"
-          textAnchor="middle"
-          pointerEvents="none"
-        >
-          {node.label}
-        </text>
+        {isEditingLabel ? (
+          <foreignObject
+            x={-120}
+            y={-18}
+            width={240}
+            height={36}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <XHTMLDiv xmlns="http://www.w3.org/1999/xhtml">
+              <input
+                type="text"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onBlur={commitLabel}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    commitLabel();
+                  } else if (e.key === "Escape") {
+                    e.preventDefault();
+                    cancelEditing();
+                  }
+                }}
+                onClick={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
+                autoFocus
+                className="h-full w-full rounded border border-gray-500 bg-slate-800 px-2 text-center text-2xl font-semibold text-gray-400 outline-none"
+              />
+            </XHTMLDiv>
+          </foreignObject>
+        ) : (
+          <g
+            onClick={(e) => {
+              e.stopPropagation();
+              startEditing();
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            style={{ cursor: "text" }}
+            pointerEvents="bounding-box"
+          >
+            <rect
+              x={-120}
+              y={-18}
+              width={240}
+              height={36}
+              fill="transparent"
+              pointerEvents="all"
+            />
+
+            <text
+              className="node-text select-none"
+              y={0}
+              fontSize="28"
+              letterSpacing="2"
+              fill="#9a9a9a"
+              opacity="0.7"
+              fontWeight="600"
+              textAnchor="middle"
+              pointerEvents="none"
+            >
+              {node.label}
+            </text>
+          </g>
+        )}
 
         {(isHovered || isRotating) && (
           <line
@@ -203,16 +289,69 @@ export const StageNodeBuilderComponent: React.FC<StageNodeBuilderProps> = ({
         height={config.height * scale}
       />
 
-      <text
-        className="node-text select-none"
-        y={config.labelOffset}
-        fontSize="14"
-        fill="#fff"
-        textAnchor="middle"
-        pointerEvents="none"
-      >
-        {node.label}
-      </text>
+      {isEditingLabel ? (
+        <foreignObject
+          x={-70}
+          y={config.labelOffset - 10}
+          width={140}
+          height={24}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <XHTMLDiv xmlns="http://www.w3.org/1999/xhtml">
+            <input
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={commitLabel}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  commitLabel();
+                } else if (e.key === "Escape") {
+                  e.preventDefault();
+                  cancelEditing();
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              onPointerDown={(e) => e.stopPropagation()}
+              autoFocus
+              className="h-full w-full rounded border border-white bg-slate-800 px-2 text-center text-sm text-white outline-none"
+            />
+          </XHTMLDiv>
+        </foreignObject>
+      ) : (
+        <g
+          onClick={(e) => {
+            e.stopPropagation();
+            startEditing();
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          style={{ cursor: "text" }}
+          pointerEvents="bounding-box"
+        >
+          <rect
+            x={-70}
+            y={config.labelOffset - 10}
+            width={140}
+            height={24}
+            fill="transparent"
+            pointerEvents="all"
+          />
+
+          <text
+            className="node-text select-none"
+            y={config.labelOffset}
+            fontSize="14"
+            fill="#fff"
+            textAnchor="middle"
+            pointerEvents="none"
+          >
+            {node.label}
+          </text>
+        </g>
+      )}
+
       <text
         className="node-coords select-none"
         y={config.labelOffset + 15}
