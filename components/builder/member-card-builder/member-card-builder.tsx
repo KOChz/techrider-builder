@@ -218,7 +218,7 @@ export function MemberCardBuilder({
                       quantity: e.target.value,
                     })
                   }
-                  className="max-w-24 w-3/4 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                  className="max-w-20 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none md:max-w-none"
                   placeholder="Qty"
                 />
                 <button
