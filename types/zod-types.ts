@@ -2,7 +2,7 @@ import { zStageNodeType } from "@/components/builder/equipment-select/equipment-
 import { z } from "zod";
 
 export const zStageNode = z.object({
-  id: z.number().int(),
+  id: z.string(),
   x: z.number(),
   y: z.number(),
   label: z.string(),

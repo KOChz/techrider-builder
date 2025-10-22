@@ -35,7 +35,6 @@ const memberInputSchema = z.object({
   role: z.string().optional(),
   icon: z.string().optional(),
   equipment: z.array(equipmentItemSchema).default([]),
-  sortOrder: z.number().int().default(0),
 });
 
 // --------------------------------------------------------------------------------------
@@ -43,6 +42,7 @@ const memberInputSchema = z.object({
 // --------------------------------------------------------------------------------------
 const inputSchema = z.object({
   name: z.string().min(1),
+  notes: z.string().optional(),
   isPublic: z.boolean().optional(), // DB default true
   stagePlanConfig: stagePlanConfigSchema.optional(), // ✅ your schema
   members: z.array(memberInputSchema).optional(),
@@ -51,15 +51,15 @@ const inputSchema = z.object({
     .optional(),
 });
 
-export type CreateNewProjectInput = z.infer<typeof inputSchema>;
-export type CreateNewProjectResult = {
+export type TCreateNewProjectInput = z.infer<typeof inputSchema>;
+export type TCreateNewProjectResult = {
   project: TProject & { members: TProjectMember[] };
 };
 
 // --------------------------------------------------------------------------------------
 // Server Action
 // --------------------------------------------------------------------------------------
-export async function createNewProject(raw: CreateNewProjectInput) {
+export async function createNewProject(raw: TCreateNewProjectInput) {
   const input = inputSchema.parse(raw);
 
   const cookieStore = await cookies();
@@ -115,7 +115,7 @@ export async function createNewProject(raw: CreateNewProjectInput) {
       .values({
         ownerId: user.id,
         name: input.name,
-        isPublic: input.isPublic ?? undefined, // let DB default
+        isPublic: input.isPublic ?? undefined,
         stagePlanConfig:
           input.stagePlanConfig ??
           ({
@@ -136,7 +136,6 @@ export async function createNewProject(raw: CreateNewProjectInput) {
           role: m.role ?? null,
           icon: m.icon ?? null,
           equipment: m.equipment ?? [],
-          sortOrder: m.sortOrder ?? 0,
         }))
       );
     }

@@ -1,28 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
-interface IProjectSettings {
-  name: string;
-  isPublic: boolean;
-}
+import { useProjectCreationStore } from "@/stores/use-project-creation-store";
 
 export function SettingsContent() {
-  const [settings, setSettings] = useState<IProjectSettings>({
-    name: "",
-    isPublic: false,
-  });
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings((prev) => ({ ...prev, name: e.target.value }));
-  };
-
-  const handlePublicToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings((prev) => ({ ...prev, isPublic: e.target.checked }));
-  };
+  const { name, isPublic, setName, setIsPublic } = useProjectCreationStore();
 
   return (
-    <div className="space-y-4 min-h-64">
+    <div className="min-h-64 space-y-4">
       <h3 className="text-2xl font-semibold text-slate-900">
         Project Settings
       </h3>
@@ -37,18 +21,27 @@ export function SettingsContent() {
           <input
             id="project-name"
             type="text"
-            value={settings.name}
-            onChange={handleNameChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Enter project name"
-            className="px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600"
           />
         </div>
 
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-slate-800">
+          <label
+            htmlFor="project-public"
+            className="text-sm font-medium text-slate-800"
+          >
             Make project public
           </label>
-          <input type="checkbox" className="w-4 h-4" />
+          <input
+            id="project-public"
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            className="h-4 w-4 cursor-pointer"
+          />
         </div>
       </div>
     </div>

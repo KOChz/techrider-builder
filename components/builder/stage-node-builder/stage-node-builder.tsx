@@ -7,7 +7,7 @@ import { equipmentConfig } from "@/components/stage-plan/stage-plan";
 import { TStageNodeType } from "../equipment-select/equipment-select";
 
 export interface TStageNodeBuilder {
-  id: number;
+  id: string;
   x: number;
   y: number;
   label: string;
@@ -22,7 +22,7 @@ export interface StageNodeBuilderProps {
   isRotating: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  onDelete?: (nodeId: number) => void;
+  onDelete?: (nodeId: string) => void;
 }
 
 const CONTROL_R = 18;

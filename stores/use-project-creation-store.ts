@@ -5,11 +5,13 @@ import { TBandMemberBuilder } from "@/components/builder/member-card-builder/mem
 
 interface IProjectCreationState {
   name: string;
+  notes: string;
   isPublic: boolean;
   stagePlanConfig: TStagePlanConfig;
   members: TBandMemberBuilder[];
 
   setName: (name: string) => void;
+  setNotes: (notes: string) => void;
   setIsPublic: (isPublic: boolean) => void;
   setStagePlanConfig: (config: TStagePlanConfig) => void;
   addMember: (member: TBandMemberBuilder) => void;
@@ -20,6 +22,7 @@ interface IProjectCreationState {
 
 const initialState = {
   name: "",
+  notes: "",
   isPublic: false,
   stagePlanConfig: {
     nodes: [],
@@ -35,6 +38,8 @@ export const useProjectCreationStore = create<IProjectCreationState>()(
       ...initialState,
 
       setName: (name) => set({ name }),
+
+      setNotes: (notes) => set({ notes }),
 
       setIsPublic: (isPublic) => set({ isPublic }),
 

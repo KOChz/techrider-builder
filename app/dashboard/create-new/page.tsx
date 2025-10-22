@@ -1,4 +1,4 @@
-import ProjectCreationTabs from "@/components/builder/builder-tabs/builder-tabs";
+import ProjectCreationTabs from "@/components/builder/project-creation-tabs/project-creation-tabs";
 import Link from "next/link";
 import React from "react";
 
@@ -18,10 +18,6 @@ export default function CreateNewProjectPage() {
           >
             Cancel
           </Link>
-
-          <button className="hover:bg-green-700/15 w-auto cursor-pointer rounded-lg border border-green-700/50 px-12 py-2 transition-all duration-200">
-            Create
-          </button>
         </div>
       </div>
     </div>

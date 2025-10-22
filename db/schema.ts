@@ -50,6 +50,8 @@ export const projects = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
+
+    notes: text("notes"),
   },
   (t) => ({
     ownerIdx: index("projects_owner_idx").on(t.ownerId),

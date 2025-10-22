@@ -1,26 +1,44 @@
+"use client";
+
+import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+
 export function BandInfoContent() {
+  const { name, notes, setName, setNotes } = useProjectCreationStore();
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-slate-900">Band Information</h3>
       <div className="space-y-3">
         <div>
-          <label className="block text-sm text-slate-900 font-medium mb-1">
+          <label
+            htmlFor="band-name"
+            className="mb-1 block text-sm font-medium text-slate-900"
+          >
             Band Name
           </label>
           <input
+            id="band-name"
             type="text"
-            className="w-full px-3 py-2 border placeholder-slate-500 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="Enter band name"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-900 mb-1">
+          <label
+            htmlFor="band-notes"
+            className="mb-1 block text-sm font-medium text-slate-900"
+          >
             Notes
           </label>
           <textarea
-            className="w-full placeholder-slate-500 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="This is section for for any technical stuff notes"
+            id="band-notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="This is section for any technical stuff notes"
             rows={4}
           />
         </div>

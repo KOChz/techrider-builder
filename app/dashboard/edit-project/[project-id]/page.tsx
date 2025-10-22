@@ -1,6 +1,6 @@
 "use client";
 
-import ProjectCreationTabs from "@/components/builder/builder-tabs/builder-tabs";
+import ProjectCreationTabs from "@/components/builder/project-creation-tabs/project-creation-tabs";
 import React from "react";
 
 export default function EditProjectPage() {

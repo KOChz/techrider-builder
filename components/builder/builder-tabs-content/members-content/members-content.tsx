@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useProjectCreationStore } from "@/stores/use-project-creation-store";
 import {
   MemberCardBuilder,
   TBandMemberBuilder,
 } from "../../member-card-builder/member-card-builder";
 
 export function MembersContent() {
-  const [members, setMembers] = useState<TBandMemberBuilder[]>([]);
+  const { members, addMember, updateMember, removeMember } =
+    useProjectCreationStore();
 
   const handleAddMember = () => {
     const newMember: TBandMemberBuilder = {
@@ -17,19 +18,7 @@ export function MembersContent() {
       role: "",
       equipment: [],
     };
-    setMembers((prev) => [...prev, newMember]);
-  };
-
-  const handleRemoveMember = (memberId: string) => {
-    setMembers((prev) => prev.filter((member) => member.id !== memberId));
-  };
-
-  const handleMemberChange = (updatedMember: TBandMemberBuilder) => {
-    setMembers((prev) =>
-      prev.map((member) =>
-        member.id === updatedMember.id ? updatedMember : member
-      )
-    );
+    addMember(newMember);
   };
 
   return (
@@ -39,23 +28,25 @@ export function MembersContent() {
 
       <button
         onClick={handleAddMember}
-        className="px-4 cursor-pointer py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+        className="cursor-pointer rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
       >
         + Add Member
       </button>
 
       {members.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <p>No band members yet. Click "Add Member" to get started!</p>
+        <div className="py-12 text-center text-gray-500">
+          <p>
+            No band members yet. Click &quot;Add Member&quot; to get started!
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
           {members.map((member) => (
             <MemberCardBuilder
               key={member.id}
               initialMember={member}
-              onChange={handleMemberChange}
-              onRemove={() => handleRemoveMember(member.id)}
+              onChange={(updated) => updateMember(member.id, updated)}
+              onRemove={() => removeMember(member.id)}
             />
           ))}
         </div>

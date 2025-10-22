@@ -6,6 +6,7 @@ import { StagePlanContent } from "../builder-tabs-content/stage-plan-content";
 import { SettingsContent } from "../builder-tabs-content/settings-content/settings-content";
 import { MembersContent } from "../builder-tabs-content/members-content/members-content";
 import { BandInfoContent } from "../builder-tabs-content/dand-info-content/band-info-content";
+import { useCreateProject } from "@/hooks/use-create-project";
 
 type TTabId = "band-info" | "members" | "stage-plan" | "settings";
 
@@ -23,6 +24,7 @@ const TABS: ITab[] = [
 
 export default function ProjectCreationTabs() {
   const [activeTab, setActiveTab] = useState<TTabId>("band-info");
+  const { isCreating, error, createProject } = useCreateProject();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -80,6 +82,26 @@ export default function ProjectCreationTabs() {
         className="py-6"
       >
         {renderContent()}
+      </div>
+
+      {error && (
+        <div
+          className="mt-4 rounded-md border border-red-200 bg-red-50 p-4"
+          role="alert"
+        >
+          <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={createProject}
+          disabled={isCreating}
+          className="rounded-md bg-green-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isCreating ? "Creating..." : "Create Project"}
+        </button>
       </div>
     </div>
   );
