@@ -31,9 +31,4 @@ body {
 }
 
 .no-zoom-input {
-  font-size: 16px; /* Actual font size to prevent zoom */
-  transform: scale(0.75); /* Visually reduce to 12px (12/16) */
-  transform-origin: left top; /* Adjust origin if needed */
-  width: 133%;
-  /* Adjust margins/padding to compensate for scaling */
 }
