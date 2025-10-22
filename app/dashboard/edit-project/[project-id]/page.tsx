@@ -19,7 +19,7 @@ export default async function EditProjectPage({
   return (
     <div>
       <h2 className="mb-6 text-2xl font-bold text-slate-900">
-        Edit headeachee {project.name}
+        Edit {project.name}
       </h2>
       <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-8">
         <EditProjectTabs project={project} />

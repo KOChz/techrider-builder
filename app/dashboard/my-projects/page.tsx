@@ -1,6 +1,5 @@
 import { getMyProjects } from "@/app/actions/get-my-projects/get-my-projects";
 import { ProjectCard } from "@/components/dashboard/my-project/project-card/project-card";
-import { slugify } from "@/lib/utils/slugify";
 
 export default async function MyProjectsPage() {
   const myProjects = await getMyProjects();
