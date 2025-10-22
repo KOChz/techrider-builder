@@ -4,47 +4,39 @@ import Link from "next/link";
 import { FolderIcon } from "lucide-react";
 import { ProjectCardActions } from "./project-card-actions";
 import { useRouter } from "next/navigation";
+import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
+import { slugify } from "@/lib/utils/slugify";
 
 interface IProjectCardProps {
-  href: string;
-  title: string;
-  description: string;
   onDelete?: () => void;
+  project: TProjectWithRelations;
 }
 
-export function ProjectCard({
-  href,
-  title,
-  description,
-  onDelete,
-}: IProjectCardProps) {
+export function ProjectCard({ onDelete, project }: IProjectCardProps) {
   const router = useRouter();
 
   return (
     <Link
-      href={href}
-      className="group relative bg-white rounded-2xl border border-slate-200 p-6 transition-all duration-200 hover:border-green-500 hover:shadow-sm hover:bg-slate-50"
+      href={`/techrider/${slugify(project.name)}`}
+      className="group relative rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-200 hover:border-green-500 hover:bg-slate-50 hover:shadow-sm"
     >
       <div className="flex items-start gap-3">
         <div className="rounded-lg bg-green-50 p-2 text-green-700 transition-colors group-hover:bg-green-100">
           <FolderIcon className="h-5 w-5" />
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-green-700">
-            {title}
+            {project.name}
           </h3>
-          <p className="mt-1 text-sm text-slate-500">{description}</p>
         </div>
 
-        {onDelete && (
-          <ProjectCardActions
-            onEdit={() => {
-              router.push("/dashboard/edit-project/headeachee");
-            }}
-            onDelete={onDelete}
-          />
-        )}
+        <ProjectCardActions
+          onEdit={() => {
+            router.push(`/dashboard/edit-project/${project.id}`);
+          }}
+          onDelete={onDelete}
+        />
       </div>
     </Link>
   );

@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
+
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 import { TStageNodeBuilder } from "@/components/builder/stage-node-builder/stage-node-builder";
 import { TMeasurement } from "@/components/builder/dimension-line/dimension-line";
+import { TStagePlanConfig } from "@/schemas/stage-plan";
 
-interface IProjectCreationState {
+interface IProjectStore {
   // ========================================
   // State Properties
   // ========================================
@@ -44,13 +45,15 @@ interface IProjectCreationState {
   updateMember: (id: string, member: TBandMemberBuilder) => void;
   removeMember: (id: string) => void;
 
+  initializeWithProject: (projectData: Partial<IProjectStore>) => void;
+
   // ========================================
   // Form Control
   // ========================================
   resetForm: () => void;
 }
 
-const getInitialState = () => ({
+const getInitialStore = () => ({
   name: "",
   notes: "",
   isPublic: false,
@@ -62,10 +65,10 @@ const getInitialState = () => ({
   members: [] as TBandMemberBuilder[],
 });
 
-export const useProjectCreationStore = create<IProjectCreationState>()(
+export const useProjectStore = create<IProjectStore>()(
   devtools(
     (set) => ({
-      ...getInitialState(),
+      ...getInitialStore(),
 
       setName: (name) => set({ name }),
 
@@ -147,7 +150,13 @@ export const useProjectCreationStore = create<IProjectCreationState>()(
           members: state.members.filter((m) => m.id !== id),
         })),
 
-      resetForm: () => set(getInitialState()),
+      initializeWithProject: (projectData) =>
+        set((state) => ({
+          ...state,
+          ...projectData,
+        })),
+
+      resetForm: () => set(getInitialStore()),
     }),
     { name: "project-creation-store" }
   )

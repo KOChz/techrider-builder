@@ -9,7 +9,6 @@ import { profiles, type TProject, type TProjectMember } from "@/db/schema";
 
 const inputSchema = z
   .object({
-    includePrivate: z.boolean().optional().default(true),
     sortBy: z
       .enum(["createdAt", "updatedAt", "name"])
       .optional()
@@ -25,7 +24,6 @@ export type TProjectWithRelations = TProject & {
   owner: typeof profiles.$inferSelect;
 };
 
-// In your action:
 export type TGetMyProjectsResult = {
   projects: TProjectWithRelations[];
 };
@@ -34,7 +32,6 @@ export type TGetMyProjectsResult = {
  * Retrieves all projects owned by the authenticated user.
  *
  * @param input - Optional filtering and sorting parameters
- * @param input.includePrivate - Whether to include private projects (default: true)
  * @param input.sortBy - Field to sort by: 'createdAt', 'updatedAt', or 'name' (default: 'createdAt')
  * @param input.sortOrder - Sort direction: 'asc' or 'desc' (default: 'desc')
  *
@@ -82,10 +79,6 @@ export async function getMyProjects(
   const userProjects = await db.query.projects.findMany({
     where: (fields, { eq, and }) => {
       const conditions = [eq(fields.ownerId, user.id)];
-
-      if (!input?.includePrivate) {
-        conditions.push(eq(fields.isPublic, true));
-      }
 
       return and(...conditions);
     },

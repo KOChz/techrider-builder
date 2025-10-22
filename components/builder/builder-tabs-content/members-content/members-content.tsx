@@ -1,6 +1,6 @@
 "use client";
 
-import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 import {
   MemberCardBuilder,
   TBandMemberBuilder,
@@ -8,7 +8,7 @@ import {
 
 export function MembersContent() {
   const { members, addMember, updateMember, removeMember } =
-    useProjectCreationStore();
+    useProjectStore();
 
   const handleAddMember = () => {
     const newMember: TBandMemberBuilder = {

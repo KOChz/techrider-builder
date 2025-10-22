@@ -1,26 +1,28 @@
-"use client";
-
-import ProjectCreationTabs from "@/components/builder/project-creation-tabs/project-creation-tabs";
 import React from "react";
 
-export default function EditProjectPage() {
+import EditProjectTabs from "@/components/dashboard/edit-project/edit-project-tabs/edit-project-tabs";
+import { getProjectById } from "@/app/actions/get-project-by-id/get-project-by-id";
+
+interface IEditProjectPageProps {
+  params: Promise<{
+    "project-id": string;
+  }>;
+}
+
+export default async function EditProjectPage({
+  params,
+}: IEditProjectPageProps) {
+  const { "project-id": projectId } = await params;
+
+  const { project } = await getProjectById({ projectId });
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-slate-900 mb-6">
-        Edit headeachee Project
+      <h2 className="mb-6 text-2xl font-bold text-slate-900">
+        Edit headeachee {project.name}
       </h2>
-      <div className="bg-white rounded-lg flex flex-col border border-slate-200 p-8">
-        <ProjectCreationTabs />
-
-        <div className="w-full flex justify-between">
-          <button className="border px-12 py-2 w-auto rounded-lg border-red-700/50 cursor-pointer hover:bg-red-700/15 duration-200 transition-all ">
-            Delete Project
-          </button>
-
-          <button className="border px-12 py-2 w-auto rounded-lg border-green-700/50 cursor-pointer hover:bg-green-700/15 duration-200 transition-all ">
-            Save
-          </button>
-        </div>
+      <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-8">
+        <EditProjectTabs project={project} />
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export function ProjectCardActions({
       {onEdit && (
         <button
           onClick={handleEdit}
-          className="rounded-lg cursor-pointer p-2 text-slate-400 transition-colors hover:bg-blue-50 hover:text-green-700"
+          className="cursor-pointer rounded-lg p-2 text-slate-400 transition-colors hover:bg-blue-50 hover:text-green-700"
           aria-label="Edit project"
         >
           <Pencil className="h-4 w-4" />
@@ -37,7 +37,7 @@ export function ProjectCardActions({
       {onDelete && (
         <button
           onClick={handleDelete}
-          className="rounded-lg cursor-pointer p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+          className="cursor-pointer rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
           aria-label="Delete project"
         >
           <Trash2 className="h-4 w-4" />

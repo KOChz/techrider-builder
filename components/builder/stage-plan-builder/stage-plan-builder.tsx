@@ -19,10 +19,9 @@ import { MeasurementControls } from "../measurement-controls/measurement-control
 import { cn } from "@/lib/utils/cn";
 
 import { v4 as uuidv4 } from "uuid";
-import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
-import { TStageNodeType } from "@/schemas/stage-plan";
+import { TStageNodeType, TStagePlanConfig } from "@/schemas/stage-plan";
 import EquipmentSelect from "../equipment-select/equipment-select";
-import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 interface IVec2 {
   x: number;
@@ -290,7 +289,7 @@ export default function StagePlanBuilder({
     deleteMeasurement: storeDeleteMeasurement,
     addNode: storeAddNode,
     addMeasurement: storeAddMeasurement,
-  } = useProjectCreationStore();
+  } = useProjectStore();
 
   const [viewBox, setViewBox] = useState<IViewBox>({
     x: -500,

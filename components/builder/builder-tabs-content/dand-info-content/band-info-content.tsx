@@ -1,9 +1,9 @@
 "use client";
 
-import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export function BandInfoContent() {
-  const { name, notes, setName, setNotes } = useProjectCreationStore();
+  const { name, notes, setName, setNotes } = useProjectStore();
 
   return (
     <div className="space-y-4">

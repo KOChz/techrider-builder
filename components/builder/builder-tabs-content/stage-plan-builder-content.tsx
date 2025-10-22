@@ -1,11 +1,11 @@
 "use client";
 
-import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 import StagePlanBuilder from "../stage-plan-builder/stage-plan-builder";
-import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
+import { TStagePlanConfig } from "@/schemas/stage-plan";
 
 export function StagePlanBuilderContent() {
-  const { stagePlanConfig, setStagePlanConfig } = useProjectCreationStore();
+  const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
 
   const handleConfigChange = (config: TStagePlanConfig) => {
     setStagePlanConfig(config);

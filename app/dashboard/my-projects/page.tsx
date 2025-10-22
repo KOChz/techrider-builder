@@ -1,19 +1,18 @@
-"use client";
-
+import { getMyProjects } from "@/app/actions/get-my-projects/get-my-projects";
 import { ProjectCard } from "@/components/dashboard/my-project/project-card/project-card";
+import { slugify } from "@/lib/utils/slugify";
 
-export default function MyProjectsPage() {
+export default async function MyProjectsPage() {
+  const myProjects = await getMyProjects();
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-slate-900 mb-6">My Projects</h2>
+      <h2 className="mb-6 text-2xl font-bold text-slate-900">My Projects</h2>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <ProjectCard
-          href="/techrider/headeachee"
-          title="headeachee"
-          description="Tech rider project"
-          onDelete={() => {}}
-        />
+        {myProjects.projects.map((project) => (
+          <ProjectCard project={project} key={project.id} />
+        ))}
       </div>
     </div>
   );

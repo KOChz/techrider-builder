@@ -1,9 +1,9 @@
 "use client";
 
-import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export function SettingsContent() {
-  const { name, isPublic, setName, setIsPublic } = useProjectCreationStore();
+  const { name, isPublic, setName, setIsPublic } = useProjectStore();
 
   return (
     <div className="min-h-64 space-y-4">

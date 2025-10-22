@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-import { useProjectCreationStore } from "@/stores/use-project-creation-store";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 import {
   createNewProject,
   TCreateNewProjectInput,
 } from "@/app/actions/create-new-project/create-new-project";
-import toast from "react-hot-toast";
 
 interface IUseCreateProjectReturn {
   isCreating: boolean;
@@ -20,7 +20,7 @@ export function useCreateProject(): IUseCreateProjectReturn {
   const router = useRouter();
 
   const { name, notes, isPublic, stagePlanConfig, members, resetForm } =
-    useProjectCreationStore();
+    useProjectStore();
 
   const createProject = async () => {
     setError(null);
