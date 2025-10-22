@@ -4,7 +4,7 @@ import React from "react";
 import { StageNodeDeleteHandle } from "@/components/stage-node-delete-handle/stage-node-delete-handle";
 import { StageNodeHandle } from "@/components/stage-node-handle/stage-node-handle";
 import { equipmentConfig } from "@/components/stage-plan/stage-plan";
-import { TStageNodeType } from "../equipment-select/equipment-select";
+import { TStageNodeType } from "@/schemas/stage-plan";
 
 export interface TStageNodeBuilder {
   id: string;
