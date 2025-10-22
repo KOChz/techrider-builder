@@ -11,7 +11,7 @@ export function MobileMenuButton({ onClick, isOpen }: IMobileMenuButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="fixed -left-4 top-20 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg transition-colors hover:bg-gray-50 lg:hidden"
+      className="fixed -left-4 top-16 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg transition-colors hover:bg-gray-50 lg:hidden"
       aria-label={isOpen ? "Close menu" : "Open menu"}
       aria-expanded={isOpen}
     >

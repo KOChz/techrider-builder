@@ -20,12 +20,12 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen lg:ml-64 bg-slate-50">
+    <div className="min-h-screen bg-slate-50 lg:ml-64">
       <DashboardHeader user={user} />
       <DashboardSidebar />
 
-      <main className="pt-10 min-h-screen bg-slate-50">
-        <div className="p-6 bg-slate-50">{children}</div>
+      <main className="min-h-screen bg-slate-50 pt-10">
+        <div className="bg-slate-50 px-2 py-3 md:p-6">{children}</div>
       </main>
     </div>
   );
