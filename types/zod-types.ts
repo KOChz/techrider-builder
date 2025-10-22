@@ -1,4 +1,4 @@
-import { zStageNodeType } from "@/components/builder/equipment-select/equipment-select";
+import { zStageNodeType } from "@/schemas/stage-plan";
 import { z } from "zod";
 
 export const zStageNode = z.object({

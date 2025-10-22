@@ -1,21 +1,8 @@
 "use client";
 
+import { TStageNodeType } from "@/schemas/stage-plan";
 import * as React from "react";
 import z from "zod";
-
-export const STAGE_NODE_TYPES = [
-  "drumkit",
-  "amp",
-  "monitor",
-  "mic-stand",
-  "power-extension",
-  "di-box",
-  "text",
-] as const;
-
-export const zStageNodeType = z.enum(STAGE_NODE_TYPES);
-
-export type TStageNodeType = z.infer<typeof zStageNodeType>;
 
 // exclude "text" on purpose—no SVG symbol.
 const EQUIPMENT_OPTIONS: { value: TStageNodeType; label: string }[] = [

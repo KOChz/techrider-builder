@@ -60,6 +60,7 @@ export type TCreateNewProjectResult = {
 // Server Action
 // --------------------------------------------------------------------------------------
 export async function createNewProject(raw: TCreateNewProjectInput) {
+  console.log("🚀 ~ createNewProject ~ raw:", raw.stagePlanConfig);
   const input = inputSchema.parse(raw);
 
   const cookieStore = await cookies();

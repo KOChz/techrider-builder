@@ -26,7 +26,7 @@ export function BandInfoContent() {
           />
         </div>
 
-        <div>
+        {/* <div>
           <label
             htmlFor="band-notes"
             className="mb-1 block text-sm font-medium text-slate-900"
@@ -41,7 +41,7 @@ export function BandInfoContent() {
             placeholder="This is section for any technical stuff notes"
             rows={4}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

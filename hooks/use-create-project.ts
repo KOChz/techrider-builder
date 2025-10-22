@@ -48,7 +48,6 @@ export function useCreateProject(): IUseCreateProjectReturn {
           role: m.role.trim() || undefined,
           icon: m.icon.trim() || undefined,
           equipment: m.equipment,
-          sortOrder: index,
         })),
         revalidate: {
           path: "/projects",
@@ -56,6 +55,7 @@ export function useCreateProject(): IUseCreateProjectReturn {
       };
 
       const result = await createNewProject(input);
+      console.log("🚀 ~ createProject ~ result:", result);
 
       resetForm();
       router.push(`/dashboard/my-projects`);
