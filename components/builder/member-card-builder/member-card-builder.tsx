@@ -224,7 +224,7 @@ export function MemberCardBuilder({
                 <button
                   type="button"
                   onClick={() => removeEquipmentItem(equipmentIndex)}
-                  className="relative -right-5 -top-4 h-5 w-5 cursor-pointer rounded-3xl bg-red-500 p-1 text-white transition-colors hover:bg-red-600 md:-right-6 md:-top-7"
+                  className="relative -right-3 -top-4 h-5 w-5 cursor-pointer rounded-3xl bg-red-500 p-1 text-white transition-colors hover:bg-red-600 md:-right-4 md:-top-7 lg:-right-6"
                 >
                   <X size={12} />
                 </button>
@@ -272,7 +272,7 @@ export function MemberCardBuilder({
                           onClick={() =>
                             removeExampleItem(equipmentIndex, exampleIndex)
                           }
-                          className="cursor-pointer rounded bg-red-400 px-2 py-1 text-sm text-white transition-colors hover:bg-red-500"
+                          className="h-5 w-5 cursor-pointer rounded-3xl bg-red-400 text-sm text-white transition-colors hover:bg-red-500"
                         >
                           ×
                         </button>
