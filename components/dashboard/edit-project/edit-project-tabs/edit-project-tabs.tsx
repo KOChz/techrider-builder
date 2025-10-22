@@ -91,7 +91,7 @@ export default function EditProjectTabs({
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
-                  px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer
+                  px-4 text-xs py-3 md:text-sm font-medium border-b-2 transition-colors cursor-pointer
                   ${
                     isActive
                       ? "border-green-600 text-green-600"
