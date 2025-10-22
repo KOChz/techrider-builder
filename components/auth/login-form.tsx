@@ -25,15 +25,15 @@ export default function LoginForm() {
         </p>
       </div>
 
-      <div className="space-y-2 bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+      <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-6 shadow-lg">
         {(state.message || oauthError) && (
           <div
-            className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm flex items-start gap-3"
+            className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
             role="alert"
             aria-live="polite"
           >
             <svg
-              className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600"
+              className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600"
               fill="currentColor"
               viewBox="0 0 20 20"
               aria-hidden="true"
@@ -57,7 +57,7 @@ export default function LoginForm() {
             <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-slate-500">
+            <span className="bg-white px-4 text-slate-500">
               Or continue with email
             </span>
           </div>
@@ -77,7 +77,7 @@ export default function LoginForm() {
               type="email"
               autoComplete="email"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="you@example.com"
               aria-invalid={state.errors?.email ? "true" : "false"}
               aria-describedby={state.errors?.email ? "email-error" : undefined}
@@ -85,11 +85,11 @@ export default function LoginForm() {
             {state.errors?.email && (
               <p
                 id="email-error"
-                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                className="mt-2 flex items-center gap-1.5 text-sm text-red-600"
                 role="alert"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -118,7 +118,7 @@ export default function LoginForm() {
               type="password"
               autoComplete="current-password"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="••••••••"
               aria-invalid={state.errors?.password ? "true" : "false"}
               aria-describedby={
@@ -128,11 +128,11 @@ export default function LoginForm() {
             {state.errors?.password && (
               <p
                 id="password-error"
-                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                className="mt-2 flex items-center gap-1.5 text-sm text-red-600"
                 role="alert"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -158,7 +158,7 @@ export default function LoginForm() {
             <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-slate-500">
+            <span className="bg-white px-4 text-slate-500">
               New to TechRider Builder?
             </span>
           </div>
@@ -167,7 +167,7 @@ export default function LoginForm() {
         <div className="text-center">
           <Link
             href="/signup"
-            className="inline-flex items-center justify-center w-full px-6 py-3 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 transition-all duration-200"
+            className="inline-flex w-full items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
             prefetch={false}
           >
             Create an account

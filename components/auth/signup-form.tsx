@@ -25,7 +25,7 @@ export default function SignUpForm() {
         </p>
       </div>
 
-      <div className="space-y-1 bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+      <div className="space-y-1 rounded-xl border border-slate-200 bg-white p-6 shadow-lg">
         {(state.message || oauthError) && (
           <div
             className={`px-4 py-3 rounded-lg text-sm flex items-start gap-3 border ${
@@ -37,7 +37,7 @@ export default function SignUpForm() {
             aria-live="polite"
           >
             <svg
-              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              className="mt-0.5 h-5 w-5 flex-shrink-0"
               fill="currentColor"
               viewBox="0 0 20 20"
               aria-hidden="true"
@@ -65,7 +65,7 @@ export default function SignUpForm() {
             <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-slate-500">
+            <span className="bg-white px-4 text-slate-500">
               Or continue with email
             </span>
           </div>
@@ -85,7 +85,7 @@ export default function SignUpForm() {
               type="email"
               autoComplete="email"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="you@example.com"
               aria-invalid={state.errors?.email ? "true" : "false"}
               aria-describedby={state.errors?.email ? "email-error" : undefined}
@@ -93,11 +93,11 @@ export default function SignUpForm() {
             {state.errors?.email && (
               <p
                 id="email-error"
-                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                className="mt-2 flex items-center gap-1.5 text-sm text-red-600"
                 role="alert"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -126,7 +126,7 @@ export default function SignUpForm() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="••••••••"
               aria-invalid={state.errors?.password ? "true" : "false"}
               aria-describedby={
@@ -136,11 +136,11 @@ export default function SignUpForm() {
             {state.errors?.password && (
               <p
                 id="password-error"
-                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                className="mt-2 flex items-center gap-1.5 text-sm text-red-600"
                 role="alert"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -169,7 +169,7 @@ export default function SignUpForm() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all duration-200 outline-none text-slate-900 placeholder:text-slate-400"
+              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="••••••••"
               aria-invalid={state.errors?.confirmPassword ? "true" : "false"}
               aria-describedby={
@@ -181,11 +181,11 @@ export default function SignUpForm() {
             {state.errors?.confirmPassword && (
               <p
                 id="confirm-password-error"
-                className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                className="mt-2 flex items-center gap-1.5 text-sm text-red-600"
                 role="alert"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -211,7 +211,7 @@ export default function SignUpForm() {
             <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-slate-500">
+            <span className="bg-white px-4 text-slate-500">
               Already onboard?
             </span>
           </div>
@@ -220,7 +220,7 @@ export default function SignUpForm() {
         <div className="text-center">
           <Link
             href="/login"
-            className="inline-flex items-center justify-center w-full px-6 py-3 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 transition-all duration-200"
+            className="inline-flex w-full items-center justify-center rounded-lg border border-slate-300 px-6 py-3 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2"
             prefetch={false}
           >
             Sign in
