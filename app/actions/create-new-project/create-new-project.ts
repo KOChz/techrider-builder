@@ -16,9 +16,6 @@ import {
 import { stagePlanConfigSchema } from "@/types/zod-types";
 import { TSupabaseUserMetadata } from "@/types/user-types";
 
-// --------------------------------------------------------------------------------------
-// Zod: members & equipment (unchanged domain model)
-// --------------------------------------------------------------------------------------
 const equipmentExampleSchema = z.object({
   title: z.string(),
   items: z.array(z.string()),
@@ -37,9 +34,6 @@ const memberInputSchema = z.object({
   equipment: z.array(equipmentItemSchema).default([]),
 });
 
-// --------------------------------------------------------------------------------------
-// Zod: server action input (stagePlanConfig wired to your schema)
-// --------------------------------------------------------------------------------------
 const inputSchema = z.object({
   name: z.string().min(1),
   notes: z.string().optional(),
@@ -56,9 +50,6 @@ export type TCreateNewProjectResult = {
   project: TProject & { members: TProjectMember[] };
 };
 
-// --------------------------------------------------------------------------------------
-// Server Action
-// --------------------------------------------------------------------------------------
 export async function createNewProject(raw: TCreateNewProjectInput) {
   console.log("🚀 ~ createNewProject ~ raw:", raw.stagePlanConfig);
   const input = inputSchema.parse(raw);

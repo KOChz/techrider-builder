@@ -22,30 +22,27 @@ import { v4 as uuidv4 } from "uuid";
 import { TStagePlanConfig } from "@/types/stage-plan-builder-types";
 import { TStageNodeType } from "@/schemas/stage-plan";
 import EquipmentSelect from "../equipment-select/equipment-select";
+import { useProjectCreationStore } from "@/stores/use-project-creation-store";
 
-interface Vec2 {
+interface IVec2 {
   x: number;
   y: number;
 }
-interface ViewBox {
+interface IViewBox {
   x: number;
   y: number;
   width: number;
   height: number;
 }
-interface EquipmentConfig {
+interface IEquipmentConfig {
   width: number;
   height: number;
   labelOffset: number;
 }
 
-/* ────────────────────────────────────────────────────────────────────────────
-   Config (keep this in a separate module if you import it elsewhere to avoid
-   circular deps)
-   ──────────────────────────────────────────────────────────────────────────── */
 export const equipmentConfig: Record<
   TStageNodeBuilder["type"],
-  EquipmentConfig
+  IEquipmentConfig
 > = {
   drumkit: { width: 200, height: 180, labelOffset: 100 },
   amp: { width: 80, height: 100, labelOffset: 60 },
@@ -279,7 +276,6 @@ export default function StagePlanBuilder({
   config,
   onConfigChange,
 }: IStagePlanBuilderProps) {
-  /* ── Local source of truth ─────────────────────────────────────────────── */
   const [nodes, setNodes] = useState<TStageNodeBuilder[]>(
     config.nodes.length > 0 ? config.nodes : getDefaultNodes()
   );
@@ -287,14 +283,23 @@ export default function StagePlanBuilder({
     config.measurements
   );
 
-  const [viewBox, setViewBox] = useState<ViewBox>({
+  const {
+    updateNodeLabel: storeUpdateNodeLabel,
+    updateMeasurementDistance: storeUpdateMeasurementDistance,
+    deleteNode: storeDeleteNode,
+    deleteMeasurement: storeDeleteMeasurement,
+    addNode: storeAddNode,
+    addMeasurement: storeAddMeasurement,
+  } = useProjectCreationStore();
+
+  const [viewBox, setViewBox] = useState<IViewBox>({
     x: -500,
     y: -500,
     width: 1000,
     height: 1000,
   });
   const [zoom, setZoom] = useState(1);
-  const [mouse, setMouse] = useState<Vec2>({ x: 0, y: 0 });
+  const [mouse, setMouse] = useState<IVec2>({ x: 0, y: 0 });
 
   const [isPanning, setIsPanning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -306,7 +311,7 @@ export default function StagePlanBuilder({
     number | null
   >(null);
 
-  const [dragOffset, setDragOffset] = useState<Vec2>({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState<IVec2>({ x: 0, y: 0 });
   const [rotationStart, setRotationStart] = useState({
     angle: 0,
     mouseAngle: 0,
@@ -324,7 +329,7 @@ export default function StagePlanBuilder({
   >([null, null]);
 
   const svgRef = useRef<SVGSVGElement>(null);
-  const panStartRef = useRef<Vec2>({ x: 0, y: 0 });
+  const panStartRef = useRef<IVec2>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   /* ── Hover timers ─────────────────────────────────────────────────────── */
@@ -340,7 +345,7 @@ export default function StagePlanBuilder({
 
   /* ── Utilities ────────────────────────────────────────────────────────── */
   const screenToCanvas = useCallback(
-    (screenX: number, screenY: number): Vec2 => {
+    (screenX: number, screenY: number): IVec2 => {
       if (!svgRef.current) return { x: 0, y: 0 };
       const rect = svgRef.current.getBoundingClientRect();
       const x =
@@ -466,14 +471,15 @@ export default function StagePlanBuilder({
               measurements.length > 0
                 ? Math.max(...measurements.map((m) => m.id)) + 1
                 : 1;
-            setMeasurements((prev) => [
-              ...prev,
-              {
-                id: nextId,
-                startNodeId: selectedMeasurementNodes[0]!,
-                endNodeId: nodeId!,
-              },
-            ]);
+
+            const newMeasurement = {
+              id: nextId,
+              startNodeId: selectedMeasurementNodes[0]!,
+              endNodeId: nodeId!,
+            };
+
+            setMeasurements((prev) => [...prev, newMeasurement]);
+            storeAddMeasurement(newMeasurement);
             setSelectedMeasurementNodes([null, null]);
             setIsMeasurementMode(false);
           }
@@ -584,17 +590,27 @@ export default function StagePlanBuilder({
   }, []);
 
   /* ── CRUD helpers ─────────────────────────────────────────────────────── */
-  const handleDeleteNode = useCallback((nodeId: string) => {
-    setNodes((prev) => prev.filter((node) => node.id !== nodeId));
-    setSelectedNodeId((prev) => (prev === nodeId ? null : prev));
-    setMeasurements((prev) =>
-      prev.filter((m) => m.startNodeId !== nodeId && m.endNodeId !== nodeId)
-    );
-  }, []);
+  const handleDeleteNode = useCallback(
+    (nodeId: string) => {
+      setNodes((prev) => prev.filter((node) => node.id !== nodeId));
+      setSelectedNodeId((prev) => (prev === nodeId ? null : prev));
+      setMeasurements((prev) =>
+        prev.filter((m) => m.startNodeId !== nodeId && m.endNodeId !== nodeId)
+      );
 
-  const handleDeleteMeasurement = useCallback((measurementId: number) => {
-    setMeasurements((prev) => prev.filter((m) => m.id !== measurementId));
-  }, []);
+      storeDeleteNode(nodeId);
+    },
+    [storeDeleteNode]
+  );
+
+  const handleDeleteMeasurement = useCallback(
+    (measurementId: number) => {
+      setMeasurements((prev) => prev.filter((m) => m.id !== measurementId));
+
+      storeDeleteMeasurement(measurementId);
+    },
+    [storeDeleteMeasurement]
+  );
 
   const handleUpdateCustomDistance = useCallback(
     (measurementId: number, distance: string) => {
@@ -603,8 +619,21 @@ export default function StagePlanBuilder({
           m.id === measurementId ? { ...m, customDistance: distance } : m
         )
       );
+
+      storeUpdateMeasurementDistance(measurementId, distance);
     },
-    []
+    [storeUpdateMeasurementDistance]
+  );
+
+  const handleUpdateNodeLabel = useCallback(
+    (nodeId: string, newLabel: string) => {
+      setNodes((prev) =>
+        prev.map((n) => (n.id === nodeId ? { ...n, label: newLabel } : n))
+      );
+
+      storeUpdateNodeLabel(nodeId, newLabel);
+    },
+    [storeUpdateNodeLabel]
   );
 
   const toggleMeasurementMode = useCallback(() => {
@@ -614,24 +643,23 @@ export default function StagePlanBuilder({
 
   const [picker, setPicker] = useState<TStageNodeType>("drumkit");
 
-  function addNodeOfType(t: TStageNodeType) {
-    const cx = viewBox.x + viewBox.width / 2;
-    const cy = viewBox.y + viewBox.height / 2;
-    const nextId = uuidv4();
+  const addNodeOfType = useCallback(
+    (t: TStageNodeType) => {
+      const cx = viewBox.x + viewBox.width / 2;
+      const cy = viewBox.y + viewBox.height / 2;
+      const nextId = uuidv4();
 
-    const labelByType: Record<TStageNodeType, string> = {
-      drumkit: "Drumkit",
-      amp: "Amp",
-      monitor: "Monitor",
-      "mic-stand": "Mic Stand",
-      "power-extension": "Power Strip",
-      "di-box": "DI Box",
-      text: "Text",
-    };
+      const labelByType: Record<TStageNodeType, string> = {
+        drumkit: "Drumkit",
+        amp: "Amp",
+        monitor: "Monitor",
+        "mic-stand": "Mic Stand",
+        "power-extension": "Power Strip",
+        "di-box": "DI Box",
+        text: "Text",
+      };
 
-    setNodes((prev) => [
-      ...prev,
-      {
+      const newNode: TStageNodeBuilder = {
         id: nextId,
         x: cx,
         y: cy,
@@ -639,10 +667,17 @@ export default function StagePlanBuilder({
         type: t,
         angle: 0,
         scale: 1,
-      },
-    ]);
-    setSelectedNodeId(nextId);
-  }
+      };
+
+      // Update local state
+      setNodes((prev) => [...prev, newNode]);
+      setSelectedNodeId(nextId);
+
+      // ✅ Sync to store immediately
+      storeAddNode(newNode);
+    },
+    [viewBox, storeAddNode]
+  );
 
   const updateSelectedLabel = useCallback(
     (next: string) => {
@@ -650,8 +685,10 @@ export default function StagePlanBuilder({
       setNodes((prev) =>
         prev.map((n) => (n.id === selectedNodeId ? { ...n, label: next } : n))
       );
+
+      storeUpdateNodeLabel(selectedNodeId, next);
     },
-    [selectedNodeId]
+    [selectedNodeId, storeUpdateNodeLabel]
   );
 
   /* ── Event binding ────────────────────────────────────────────────────── */
@@ -689,7 +726,6 @@ export default function StagePlanBuilder({
     debouncedPush(nodes, measurements, config.version);
   }, [nodes, measurements, debouncedPush, config.version]);
 
-  /* ── Render ───────────────────────────────────────────────────────────── */
   return (
     <div
       id="stage-plan"
@@ -697,7 +733,7 @@ export default function StagePlanBuilder({
     >
       <div className="max-w-full p-3 sm:p-5">
         <p className="mb-2 text-xs text-gray-400 sm:text-sm">
-          To zoom press control and scroll
+          To zoom press control and use mousewheel scroll
         </p>
 
         <div className="mb-3 flex flex-wrap items-start gap-2 sm:items-center sm:gap-3">
@@ -806,13 +842,7 @@ export default function StagePlanBuilder({
                 onMouseEnter={() => armedEnter(node.id)}
                 onMouseLeave={armedLeave}
                 onDelete={handleDeleteNode}
-                onUpdateLabel={(nodeId, newLabel) => {
-                  setNodes(
-                    nodes.map((n) =>
-                      n.id === nodeId ? { ...n, label: newLabel } : n
-                    )
-                  );
-                }}
+                onUpdateLabel={handleUpdateNodeLabel}
               />
             ))}
 
