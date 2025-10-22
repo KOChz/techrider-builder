@@ -21,7 +21,7 @@ export function BandInfoContent() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="no-zoom-input w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="Enter band name"
           />
         </div>

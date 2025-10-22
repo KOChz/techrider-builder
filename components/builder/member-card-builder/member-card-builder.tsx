@@ -167,14 +167,14 @@ export function MemberCardBuilder({
                 type="text"
                 value={member.name}
                 onChange={(e) => updateMember({ name: e.target.value })}
-                className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                className="no-zoom-input w-full rounded-lg border-2 border-gray-300 px-4 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                 placeholder="Member Name"
               />
               <input
                 type="text"
                 value={member.role}
                 onChange={(e) => updateMember({ role: e.target.value })}
-                className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                className="no-zoom-input w-full rounded-lg border-2 border-gray-300 px-4 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                 placeholder="Role"
               />
             </div>
@@ -207,7 +207,7 @@ export function MemberCardBuilder({
                       name: e.target.value,
                     })
                   }
-                  className="flex-1 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                  className="no-zoom-input flex-1 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                   placeholder="Equipment name"
                 />
                 <input
@@ -218,7 +218,7 @@ export function MemberCardBuilder({
                       quantity: e.target.value,
                     })
                   }
-                  className="max-w-20 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none md:max-w-none"
+                  className="max-w-20 no-zoom-input rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none md:max-w-none"
                   placeholder="Qty"
                 />
                 <button
@@ -239,7 +239,7 @@ export function MemberCardBuilder({
                       onChange={(e) =>
                         updateExamplesTitle(equipmentIndex, e.target.value)
                       }
-                      className="flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                      className="no-zoom-input flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
                       placeholder="Examples title"
                     />
                     <button
@@ -264,7 +264,7 @@ export function MemberCardBuilder({
                               e.target.value
                             )
                           }
-                          className="flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                          className="no-zoom-input flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
                           placeholder="Example item"
                         />
                         <button
