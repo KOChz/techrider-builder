@@ -62,7 +62,6 @@ export type CreateNewProjectResult = {
 export async function createNewProject(raw: CreateNewProjectInput) {
   const input = inputSchema.parse(raw);
 
-  // 👇 key change
   const cookieStore = await cookies();
 
   const supabase = createServerClient(
