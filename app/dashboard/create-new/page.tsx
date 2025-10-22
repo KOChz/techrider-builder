@@ -8,7 +8,7 @@ export default function CreateNewProjectPage() {
       <h2 className="mb-6 text-2xl font-bold text-slate-900">
         Create a New Project
       </h2>
-      <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-8">
+      <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 md:p-8">
         <ProjectCreationTabs />
       </div>
     </div>

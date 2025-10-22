@@ -30,7 +30,7 @@ export const MeasurementControls: React.FC<IMeasurementControlsProps> = ({
       <button
         onClick={onToggleMeasurementMode}
         className={cn(
-          "cursor-pointer select-none rounded border px-5 py-2.5 text-sm font-medium transition-colors",
+          "cursor-pointer w-full md:w-auto select-none rounded border px-5 py-2.5 text-sm font-medium transition-colors",
           isMeasurementMode
             ? "bg-green-600 border-green-500 text-white hover:bg-green-700"
             : "bg-slate-700 border-slate-600 text-white hover:bg-slate-600"

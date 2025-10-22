@@ -61,7 +61,7 @@ export default function ProjectCreationTabs() {
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
-                  px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer
+                  px-4 text-xs py-3 md:text-sm font-medium border-b-2 transition-colors cursor-pointer
                   ${
                     isActive
                       ? "border-green-600 text-green-600"
@@ -97,7 +97,7 @@ export default function ProjectCreationTabs() {
       <div className="mt-6 flex justify-between gap-3">
         <Link
           href="/dashboard/my-projects"
-          className="hover:bg-red-700/15 inline-block w-auto cursor-pointer rounded-lg border border-red-700/50 px-12 py-2 transition-all duration-200"
+          className="rounded-md bg-red-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </Link>

@@ -2,7 +2,6 @@
 
 import { TStageNodeType } from "@/schemas/stage-plan";
 import * as React from "react";
-import z from "zod";
 
 // exclude "text" on purpose—no SVG symbol.
 const EQUIPMENT_OPTIONS: { value: TStageNodeType; label: string }[] = [
@@ -17,7 +16,7 @@ const EQUIPMENT_OPTIONS: { value: TStageNodeType; label: string }[] = [
 export type EquipmentSelectProps = {
   value: TStageNodeType;
   onChange: (value: TStageNodeType) => void;
-  onAdd?: (value: TStageNodeType) => void; // optional CTA hook
+  onAdd?: (value: TStageNodeType) => void;
   disabled?: boolean;
   id?: string;
 };
@@ -39,13 +38,11 @@ export default function EquipmentSelect({
     )
   );
 
-  // keep activeIndex in sync with external value
   React.useEffect(() => {
     const idx = EQUIPMENT_OPTIONS.findIndex((o) => o.value === value);
     setActiveIndex(Math.max(0, idx));
   }, [value]);
 
-  // Close on outside click / focus loss
   React.useEffect(() => {
     function handleDocClick(e: MouseEvent) {
       if (!open) return;
@@ -63,7 +60,6 @@ export default function EquipmentSelect({
     return () => document.removeEventListener("mousedown", handleDocClick);
   }, [open]);
 
-  // Keyboard UX
   function onKeyDown(e: React.KeyboardEvent) {
     if (!open) {
       if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
@@ -106,9 +102,9 @@ export default function EquipmentSelect({
     EQUIPMENT_OPTIONS.find((o) => o.value === value) ?? EQUIPMENT_OPTIONS[0];
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-3">
-        <div className="relative">
+    <div className="flex w-full flex-col gap-2 sm:w-auto">
+      <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+        <div className="relative w-full sm:w-auto">
           <button
             id={id}
             ref={buttonRef}
@@ -120,15 +116,15 @@ export default function EquipmentSelect({
             disabled={disabled}
             title="Choose equipment"
             className={[
-              "min-w-[220px] inline-flex items-center justify-between gap-2",
-              "rounded-md border border-slate-700 cursor-pointer bg-slate-900 px-2 py-2 text-slate-100",
+              "w-full sm:w-[260px] min-w-0 inline-flex items-center justify-between gap-2",
+              "rounded-md border border-slate-700 cursor-pointer bg-slate-900 px-3 md:py-3 py-1 text-slate-100",
               "shadow-sm hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-green-500/60",
               "disabled:cursor-not-allowed disabled:opacity-60 select-none",
             ].join(" ")}
           >
-            <span className="inline-flex items-center gap-2.5">
+            <span className="inline-flex items-center gap-2">
               <IconPreview symbolId={selected.value} />
-              <span>{selected.label}</span>
+              <span className="text-sm sm:text-base">{selected.label}</span>
             </span>
             <span aria-hidden>▾</span>
           </button>
@@ -144,8 +140,9 @@ export default function EquipmentSelect({
                 id ? `${id}-opt-${activeIndex}` : undefined
               }
               className={[
-                "absolute left-0 z-20 mt-1 min-w-[220px] max-h-80 overflow-y-auto",
-                "rounded-lg border border-slate-800 bg-slate-950 p-1.5",
+                // Full-width dropdown under button on mobile; standard popover on sm+
+                "absolute left-0 right-0 top-full z-20 mt-1 w-full",
+                "max-h-[45vh] overflow-y-auto rounded-lg border border-slate-800 bg-slate-950 p-1.5",
                 "shadow-xl ring-1 ring-black/10",
               ].join(" ")}
             >
@@ -160,24 +157,24 @@ export default function EquipmentSelect({
                     aria-selected={isSelected}
                     data-active={active ? "true" : "false"}
                     onMouseEnter={() => setActiveIndex(idx)}
-                    onMouseDown={(e) => e.preventDefault()} // keep focus flow clean
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => {
                       onChange(opt.value);
                       setOpen(false);
                       buttonRef.current?.focus();
                     }}
                     className={[
-                      "list-none flex items-center justify-between gap-2.5",
-                      "rounded-md py-2 px-2.5 cursor-pointer text-slate-100",
+                      "list-none flex items-center justify-between gap-2",
+                      "rounded-md py-3 px-2.5 cursor-pointer text-slate-100",
                       "hover:bg-slate-800/60 focus:bg-slate-800/60",
                       active
                         ? "bg-slate-800 outline outline-1 outline-slate-700"
                         : "",
                     ].join(" ")}
                   >
-                    <span className="inline-flex items-center gap-2.5">
+                    <span className="inline-flex items-center gap-2">
                       <IconPreview symbolId={opt.value} />
-                      <span>{opt.label}</span>
+                      <span className="text-sm sm:text-base">{opt.label}</span>
                     </span>
                     {isSelected ? (
                       <span className="text-green-400" aria-hidden>
@@ -198,8 +195,8 @@ export default function EquipmentSelect({
             disabled={disabled}
             title="Add selected equipment to canvas"
             className={[
-              "inline-flex select-none items-center rounded-md border cursor-pointer border-slate-700 bg-slate-900",
-              "px-2 py-5 text-slate-100 shadow-sm hover:bg-slate-800/60",
+              "w-full sm:w-auto inline-flex select-none items-center rounded-md border cursor-pointer border-slate-700 bg-slate-900",
+              "px-3 py-2 md:py-[24px] justify-center text-xs md:text-md text-slate-100 shadow-sm hover:bg-slate-800/60",
               "focus:outline-none focus:ring-2 focus:ring-green-500/60",
               "disabled:cursor-not-allowed disabled:opacity-60",
             ].join(" ")}
@@ -213,19 +210,29 @@ export default function EquipmentSelect({
 }
 
 function IconPreview({ symbolId }: { symbolId: string }) {
-  // Leans on your global <symbol id="..."> from <SvgSymbols />
+  // Compact on mobile, roomier on desktop
   return (
-    <svg
-      width={48}
-      height={48}
-      viewBox="0 0 100 100"
-      preserveAspectRatio="xMidYMid meet"
-      aria-hidden
-      className="inline-block"
-    >
-      {/* We wrap the symbol in a <g> to normalize sizing;
-          adjust scale/translate if any icon looks off */}
-      <use width={88} height={88} href={`#${symbolId}`} />
-    </svg>
+    <>
+      <svg
+        width={24}
+        height={24}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden
+        className="inline-block sm:hidden"
+      >
+        <use width={88} height={88} href={`#${symbolId}`} />
+      </svg>
+      <svg
+        width={40}
+        height={40}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden
+        className="hidden sm:inline-block"
+      >
+        <use width={88} height={88} href={`#${symbolId}`} />
+      </svg>
+    </>
   );
 }

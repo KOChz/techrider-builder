@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
+import { X } from "lucide-react";
 
 export type TEquipmentExample = {
   title: string;
@@ -142,15 +143,15 @@ export function MemberCardBuilder({
   };
 
   return (
-    <div className="relative max-w-lg text-sm p-6 bg-white rounded-lg border border-gray-200">
+    <div className="relative max-w-lg rounded-lg border border-gray-200 bg-white p-3 text-sm md:p-6">
       {onRemove && (
         <button
           type="button"
           onClick={onRemove}
-          className="absolute -top-3 -right-3 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors cursor-pointer text-lg"
+          className="absolute -right-3 -top-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-lg text-white transition-colors hover:bg-red-600"
           aria-label="Remove member"
         >
-          ×
+          <X size={14} />
         </button>
       )}
 
@@ -166,14 +167,14 @@ export function MemberCardBuilder({
                 type="text"
                 value={member.name}
                 onChange={(e) => updateMember({ name: e.target.value })}
-                className="w-full placeholder-slate-500 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none"
+                className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                 placeholder="Member Name"
               />
               <input
                 type="text"
                 value={member.role}
                 onChange={(e) => updateMember({ role: e.target.value })}
-                className="w-full placeholder-slate-500 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none"
+                className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                 placeholder="Role"
               />
             </div>
@@ -186,7 +187,7 @@ export function MemberCardBuilder({
             <button
               type="button"
               onClick={addEquipmentItem}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors cursor-pointer"
+              className="cursor-pointer rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
             >
               + Add Equipment
             </button>
@@ -195,7 +196,7 @@ export function MemberCardBuilder({
           {member.equipment.map((item, equipmentIndex) => (
             <div
               key={equipmentIndex}
-              className="p-4 border-2 border-gray-200 rounded-lg space-y-3"
+              className="space-y-3 rounded-lg border-2 border-gray-200 p-2 md:p-4"
             >
               <div className="flex gap-2">
                 <input
@@ -206,7 +207,7 @@ export function MemberCardBuilder({
                       name: e.target.value,
                     })
                   }
-                  className="flex-1 placeholder-slate-500 px-3 py-2 border border-gray-300 rounded focus:border-green-500 focus:outline-none"
+                  className="flex-1 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                   placeholder="Equipment name"
                 />
                 <input
@@ -217,34 +218,34 @@ export function MemberCardBuilder({
                       quantity: e.target.value,
                     })
                   }
-                  className="w-24 placeholder-slate-500 px-3 py-2 border border-gray-300 rounded focus:border-green-500 focus:outline-none"
+                  className="max-w-24 w-3/4 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                   placeholder="Qty"
                 />
                 <button
                   type="button"
                   onClick={() => removeEquipmentItem(equipmentIndex)}
-                  className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors cursor-pointer"
+                  className="relative -right-5 -top-5 h-5 w-5 cursor-pointer rounded-3xl bg-red-500 p-1 text-white transition-colors hover:bg-red-600"
                 >
-                  Remove
+                  <X size={12} />
                 </button>
               </div>
 
               {item.examples ? (
-                <div className="pl-4 space-y-2 border-l-4 border-green-200">
-                  <div className="flex gap-2 items-center">
+                <div className="space-y-2 border-l-4 border-green-200 pl-4">
+                  <div className="flex items-center gap-2">
                     <input
                       type="text"
                       value={item.examples.title}
                       onChange={(e) =>
                         updateExamplesTitle(equipmentIndex, e.target.value)
                       }
-                      className="flex-1 placeholder-slate-500 px-3 py-1 text-sm border border-gray-300 rounded focus:border-green-500 focus:outline-none"
+                      className="flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
                       placeholder="Examples title"
                     />
                     <button
                       type="button"
                       onClick={() => removeExamplesFromItem(equipmentIndex)}
-                      className="px-2 py-1 text-sm bg-gray-400 text-white rounded hover:bg-gray-500 transition-colors cursor-pointer"
+                      className="cursor-pointer rounded bg-gray-400 px-2 py-1 text-sm text-white transition-colors hover:bg-gray-500"
                     >
                       Remove Examples
                     </button>
@@ -263,7 +264,7 @@ export function MemberCardBuilder({
                               e.target.value
                             )
                           }
-                          className="flex-1 placeholder-slate-500 px-3 py-1 text-sm border border-gray-300 rounded focus:border-green-500 focus:outline-none"
+                          className="flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
                           placeholder="Example item"
                         />
                         <button
@@ -271,7 +272,7 @@ export function MemberCardBuilder({
                           onClick={() =>
                             removeExampleItem(equipmentIndex, exampleIndex)
                           }
-                          className="px-2 py-1 text-sm bg-red-400 text-white rounded hover:bg-red-500 transition-colors cursor-pointer"
+                          className="cursor-pointer rounded bg-red-400 px-2 py-1 text-sm text-white transition-colors hover:bg-red-500"
                         >
                           ×
                         </button>
@@ -282,7 +283,7 @@ export function MemberCardBuilder({
                   <button
                     type="button"
                     onClick={() => addExampleItem(equipmentIndex)}
-                    className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition-colors cursor-pointer"
+                    className="cursor-pointer rounded bg-green-500 px-3 py-1 text-sm text-white transition-colors hover:bg-green-600"
                   >
                     + Add Example
                   </button>
@@ -291,7 +292,7 @@ export function MemberCardBuilder({
                 <button
                   type="button"
                   onClick={() => addExamplesToItem(equipmentIndex)}
-                  className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer"
+                  className="cursor-pointer rounded bg-green-600 px-3 py-1 text-sm text-white transition-colors hover:bg-green-700"
                 >
                   + Add Examples Section
                 </button>
