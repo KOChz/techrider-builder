@@ -429,6 +429,59 @@ export default function StagePlanBuilder({
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
+      activePointers.current.set(e.pointerId, {
+        clientX: e.clientX,
+        clientY: e.clientY,
+      });
+
+      const isTwoFinger = activePointers.current.size >= 2;
+      // if two fingers now, prime pinch (like your code), and return
+      if (isTwoFinger) {
+        // ... your pinchRef init stays
+        setIsPanning(false);
+        setIsDragging(false);
+        setIsRotating(false);
+        setDraggedNodeId(null);
+        return;
+      }
+
+      const nodeElement = (e.target as Element).closest(
+        ".stage-node"
+      ) as SVGGElement | null;
+
+      if (nodeElement) {
+        const nodeId = nodeElement.getAttribute("data-id")!;
+        const node = nodes.find((n) => n.id === nodeId)!;
+        const canvasPos = screenToCanvas(e.clientX, e.clientY);
+        const isRotationHandle =
+          (e.target as Element).classList.contains("rotation-hitbox") ||
+          !!(e.target as Element).closest(".rotation-hitbox");
+
+        setSelectedNodeId(nodeId);
+
+        if (isRotationHandle || (e as any).altKey) {
+          setIsRotating(true);
+          setDraggedNodeId(nodeId);
+          setRotationStart({
+            angle: node.angle,
+            mouseAngle: calculateAngle(
+              node.x,
+              node.y,
+              canvasPos.x,
+              canvasPos.y
+            ),
+          });
+        } else {
+          setIsDragging(true);
+          setDraggedNodeId(nodeId);
+          setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
+        }
+      } else {
+        setSelectedNodeId(null);
+        setIsPanning(true);
+        panStartRef.current = { x: e.clientX, y: e.clientY };
+      }
+
       (svgRef.current as SVGElement | null)?.setPointerCapture?.(e.pointerId);
 
       const target = e.target as SVGElement;
@@ -469,86 +522,6 @@ export default function StagePlanBuilder({
           clearTimeout(dragDelayTimerRef.current);
           dragDelayTimerRef.current = null;
         }
-      }
-
-      const nodeElement = target.closest(".stage-node") as SVGGElement | null;
-      const isTouchDevice = e.pointerType === "touch";
-
-      if (nodeElement) {
-        const nodeId = nodeElement.getAttribute("data-id");
-        const node = nodes.find((n) => n.id === nodeId);
-        if (!node) return;
-
-        if (isMeasurementMode) {
-          if (selectedMeasurementNodes[0] === null) {
-            setSelectedMeasurementNodes([nodeId, null]);
-          } else if (
-            selectedMeasurementNodes[1] === null &&
-            selectedMeasurementNodes[0] !== nodeId
-          ) {
-            const nextId =
-              measurements.length > 0
-                ? Math.max(...measurements.map((m) => m.id)) + 1
-                : 1;
-
-            const newMeasurement = {
-              id: nextId,
-              startNodeId: selectedMeasurementNodes[0]!,
-              endNodeId: nodeId!,
-            };
-
-            setMeasurements((prev) => [...prev, newMeasurement]);
-            storeAddMeasurement(newMeasurement);
-            setSelectedMeasurementNodes([null, null]);
-            setIsMeasurementMode(false);
-          }
-          return;
-        }
-
-        setSelectedNodeId(nodeId);
-
-        const canvasPos = screenToCanvas(e.clientX, e.clientY);
-        const isRotationHandle =
-          target.classList.contains("rotation-hitbox") ||
-          !!target.closest(".rotation-hitbox");
-
-        if (isRotationHandle || (e as any).altKey) {
-          setIsRotating(true);
-          setDraggedNodeId(nodeId);
-          const mouseAngle = calculateAngle(
-            node.x,
-            node.y,
-            canvasPos.x,
-            canvasPos.y
-          );
-          setRotationStart({ angle: node.angle, mouseAngle });
-          (target as any).style.cursor = "grabbing";
-        } else {
-          // On touch devices, delay drag start to allow gesture detection
-          if (isTouchDevice) {
-            setIsPendingDrag(true);
-            dragDelayTimerRef.current = window.setTimeout(() => {
-              setIsDragging(true);
-              setDraggedNodeId(nodeId);
-              setDragOffset({
-                x: canvasPos.x - node.x,
-                y: canvasPos.y - node.y,
-              });
-              setIsPendingDrag(false);
-            }, 75); // 75ms delay for gesture detection
-          } else {
-            // Desktop: immediate drag
-            setIsDragging(true);
-            setDraggedNodeId(nodeId);
-            setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
-          }
-        }
-        e.preventDefault();
-      } else {
-        setSelectedNodeId(null);
-        if (isMeasurementMode) setSelectedMeasurementNodes([null, null]);
-        setIsPanning(true);
-        panStartRef.current = { x: e.clientX, y: e.clientY };
       }
     },
     [
