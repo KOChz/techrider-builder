@@ -143,7 +143,7 @@ export function MemberCardBuilder({
   };
 
   return (
-    <div className="relative max-w-lg rounded-lg border border-gray-200 bg-white p-3 text-sm md:p-6">
+    <div className="relative max-w-lg rounded-lg border border-gray-200 bg-white p-3 text-sm md:max-w-none md:p-6">
       {onRemove && (
         <button
           type="button"
