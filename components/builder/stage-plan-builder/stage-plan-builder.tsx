@@ -728,7 +728,7 @@ export default function StagePlanBuilder({
   return (
     <div
       id="stage-plan"
-      className="min-h-screen w-full bg-[#1a1a1a] font-sans text-white"
+      className="md:min-h-none min-h-auto w-full bg-[#1a1a1a] font-sans text-white"
     >
       <div className="max-w-full p-3 sm:p-5">
         <p className="mb-2 text-xs text-gray-400 sm:text-sm">

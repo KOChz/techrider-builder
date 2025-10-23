@@ -198,18 +198,7 @@ export function MemberCardBuilder({
               key={equipmentIndex}
               className="relative space-y-3 rounded-lg border-2 border-gray-200 p-2 md:p-4"
             >
-              {/* NEW: anchor to card, not the row */}
-              <button
-                type="button"
-                onClick={() => removeEquipmentItem(equipmentIndex)}
-                className="absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-full bg-red-500 text-white shadow hover:bg-red-600 md:-right-3 md:-top-3"
-                aria-label="Remove equipment item"
-              >
-                <X size={12} />
-              </button>
-
-              {/* give the row breathing room for the button on mobile */}
-              <div className="flex gap-2 pr-10">
+              <div className="flex gap-2">
                 <input
                   type="text"
                   value={item.name}
@@ -221,17 +210,28 @@ export function MemberCardBuilder({
                   className="no-zoom-input flex-1 rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none"
                   placeholder="Equipment name"
                 />
-                <input
-                  type="text"
-                  value={item.quantity || ""}
-                  onChange={(e) =>
-                    updateEquipmentItem(equipmentIndex, {
-                      quantity: e.target.value,
-                    })
-                  }
-                  className="max-w-20 no-zoom-input rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none md:max-w-none"
-                  placeholder="Qty"
-                />
+
+                <div className="flex">
+                  <input
+                    type="text"
+                    value={item.quantity || ""}
+                    onChange={(e) =>
+                      updateEquipmentItem(equipmentIndex, {
+                        quantity: e.target.value,
+                      })
+                    }
+                    className="no-zoom-input w-12 rounded-l border border-gray-300 px-3 py-2 placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
+                    placeholder="Qty"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeEquipmentItem(equipmentIndex)}
+                    className="flex cursor-pointer items-center justify-center rounded-r border border-l-0 border-red-300 bg-red-600 px-3 text-white transition-colors hover:bg-red-600/30"
+                    aria-label="Delete equipment"
+                  >
+                    <X size={10} className="p-0" />
+                  </button>
+                </div>
               </div>
 
               {item.examples ? (
@@ -255,31 +255,33 @@ export function MemberCardBuilder({
                     </button>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="">
                     {item.examples.items.map((example, exampleIndex) => (
                       <div key={exampleIndex} className="flex gap-2">
-                        <input
-                          type="text"
-                          value={example}
-                          onChange={(e) =>
-                            updateExampleItem(
-                              equipmentIndex,
-                              exampleIndex,
-                              e.target.value
-                            )
-                          }
-                          className="no-zoom-input flex-1 rounded border border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                          placeholder="Example item"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            removeExampleItem(equipmentIndex, exampleIndex)
-                          }
-                          className="h-5 w-5 cursor-pointer rounded-3xl bg-red-400 text-sm text-white transition-colors hover:bg-red-500"
-                        >
-                          ×
-                        </button>
+                        <div className="flex flex-1">
+                          <input
+                            type="text"
+                            value={example}
+                            onChange={(e) =>
+                              updateExampleItem(
+                                equipmentIndex,
+                                exampleIndex,
+                                e.target.value
+                              )
+                            }
+                            className="no-zoom-input flex-1 rounded-l border border-r-0 border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:z-10 focus:border-green-500 focus:outline-none"
+                            placeholder="Example item"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              removeExampleItem(equipmentIndex, exampleIndex)
+                            }
+                            className="rounded-r border border-red-400 bg-red-400 px-3 py-1 text-sm text-white transition-colors hover:border-red-500 hover:bg-red-500"
+                          >
+                            ×
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
