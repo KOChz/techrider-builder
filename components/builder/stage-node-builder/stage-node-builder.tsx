@@ -413,7 +413,6 @@ export const StageNodeBuilderComponent: React.FC<IStageNodeBuilderProps> = ({
           }}
           onPointerDown={(e) => {
             handleGesturePointerDown(e); // ✅ Forward to gesture system
-            e.stopPropagation(); // ✅ Prevent parent drag
           }}
           onPointerMove={(e) => {
             handlePointerMove(e); // ✅ Forward movement tracking
