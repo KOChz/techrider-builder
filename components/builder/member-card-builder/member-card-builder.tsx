@@ -196,9 +196,20 @@ export function MemberCardBuilder({
           {member.equipment.map((item, equipmentIndex) => (
             <div
               key={equipmentIndex}
-              className="space-y-3 rounded-lg border-2 border-gray-200 p-2 md:p-4"
+              className="relative space-y-3 rounded-lg border-2 border-gray-200 p-2 md:p-4"
             >
-              <div className="flex gap-2">
+              {/* NEW: anchor to card, not the row */}
+              <button
+                type="button"
+                onClick={() => removeEquipmentItem(equipmentIndex)}
+                className="absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-full bg-red-500 text-white shadow hover:bg-red-600 md:-right-3 md:-top-3"
+                aria-label="Remove equipment item"
+              >
+                <X size={12} />
+              </button>
+
+              {/* give the row breathing room for the button on mobile */}
+              <div className="flex gap-2 pr-10">
                 <input
                   type="text"
                   value={item.name}
@@ -221,13 +232,6 @@ export function MemberCardBuilder({
                   className="max-w-20 no-zoom-input rounded border border-gray-300 px-3 py-2 placeholder-slate-500 focus:border-green-500 focus:outline-none md:max-w-none"
                   placeholder="Qty"
                 />
-                <button
-                  type="button"
-                  onClick={() => removeEquipmentItem(equipmentIndex)}
-                  className="relative -right-3 -top-4 h-5 w-5 cursor-pointer rounded-3xl bg-red-500 p-1 text-white transition-colors hover:bg-red-600 md:-right-4 md:-top-7 lg:-right-6"
-                >
-                  <X size={12} />
-                </button>
               </div>
 
               {item.examples ? (
