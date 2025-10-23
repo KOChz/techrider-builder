@@ -755,6 +755,9 @@ export default function StagePlanBuilder({
 
   return (
     <div
+      style={{
+        touchAction: "none", // ✅ Prevents mobile scrolling
+      }}
       id="stage-plan"
       className="md:min-h-none min-h-auto w-full bg-[#1a1a1a] font-sans text-white"
     >
