@@ -17,10 +17,13 @@ export function StagePlanBuilderContent() {
       <p className="text-sm text-gray-600">
         Create your stage setup and positioning
       </p>
-      <StagePlanBuilder
-        config={stagePlanConfig}
-        onConfigChange={handleConfigChange}
-      />
+
+      <div className="overscroll-none">
+        <StagePlanBuilder
+          config={stagePlanConfig}
+          onConfigChange={handleConfigChange}
+        />
+      </div>
     </div>
   );
 }
