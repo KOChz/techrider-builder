@@ -14,20 +14,9 @@ import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-proj
 import { TStagePlanConfig } from "@/schemas/stage-plan";
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 import { useEditProject } from "@/hooks/use-edit-project";
+import { CREATE_PROJECT_TABS } from "@/components/builder/project-creation-tabs/project-creation-tabs";
 
 type TTabId = "band-info" | "members" | "stage-plan" | "settings";
-
-interface ITab {
-  id: TTabId;
-  label: string;
-}
-
-const TABS: ITab[] = [
-  { id: "band-info", label: "Band Info" },
-  { id: "members", label: "Members" },
-  { id: "stage-plan", label: "Stage Plan" },
-  { id: "settings", label: "Project Settings" },
-];
 
 export default function EditProjectTabs({
   project,
@@ -80,7 +69,7 @@ export default function EditProjectTabs({
           role="tablist"
           aria-label="Project tabs"
         >
-          {TABS.map((tab) => {
+          {CREATE_PROJECT_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button

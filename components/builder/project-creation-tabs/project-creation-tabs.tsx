@@ -16,9 +16,9 @@ interface ITab {
   label: string;
 }
 
-const TABS: ITab[] = [
+export const CREATE_PROJECT_TABS: ITab[] = [
   { id: "band-info", label: "Band Info" },
-  { id: "members", label: "Members" },
+  { id: "members", label: "Band Members" },
   { id: "stage-plan", label: "Stage Plan" },
   { id: "settings", label: "Project Settings" },
 ];
@@ -50,7 +50,7 @@ export default function ProjectCreationTabs() {
           role="tablist"
           aria-label="Project tabs"
         >
-          {TABS.map((tab) => {
+          {CREATE_PROJECT_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button

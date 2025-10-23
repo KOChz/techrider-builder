@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
@@ -13,14 +14,14 @@ import {
   StageNodeBuilderComponent,
   TStageNodeBuilder,
 } from "../stage-node-builder/stage-node-builder";
-
 import { DimensionLine, TMeasurement } from "../dimension-line/dimension-line";
 import { MeasurementControls } from "../measurement-controls/measurement-controls";
+import EquipmentSelect from "../equipment-select/equipment-select";
+
+import { TStageNodeType, TStagePlanConfig } from "@/schemas/stage-plan";
+
 import { cn } from "@/lib/utils/cn";
 
-import { v4 as uuidv4 } from "uuid";
-import { TStageNodeType, TStagePlanConfig } from "@/schemas/stage-plan";
-import EquipmentSelect from "../equipment-select/equipment-select";
 import { useProjectStore } from "@/stores/use-project-creation-store";
 
 interface IVec2 {

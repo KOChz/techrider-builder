@@ -18,7 +18,7 @@ export function StagePlanBuilderContent() {
         Create your stage setup and positioning
       </p>
 
-      <div className="overscroll-none">
+      <div className="select-none overscroll-none">
         <StagePlanBuilder
           config={stagePlanConfig}
           onConfigChange={handleConfigChange}

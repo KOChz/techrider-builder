@@ -7,8 +7,7 @@ import {
 } from "../../member-card-builder/member-card-builder";
 
 export function MembersContent() {
-  const { members, addMember, updateMember, removeMember } =
-    useProjectStore();
+  const { members, addMember, updateMember, removeMember } = useProjectStore();
 
   const handleAddMember = () => {
     const newMember: TBandMemberBuilder = {
