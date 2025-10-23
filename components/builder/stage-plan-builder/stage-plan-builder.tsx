@@ -234,9 +234,6 @@ const SvgSymbols: React.FC = () => (
   </defs>
 );
 
-/* ────────────────────────────────────────────────────────────────────────────
-   Debounce helper
-   ──────────────────────────────────────────────────────────────────────────── */
 function useDebouncedFn<T extends (...args: any[]) => void>(
   fn: T,
   delay = 150
@@ -262,7 +259,7 @@ function useDebouncedFn<T extends (...args: any[]) => void>(
     [cancel, delay]
   );
 
-  useEffect(() => cancel, [cancel]); // cleanup on unmount
+  useEffect(() => cancel, [cancel]);
   return run;
 }
 
@@ -331,7 +328,10 @@ export default function StagePlanBuilder({
   const panStartRef = useRef<IVec2>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  /* ── Hover timers ─────────────────────────────────────────────────────── */
+  // Track if we should delay drag start for touch gestures
+  const dragDelayTimerRef = useRef<number | null>(null);
+  const [isPendingDrag, setIsPendingDrag] = useState(false);
+
   const leaveTimer = useRef<number | null>(null);
   const armedEnter = useCallback((id: string) => {
     if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
@@ -342,7 +342,6 @@ export default function StagePlanBuilder({
     leaveTimer.current = window.setTimeout(() => setHoveredNodeId(null), 50);
   }, []);
 
-  /* ── Utilities ────────────────────────────────────────────────────────── */
   const screenToCanvas = useCallback(
     (screenX: number, screenY: number): IVec2 => {
       if (!svgRef.current) return { x: 0, y: 0 };
@@ -370,7 +369,6 @@ export default function StagePlanBuilder({
     return angle;
   };
 
-  /* ── Zoom / Reset ─────────────────────────────────────────────────────── */
   const handleZoomIn = useCallback(() => {
     setZoom((prev) => {
       const newZoom = Math.min(prev * 1.2, 10);
@@ -405,7 +403,6 @@ export default function StagePlanBuilder({
     setSelectedMeasurementNodes([null, null]);
   }, []);
 
-  /* ── Wheel (ctrl+scroll zoom) ─────────────────────────────────────────── */
   const handleWheel = useCallback(
     (e: WheelEvent) => {
       if (!e.ctrlKey) return;
@@ -434,7 +431,6 @@ export default function StagePlanBuilder({
     [screenToCanvas]
   );
 
-  /* ── Pointer interactions ─────────────────────────────────────────────── */
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       (svgRef.current as SVGElement | null)?.setPointerCapture?.(e.pointerId);
@@ -453,6 +449,7 @@ export default function StagePlanBuilder({
       }
 
       const nodeElement = target.closest(".stage-node") as SVGGElement | null;
+      const isTouchDevice = e.pointerType === "touch";
 
       if (nodeElement) {
         const nodeId = nodeElement.getAttribute("data-id");
@@ -504,9 +501,24 @@ export default function StagePlanBuilder({
           setRotationStart({ angle: node.angle, mouseAngle });
           (target as any).style.cursor = "grabbing";
         } else {
-          setIsDragging(true);
-          setDraggedNodeId(nodeId);
-          setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
+          // On touch devices, delay drag start to allow gesture detection
+          if (isTouchDevice) {
+            setIsPendingDrag(true);
+            dragDelayTimerRef.current = window.setTimeout(() => {
+              setIsDragging(true);
+              setDraggedNodeId(nodeId);
+              setDragOffset({
+                x: canvasPos.x - node.x,
+                y: canvasPos.y - node.y,
+              });
+              setIsPendingDrag(false);
+            }, 150); // 150ms delay for gesture detection
+          } else {
+            // Desktop: immediate drag
+            setIsDragging(true);
+            setDraggedNodeId(nodeId);
+            setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
+          }
         }
         e.preventDefault();
       } else {
@@ -522,6 +534,7 @@ export default function StagePlanBuilder({
       isMeasurementMode,
       selectedMeasurementNodes,
       measurements,
+      storeAddMeasurement,
     ]
   );
 
@@ -529,6 +542,19 @@ export default function StagePlanBuilder({
     (e: React.PointerEvent) => {
       const canvasPos = screenToCanvas(e.clientX, e.clientY);
       setMouse(canvasPos);
+
+      // Cancel pending drag if pointer moved too much (likely a gesture)
+      if (isPendingDrag && dragDelayTimerRef.current) {
+        const threshold = 10;
+        if (dragOffset.x !== 0 || dragOffset.y !== 0) {
+          const dx = Math.abs(canvasPos.x - (dragOffset.x || 0));
+          const dy = Math.abs(canvasPos.y - (dragOffset.y || 0));
+          if (dx > threshold || dy > threshold) {
+            clearTimeout(dragDelayTimerRef.current);
+            setIsPendingDrag(false);
+          }
+        }
+      }
 
       if (isRotating && draggedNodeId !== null) {
         setNodes((prev) =>
@@ -572,6 +598,7 @@ export default function StagePlanBuilder({
       isRotating,
       isDragging,
       isPanning,
+      isPendingDrag,
       draggedNodeId,
       dragOffset,
       rotationStart,
@@ -582,13 +609,20 @@ export default function StagePlanBuilder({
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     (svgRef.current as SVGElement | null)?.releasePointerCapture?.(e.pointerId);
+
+    // Clear pending drag timer
+    if (dragDelayTimerRef.current) {
+      clearTimeout(dragDelayTimerRef.current);
+      dragDelayTimerRef.current = null;
+    }
+
     setIsPanning(false);
     setIsDragging(false);
     setIsRotating(false);
+    setIsPendingDrag(false);
     setDraggedNodeId(null);
   }, []);
 
-  /* ── CRUD helpers ─────────────────────────────────────────────────────── */
   const handleDeleteNode = useCallback(
     (nodeId: string) => {
       setNodes((prev) => prev.filter((node) => node.id !== nodeId));
@@ -668,11 +702,9 @@ export default function StagePlanBuilder({
         scale: 1,
       };
 
-      // Update local state
       setNodes((prev) => [...prev, newNode]);
       setSelectedNodeId(nextId);
 
-      // ✅ Sync to store immediately
       storeAddNode(newNode);
     },
     [viewBox, storeAddNode]
@@ -690,7 +722,6 @@ export default function StagePlanBuilder({
     [selectedNodeId, storeUpdateNodeLabel]
   );
 
-  /* ── Event binding ────────────────────────────────────────────────────── */
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -698,12 +729,10 @@ export default function StagePlanBuilder({
     return () => container.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
-  /* ── One-time hydration (or on version bump) ──────────────────────────── */
   const hydratedRef = useRef(false);
   const lastVersionRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    // Hydrate on first mount OR when parent intentionally bumps version to force reset
     if (!hydratedRef.current || lastVersionRef.current !== config.version) {
       setNodes(config.nodes.length ? config.nodes : getDefaultNodes());
       setMeasurements(config.measurements ?? []);
@@ -712,7 +741,6 @@ export default function StagePlanBuilder({
     }
   }, [config.version, config.nodes, config.measurements]);
 
-  /* ── Debounced upstream sync (prevents feedback loop) ─────────────────── */
   const debouncedPush = useDebouncedFn(
     (n: TStageNodeBuilder[], m: TMeasurement[], v?: number) => {
       onConfigChange({ nodes: n, measurements: m, version: v });
@@ -721,7 +749,7 @@ export default function StagePlanBuilder({
   );
 
   useEffect(() => {
-    if (!hydratedRef.current) return; // guard during initial mount
+    if (!hydratedRef.current) return;
     debouncedPush(nodes, measurements, config.version);
   }, [nodes, measurements, debouncedPush, config.version]);
 
@@ -732,7 +760,8 @@ export default function StagePlanBuilder({
     >
       <div className="max-w-full p-3 sm:p-5">
         <p className="mb-2 text-xs text-gray-400 sm:text-sm">
-          To zoom press control and use mousewheel scroll
+          Desktop: Hold Ctrl + scroll to zoom | Mobile: Double-tap labels to
+          edit
         </p>
 
         <div className="mb-3 flex flex-wrap items-start gap-2 sm:items-center sm:gap-3">
@@ -787,6 +816,7 @@ export default function StagePlanBuilder({
             height: "calc(100vh - 280px)",
             minHeight: "400px",
             maxHeight: "800px",
+            touchAction: "none",
           }}
         >
           <svg
@@ -799,6 +829,7 @@ export default function StagePlanBuilder({
                 : isMeasurementMode
                 ? "crosshair"
                 : "default",
+              touchAction: "none",
             }}
             viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
             onPointerDown={handlePointerDown}
