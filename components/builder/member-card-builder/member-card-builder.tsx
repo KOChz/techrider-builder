@@ -255,7 +255,7 @@ export function MemberCardBuilder({
                     </button>
                   </div>
 
-                  <div className="">
+                  <div className="display flex flex-col gap-1.5">
                     {item.examples.items.map((example, exampleIndex) => (
                       <div key={exampleIndex} className="flex gap-2">
                         <div className="flex flex-1">
