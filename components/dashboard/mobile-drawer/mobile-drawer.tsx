@@ -65,7 +65,7 @@ export function MobileDrawer({ isOpen, onClose }: IMobileDrawerProps) {
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex h-full flex-col">
+        <div className="max-h-dvh flex h-full flex-col">
           <div className="flex-1 overflow-y-auto p-4">
             <nav aria-label="Main navigation">
               <div className="list-none space-y-1">
