@@ -143,7 +143,7 @@ export function MemberCardBuilder({
   };
 
   return (
-    <div className="relative max-w-lg rounded-lg border border-gray-200 bg-white p-3 text-sm md:max-w-none md:p-6">
+    <div className="relative max-w-lg rounded-lg border border-gray-200 bg-white p-3 text-sm md:max-w-3xl md:p-4 lg:max-w-none lg:p-6">
       {onRemove && (
         <button
           type="button"
@@ -196,7 +196,7 @@ export function MemberCardBuilder({
           {member.equipment.map((item, equipmentIndex) => (
             <div
               key={equipmentIndex}
-              className="relative space-y-3 rounded-lg border-2 border-gray-200 p-2 md:p-4"
+              className="relative space-y-3 rounded-lg border-2 border-gray-200 p-2 md:p-3 lg:p-4"
             >
               <div className="flex gap-2">
                 <input
@@ -249,9 +249,9 @@ export function MemberCardBuilder({
                     <button
                       type="button"
                       onClick={() => removeExamplesFromItem(equipmentIndex)}
-                      className="scale-75 cursor-pointer rounded bg-gray-400 px-2 py-1 text-xs text-white transition-colors hover:bg-gray-500 md:scale-100 md:text-sm"
+                      className="cursor-pointer rounded border bg-gray-400 p-1.5 text-xs text-white transition-colors hover:bg-gray-500"
                     >
-                      Remove Examples
+                      Remove
                     </button>
                   </div>
 

@@ -21,7 +21,7 @@ export default async function EditProjectPage({
       <h2 className="mb-6 text-2xl font-bold text-slate-900">
         Edit {project.name}
       </h2>
-      <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 md:p-8">
+      <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 md:p-5 lg:p-8">
         <EditProjectTabs project={project} />
       </div>
     </div>
