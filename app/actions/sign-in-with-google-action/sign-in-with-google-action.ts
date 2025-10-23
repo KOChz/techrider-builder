@@ -19,8 +19,8 @@ export async function signInWithGoogleAction() {
   const protocol = headersList.get("x-forwarded-proto") || "https";
 
   // This will work for:
-  // - Production: headeacheetechrider.vercel.app
-  // - Preview: headeacheetechrider-anvyv6jy0-kyrylo-chs-projects.vercel.app
+  // - Production: techrider-builder.vercel.app
+  // - Preview: techrider-builder-anvyv6jy0-kyrylo-chs-projects.vercel.app
   // - Local: localhost:3000
   const baseUrl = `${protocol}://${host}`;
   const redirectUrl = `${baseUrl}/auth/callback`;

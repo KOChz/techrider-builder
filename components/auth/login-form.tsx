@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { TLoginState } from "@/types/auth";
 import { loginAction } from "@/app/actions/login-action/login-action";
 import { GoogleButton } from "../google-button/google-button";
-import { SubmitButton } from "../submit-button/submit-button";
+import { SignInButton } from "../submit-button/submit-button";
 import { useSearchParams } from "next/navigation";
 
 const initialState: TLoginState = { success: false };
@@ -149,7 +149,7 @@ export default function LoginForm() {
           </div>
 
           <div className="pt-2">
-            <SubmitButton />
+            <SignInButton />
           </div>
         </form>
 
