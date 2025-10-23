@@ -6,7 +6,7 @@ interface IStageNodeDeleteHandleProps {
   isVisible: boolean;
   nodeWidth?: number;
   spacing?: number;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const StageNodeDeleteHandle: React.FC<IStageNodeDeleteHandleProps> = ({
@@ -24,7 +24,7 @@ export const StageNodeDeleteHandle: React.FC<IStageNodeDeleteHandleProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    onClick?.();
+    onClick?.(e);
   };
 
   return (
