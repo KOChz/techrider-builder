@@ -23,6 +23,7 @@ import { TStageNodeType, TStagePlanConfig } from "@/schemas/stage-plan";
 import { cn } from "@/lib/utils/cn";
 
 import { useProjectStore } from "@/stores/use-project-creation-store";
+import { useDebouncedFn } from "@/hooks/use-debounced-fn";
 
 interface IVec2 {
   x: number;
@@ -235,35 +236,6 @@ const SvgSymbols: React.FC = () => (
   </defs>
 );
 
-function useDebouncedFn<T extends (...args: any[]) => void>(
-  fn: T,
-  delay = 150
-) {
-  const fnRef = useRef(fn);
-  useEffect(() => {
-    fnRef.current = fn;
-  }, [fn]);
-  const timerRef = useRef<number | null>(null);
-
-  const cancel = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  const run = useCallback(
-    (...args: Parameters<T>) => {
-      cancel();
-      timerRef.current = window.setTimeout(() => fnRef.current(...args), delay);
-    },
-    [cancel, delay]
-  );
-
-  useEffect(() => cancel, [cancel]);
-  return run;
-}
-
 interface IStagePlanBuilderProps {
   config: TStagePlanConfig;
   onConfigChange: (config: TStagePlanConfig) => void;
@@ -342,6 +314,29 @@ export default function StagePlanBuilder({
     if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
     leaveTimer.current = window.setTimeout(() => setHoveredNodeId(null), 50);
   }, []);
+
+  const activePointers = useRef(
+    new Map<number, { clientX: number; clientY: number }>()
+  );
+  const pinchRef = useRef<{
+    startDist: number;
+    startZoom: number;
+    startViewBox: IViewBox;
+    startCenterCanvas: IVec2;
+  } | null>(null);
+
+  const dist = (
+    a: { clientX: number; clientY: number },
+    b: { clientX: number; clientY: number }
+  ) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+
+  const mid = (
+    a: { clientX: number; clientY: number },
+    b: { clientX: number; clientY: number }
+  ) => ({
+    clientX: (a.clientX + b.clientX) / 2,
+    clientY: (a.clientY + b.clientY) / 2,
+  });
 
   const screenToCanvas = useCallback(
     (screenX: number, screenY: number): IVec2 => {
@@ -449,6 +444,33 @@ export default function StagePlanBuilder({
         return;
       }
 
+      if (activePointers.current.size === 2) {
+        const [p1, p2] = [...activePointers.current.values()];
+        const startDist = dist(p1, p2);
+        const centerClient = mid(p1, p2);
+        const centerCanvas = screenToCanvas(
+          centerClient.clientX,
+          centerClient.clientY
+        );
+
+        pinchRef.current = {
+          startDist,
+          startZoom: zoom,
+          startViewBox: { ...viewBox },
+          startCenterCanvas: centerCanvas,
+        };
+
+        // Cancel any single-pointer gestures that might be arming
+        setIsPanning(false);
+        setIsDragging(false);
+        setIsRotating(false);
+        setIsPendingDrag(false);
+        if (dragDelayTimerRef.current) {
+          clearTimeout(dragDelayTimerRef.current);
+          dragDelayTimerRef.current = null;
+        }
+      }
+
       const nodeElement = target.closest(".stage-node") as SVGGElement | null;
       const isTouchDevice = e.pointerType === "touch";
 
@@ -513,7 +535,7 @@ export default function StagePlanBuilder({
                 y: canvasPos.y - node.y,
               });
               setIsPendingDrag(false);
-            }, 150); // 150ms delay for gesture detection
+            }, 75); // 75ms delay for gesture detection
           } else {
             // Desktop: immediate drag
             setIsDragging(true);
@@ -541,6 +563,46 @@ export default function StagePlanBuilder({
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
+      if (activePointers.current.has(e.pointerId)) {
+        activePointers.current.set(e.pointerId, {
+          clientX: e.clientX,
+          clientY: e.clientY,
+        });
+      }
+
+      // If we’re in a 2-finger gesture, run pinch zoom and short-circuit the rest
+      if (activePointers.current.size === 2 && pinchRef.current) {
+        const [p1, p2] = [...activePointers.current.values()];
+        const newDist = dist(p1, p2);
+        const scale = newDist / pinchRef.current.startDist;
+
+        // clamp zoom
+        const nextZoom = Math.max(
+          0.1,
+          Math.min(pinchRef.current.startZoom * scale, 10)
+        );
+
+        // viewBox scales inversely to zoom
+        const factor = pinchRef.current.startZoom / nextZoom;
+
+        const start = pinchRef.current.startViewBox;
+        const cx = pinchRef.current.startCenterCanvas.x;
+        const cy = pinchRef.current.startCenterCanvas.y;
+
+        setZoom(nextZoom);
+        setViewBox({
+          x: cx - (cx - start.x) * factor,
+          y: cy - (cy - start.y) * factor,
+          width: start.width * factor,
+          height: start.height * factor,
+        });
+
+        // also update the “mouse” for any overlays
+        const canvasPos = screenToCanvas(e.clientX, e.clientY);
+        setMouse(canvasPos);
+        return; // 🔒 don’t run drag/pan when pinching
+      }
+
       const canvasPos = screenToCanvas(e.clientX, e.clientY);
       setMouse(canvasPos);
 
@@ -608,8 +670,16 @@ export default function StagePlanBuilder({
     ]
   );
 
+  const finalizePointer = (pointerId: number) => {
+    activePointers.current.delete(pointerId);
+    if (activePointers.current.size < 2) {
+      pinchRef.current = null; // end pinch if one finger lifts
+    }
+  };
+
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     (svgRef.current as SVGElement | null)?.releasePointerCapture?.(e.pointerId);
+    finalizePointer(e.pointerId);
 
     // Clear pending drag timer
     if (dragDelayTimerRef.current) {
@@ -617,6 +687,18 @@ export default function StagePlanBuilder({
       dragDelayTimerRef.current = null;
     }
 
+    setIsPanning(false);
+    setIsDragging(false);
+    setIsRotating(false);
+    setIsPendingDrag(false);
+    setDraggedNodeId(null);
+  }, []);
+
+  const handlePointerCancel = useCallback((e: React.PointerEvent) => {
+    svgRef.current?.releasePointerCapture?.(e.pointerId);
+    finalizePointer(e.pointerId);
+
+    // mirror your pointer-up cleanup to be safe
     setIsPanning(false);
     setIsDragging(false);
     setIsRotating(false);
@@ -815,9 +897,9 @@ export default function StagePlanBuilder({
 
         <div
           ref={containerRef}
-          className="relative w-full border border-[#333] bg-[#0a0a0a]"
+          className="relative w-full overscroll-contain border border-[#333] bg-[#0a0a0a]"
           style={{
-            height: "calc(100vh - 280px)",
+            height: "calc(100dvh - 280px)",
             minHeight: "400px",
             maxHeight: "800px",
             touchAction: "none",
@@ -840,6 +922,7 @@ export default function StagePlanBuilder({
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
+            onPointerCancel={handlePointerCancel}
           >
             <SvgSymbols />
 
