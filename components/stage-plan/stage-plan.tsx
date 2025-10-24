@@ -346,7 +346,7 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
         <div className="relative h-[70vh] w-full border border-[#333] bg-[#0a0a0a]">
           <svg
             ref={svgRef}
-            className="touch-none select-none"
+            className="select-none"
             style={{
               width: "100%",
               height: "100%",

@@ -1,20 +1,13 @@
 #stageContainer {
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
   position: relative;
-  overflow: hidden;
 }
 
 #canvas {
-  touch-action: none;
   display: block;
 }
 
 .stage-node {
   cursor: move;
-  user-select: none;
 }
 
 .panning {
