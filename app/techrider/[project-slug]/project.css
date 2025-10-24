@@ -638,7 +638,7 @@
   .techrider-page .nav-links a,
   .techrider-page .dropdown-toggle {
     font-size: 0.65rem;
-    padding: 0.5rem 0.25rem;
+    /* padding: 0.5rem 0.25rem; */
     min-height: 44px;
   }
 
@@ -689,7 +689,7 @@
   .techrider-page .nav-links a,
   .techrider-page .dropdown-toggle {
     font-size: 0.65rem;
-    padding: 0.5rem 0.25rem;
+    /* padding: 0.5rem 0.25rem; */
     min-height: 44px;
   }
 }
@@ -722,4 +722,8 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+.before\:content-\[\'\'\]::before {
+  content: "";
 }

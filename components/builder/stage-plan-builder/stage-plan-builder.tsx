@@ -29,7 +29,7 @@ interface IVec2 {
   x: number;
   y: number;
 }
-interface IViewBox {
+export interface IViewBox {
   x: number;
   y: number;
   width: number;

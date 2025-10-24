@@ -77,7 +77,7 @@ export default function LoginForm() {
               type="email"
               autoComplete="email"
               required
-              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="you@example.com"
               aria-invalid={state.errors?.email ? "true" : "false"}
               aria-describedby={state.errors?.email ? "email-error" : undefined}
@@ -118,7 +118,7 @@ export default function LoginForm() {
               type="password"
               autoComplete="current-password"
               required
-              className="no-zoom-input w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-green-700"
               placeholder="••••••••"
               aria-invalid={state.errors?.password ? "true" : "false"}
               aria-describedby={

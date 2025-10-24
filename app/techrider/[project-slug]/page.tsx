@@ -8,6 +8,7 @@ import { createServerClientService } from "@/lib/supabase/server";
 import { getProjectBySlug } from "@/app/actions/get-project-by-slug/get-project-by-slug";
 
 import "./project.css";
+import { TechRiderDropdown } from "@/components/tech-rider-dropdown/tech-rider-dropdown";
 
 interface IProjectPageProps {
   params: Promise<{
@@ -35,61 +36,15 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
           </a>
 
           <ul className="nav-links">
-            <li className="dropdown">
-              <button
-                className="dropdown-toggle"
-                aria-haspopup="true"
-                aria-expanded="false"
-                id="techRiderToggle"
-              >
-                Tech Rider
-              </button>
-              <div
-                className="dropdown-menu"
-                role="menu"
-                aria-labelledby="techRiderToggle"
-              >
-                {project.members.map((member) => (
-                  <a
-                    key={member.id}
-                    href={`#${member.name}`}
-                    id={`dropdown-${member.name}`}
-                    className="dropdown-item"
-                    role="menuitem"
-                  >
-                    <span className="dropdown-icon">{member.icon}</span>
-                    <div className="dropdown-info">
-                      <span className="dropdown-name">{member.name}</span>
-                      <span className="dropdown-role">{member.role}</span>
-                    </div>
-                  </a>
-                ))}
+            <TechRiderDropdown members={project.members} />
 
-                <a
-                  href="#stage-plan"
-                  id="dropdown-stage-plan"
-                  className="dropdown-item"
-                  role="menuitem"
-                >
-                  <span className="dropdown-icon">🏟️</span>
-                  <div className="dropdown-info">
-                    <span className="dropdown-name">Stage Plan</span>
-                  </div>
-                </a>
-              </div>
-            </li>
             <li>
-              <a href="#contact">Contact</a>
+              <Link href="#contact">Contact</Link>
             </li>
 
             {user && (
               <li>
-                <Link
-                  href="/dashboard/my-projects"
-                  type="submit"
-                  className="cursor-pointer rounded-md px-3 py-1.5 text-slate-200 transition-colors hover:bg-green-500/20"
-                  aria-label="Home"
-                >
+                <Link href="/dashboard/my-projects" aria-label="Home">
                   Home
                 </Link>
               </li>
