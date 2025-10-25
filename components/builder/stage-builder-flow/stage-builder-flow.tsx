@@ -286,14 +286,7 @@ export default function StagePlanCanvas() {
   };
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "220px 1fr",
-        gap: 12,
-        alignItems: "stretch",
-      }}
-    >
+    <div className="flex flex-col gap-2 md:flex-row md:justify-between">
       {/* Sidebar */}
       <div
         style={{
@@ -353,6 +346,7 @@ export default function StagePlanCanvas() {
         style={containerStyle}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        className="md:flex-1"
       >
         <ReactFlow<Node<EquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
@@ -377,7 +371,7 @@ export default function StagePlanCanvas() {
           snapToGrid
           snapGrid={[10, 10]}
         >
-          <MiniMap pannable zoomable />
+          <MiniMap pannable zoomable className="scale-70 md:scale-100" />
           <Background gap={20} />
           <Controls position="bottom-right" />
         </ReactFlow>
