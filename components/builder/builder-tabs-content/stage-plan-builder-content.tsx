@@ -3,13 +3,15 @@
 import { useProjectStore } from "@/stores/use-project-creation-store";
 import StagePlanBuilder from "../stage-plan-builder/stage-plan-builder";
 import { TStagePlanConfig } from "@/schemas/stage-plan";
+import StagePlanCanvas from "../stage-builder-flow/stage-builder-flow";
+import { ReactFlowProvider } from "@xyflow/react";
 
 export function StagePlanBuilderContent() {
-  const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
+  // const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
 
-  const handleConfigChange = (config: TStagePlanConfig) => {
-    setStagePlanConfig(config);
-  };
+  // const handleConfigChange = (config: TStagePlanConfig) => {
+  //   setStagePlanConfig(config);
+  // };
 
   return (
     <div className="space-y-4">
@@ -19,10 +21,13 @@ export function StagePlanBuilderContent() {
       </p>
 
       <div className="select-none overscroll-none">
-        <StagePlanBuilder
+        <ReactFlowProvider>
+          <StagePlanCanvas />
+        </ReactFlowProvider>
+        {/* <StagePlanBuilder
           config={stagePlanConfig}
           onConfigChange={handleConfigChange}
-        />
+        /> */}
       </div>
     </div>
   );

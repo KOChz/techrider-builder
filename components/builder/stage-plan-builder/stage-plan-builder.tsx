@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
@@ -14,22 +13,21 @@ import {
   StageNodeBuilderComponent,
   TStageNodeBuilder,
 } from "../stage-node-builder/stage-node-builder";
+
 import { DimensionLine, TMeasurement } from "../dimension-line/dimension-line";
 import { MeasurementControls } from "../measurement-controls/measurement-controls";
-import EquipmentSelect from "../equipment-select/equipment-select";
-
-import { TStageNodeType, TStagePlanConfig } from "@/schemas/stage-plan";
-
 import { cn } from "@/lib/utils/cn";
 
+import { v4 as uuidv4 } from "uuid";
+import { TStageNodeType, TStagePlanConfig } from "@/schemas/stage-plan";
+import EquipmentSelect from "../equipment-select/equipment-select";
 import { useProjectStore } from "@/stores/use-project-creation-store";
-import { useDebouncedFn } from "@/hooks/use-debounced-fn";
 
 interface IVec2 {
   x: number;
   y: number;
 }
-export interface IViewBox {
+interface IViewBox {
   x: number;
   y: number;
   width: number;
@@ -236,6 +234,38 @@ const SvgSymbols: React.FC = () => (
   </defs>
 );
 
+/* ────────────────────────────────────────────────────────────────────────────
+   Debounce helper
+   ──────────────────────────────────────────────────────────────────────────── */
+function useDebouncedFn<T extends (...args: any[]) => void>(
+  fn: T,
+  delay = 150
+) {
+  const fnRef = useRef(fn);
+  useEffect(() => {
+    fnRef.current = fn;
+  }, [fn]);
+  const timerRef = useRef<number | null>(null);
+
+  const cancel = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const run = useCallback(
+    (...args: Parameters<T>) => {
+      cancel();
+      timerRef.current = window.setTimeout(() => fnRef.current(...args), delay);
+    },
+    [cancel, delay]
+  );
+
+  useEffect(() => cancel, [cancel]); // cleanup on unmount
+  return run;
+}
+
 interface IStagePlanBuilderProps {
   config: TStagePlanConfig;
   onConfigChange: (config: TStagePlanConfig) => void;
@@ -301,10 +331,7 @@ export default function StagePlanBuilder({
   const panStartRef = useRef<IVec2>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Track if we should delay drag start for touch gestures
-  const dragDelayTimerRef = useRef<number | null>(null);
-  const [isPendingDrag, setIsPendingDrag] = useState(false);
-
+  /* ── Hover timers ─────────────────────────────────────────────────────── */
   const leaveTimer = useRef<number | null>(null);
   const armedEnter = useCallback((id: string) => {
     if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
@@ -315,29 +342,7 @@ export default function StagePlanBuilder({
     leaveTimer.current = window.setTimeout(() => setHoveredNodeId(null), 50);
   }, []);
 
-  const activePointers = useRef(
-    new Map<number, { clientX: number; clientY: number }>()
-  );
-  const pinchRef = useRef<{
-    startDist: number;
-    startZoom: number;
-    startViewBox: IViewBox;
-    startCenterCanvas: IVec2;
-  } | null>(null);
-
-  const dist = (
-    a: { clientX: number; clientY: number },
-    b: { clientX: number; clientY: number }
-  ) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-
-  const mid = (
-    a: { clientX: number; clientY: number },
-    b: { clientX: number; clientY: number }
-  ) => ({
-    clientX: (a.clientX + b.clientX) / 2,
-    clientY: (a.clientY + b.clientY) / 2,
-  });
-
+  /* ── Utilities ────────────────────────────────────────────────────────── */
   const screenToCanvas = useCallback(
     (screenX: number, screenY: number): IVec2 => {
       if (!svgRef.current) return { x: 0, y: 0 };
@@ -365,6 +370,7 @@ export default function StagePlanBuilder({
     return angle;
   };
 
+  /* ── Zoom / Reset ─────────────────────────────────────────────────────── */
   const handleZoomIn = useCallback(() => {
     setZoom((prev) => {
       const newZoom = Math.min(prev * 1.2, 10);
@@ -399,6 +405,7 @@ export default function StagePlanBuilder({
     setSelectedMeasurementNodes([null, null]);
   }, []);
 
+  /* ── Wheel (ctrl+scroll zoom) ─────────────────────────────────────────── */
   const handleWheel = useCallback(
     (e: WheelEvent) => {
       if (!e.ctrlKey) return;
@@ -427,61 +434,9 @@ export default function StagePlanBuilder({
     [screenToCanvas]
   );
 
+  /* ── Pointer interactions ─────────────────────────────────────────────── */
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      activePointers.current.set(e.pointerId, {
-        clientX: e.clientX,
-        clientY: e.clientY,
-      });
-
-      const isTwoFinger = activePointers.current.size >= 2;
-      // if two fingers now, prime pinch (like your code), and return
-      if (isTwoFinger) {
-        // ... your pinchRef init stays
-        setIsPanning(false);
-        setIsDragging(false);
-        setIsRotating(false);
-        setDraggedNodeId(null);
-        return;
-      }
-
-      const nodeElement = (e.target as Element).closest(
-        ".stage-node"
-      ) as SVGGElement | null;
-
-      if (nodeElement) {
-        const nodeId = nodeElement.getAttribute("data-id")!;
-        const node = nodes.find((n) => n.id === nodeId)!;
-        const canvasPos = screenToCanvas(e.clientX, e.clientY);
-        const isRotationHandle =
-          (e.target as Element).classList.contains("rotation-hitbox") ||
-          !!(e.target as Element).closest(".rotation-hitbox");
-
-        setSelectedNodeId(nodeId);
-
-        if (isRotationHandle || (e as any).altKey) {
-          setIsRotating(true);
-          setDraggedNodeId(nodeId);
-          setRotationStart({
-            angle: node.angle,
-            mouseAngle: calculateAngle(
-              node.x,
-              node.y,
-              canvasPos.x,
-              canvasPos.y
-            ),
-          });
-        } else {
-          setIsDragging(true);
-          setDraggedNodeId(nodeId);
-          setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
-        }
-      } else {
-        setSelectedNodeId(null);
-        setIsPanning(true);
-        panStartRef.current = { x: e.clientX, y: e.clientY };
-      }
-
       (svgRef.current as SVGElement | null)?.setPointerCapture?.(e.pointerId);
 
       const target = e.target as SVGElement;
@@ -497,31 +452,68 @@ export default function StagePlanBuilder({
         return;
       }
 
-      if (activePointers.current.size === 2) {
-        const [p1, p2] = [...activePointers.current.values()];
-        const startDist = dist(p1, p2);
-        const centerClient = mid(p1, p2);
-        const centerCanvas = screenToCanvas(
-          centerClient.clientX,
-          centerClient.clientY
-        );
+      const nodeElement = target.closest(".stage-node") as SVGGElement | null;
 
-        pinchRef.current = {
-          startDist,
-          startZoom: zoom,
-          startViewBox: { ...viewBox },
-          startCenterCanvas: centerCanvas,
-        };
+      if (nodeElement) {
+        const nodeId = nodeElement.getAttribute("data-id");
+        const node = nodes.find((n) => n.id === nodeId);
+        if (!node) return;
 
-        // Cancel any single-pointer gestures that might be arming
-        setIsPanning(false);
-        setIsDragging(false);
-        setIsRotating(false);
-        setIsPendingDrag(false);
-        if (dragDelayTimerRef.current) {
-          clearTimeout(dragDelayTimerRef.current);
-          dragDelayTimerRef.current = null;
+        if (isMeasurementMode) {
+          if (selectedMeasurementNodes[0] === null) {
+            setSelectedMeasurementNodes([nodeId, null]);
+          } else if (
+            selectedMeasurementNodes[1] === null &&
+            selectedMeasurementNodes[0] !== nodeId
+          ) {
+            const nextId =
+              measurements.length > 0
+                ? Math.max(...measurements.map((m) => m.id)) + 1
+                : 1;
+
+            const newMeasurement = {
+              id: nextId,
+              startNodeId: selectedMeasurementNodes[0]!,
+              endNodeId: nodeId!,
+            };
+
+            setMeasurements((prev) => [...prev, newMeasurement]);
+            storeAddMeasurement(newMeasurement);
+            setSelectedMeasurementNodes([null, null]);
+            setIsMeasurementMode(false);
+          }
+          return;
         }
+
+        setSelectedNodeId(nodeId);
+
+        const canvasPos = screenToCanvas(e.clientX, e.clientY);
+        const isRotationHandle =
+          target.classList.contains("rotation-hitbox") ||
+          !!target.closest(".rotation-hitbox");
+
+        if (isRotationHandle || (e as any).altKey) {
+          setIsRotating(true);
+          setDraggedNodeId(nodeId);
+          const mouseAngle = calculateAngle(
+            node.x,
+            node.y,
+            canvasPos.x,
+            canvasPos.y
+          );
+          setRotationStart({ angle: node.angle, mouseAngle });
+          (target as any).style.cursor = "grabbing";
+        } else {
+          setIsDragging(true);
+          setDraggedNodeId(nodeId);
+          setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
+        }
+        e.preventDefault();
+      } else {
+        setSelectedNodeId(null);
+        if (isMeasurementMode) setSelectedMeasurementNodes([null, null]);
+        setIsPanning(true);
+        panStartRef.current = { x: e.clientX, y: e.clientY };
       }
     },
     [
@@ -530,67 +522,13 @@ export default function StagePlanBuilder({
       isMeasurementMode,
       selectedMeasurementNodes,
       measurements,
-      storeAddMeasurement,
     ]
   );
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
-      if (activePointers.current.has(e.pointerId)) {
-        activePointers.current.set(e.pointerId, {
-          clientX: e.clientX,
-          clientY: e.clientY,
-        });
-      }
-
-      // If we’re in a 2-finger gesture, run pinch zoom and short-circuit the rest
-      if (activePointers.current.size === 2 && pinchRef.current) {
-        const [p1, p2] = [...activePointers.current.values()];
-        const newDist = dist(p1, p2);
-        const scale = newDist / pinchRef.current.startDist;
-
-        // clamp zoom
-        const nextZoom = Math.max(
-          0.1,
-          Math.min(pinchRef.current.startZoom * scale, 10)
-        );
-
-        // viewBox scales inversely to zoom
-        const factor = pinchRef.current.startZoom / nextZoom;
-
-        const start = pinchRef.current.startViewBox;
-        const cx = pinchRef.current.startCenterCanvas.x;
-        const cy = pinchRef.current.startCenterCanvas.y;
-
-        setZoom(nextZoom);
-        setViewBox({
-          x: cx - (cx - start.x) * factor,
-          y: cy - (cy - start.y) * factor,
-          width: start.width * factor,
-          height: start.height * factor,
-        });
-
-        // also update the “mouse” for any overlays
-        const canvasPos = screenToCanvas(e.clientX, e.clientY);
-        setMouse(canvasPos);
-        return; // 🔒 don’t run drag/pan when pinching
-      }
-
       const canvasPos = screenToCanvas(e.clientX, e.clientY);
       setMouse(canvasPos);
-
-      // Cancel pending drag if pointer moved too much (likely a gesture)
-      if (isPendingDrag && dragDelayTimerRef.current) {
-        const threshold = 10;
-        if (dragOffset.x !== 0 || dragOffset.y !== 0) {
-          const dx = Math.abs(canvasPos.x - (dragOffset.x || 0));
-          const dy = Math.abs(canvasPos.y - (dragOffset.y || 0));
-          if (dx > threshold || dy > threshold) {
-            clearTimeout(dragDelayTimerRef.current);
-            setIsPendingDrag(false);
-          }
-        }
-      }
 
       if (isRotating && draggedNodeId !== null) {
         setNodes((prev) =>
@@ -634,7 +572,6 @@ export default function StagePlanBuilder({
       isRotating,
       isDragging,
       isPanning,
-      isPendingDrag,
       draggedNodeId,
       dragOffset,
       rotationStart,
@@ -643,42 +580,15 @@ export default function StagePlanBuilder({
     ]
   );
 
-  const finalizePointer = (pointerId: number) => {
-    activePointers.current.delete(pointerId);
-    if (activePointers.current.size < 2) {
-      pinchRef.current = null; // end pinch if one finger lifts
-    }
-  };
-
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     (svgRef.current as SVGElement | null)?.releasePointerCapture?.(e.pointerId);
-    finalizePointer(e.pointerId);
-
-    // Clear pending drag timer
-    if (dragDelayTimerRef.current) {
-      clearTimeout(dragDelayTimerRef.current);
-      dragDelayTimerRef.current = null;
-    }
-
     setIsPanning(false);
     setIsDragging(false);
     setIsRotating(false);
-    setIsPendingDrag(false);
     setDraggedNodeId(null);
   }, []);
 
-  const handlePointerCancel = useCallback((e: React.PointerEvent) => {
-    svgRef.current?.releasePointerCapture?.(e.pointerId);
-    finalizePointer(e.pointerId);
-
-    // mirror your pointer-up cleanup to be safe
-    setIsPanning(false);
-    setIsDragging(false);
-    setIsRotating(false);
-    setIsPendingDrag(false);
-    setDraggedNodeId(null);
-  }, []);
-
+  /* ── CRUD helpers ─────────────────────────────────────────────────────── */
   const handleDeleteNode = useCallback(
     (nodeId: string) => {
       setNodes((prev) => prev.filter((node) => node.id !== nodeId));
@@ -758,9 +668,11 @@ export default function StagePlanBuilder({
         scale: 1,
       };
 
+      // Update local state
       setNodes((prev) => [...prev, newNode]);
       setSelectedNodeId(nextId);
 
+      // ✅ Sync to store immediately
       storeAddNode(newNode);
     },
     [viewBox, storeAddNode]
@@ -778,6 +690,7 @@ export default function StagePlanBuilder({
     [selectedNodeId, storeUpdateNodeLabel]
   );
 
+  /* ── Event binding ────────────────────────────────────────────────────── */
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -785,10 +698,12 @@ export default function StagePlanBuilder({
     return () => container.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
+  /* ── One-time hydration (or on version bump) ──────────────────────────── */
   const hydratedRef = useRef(false);
   const lastVersionRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
+    // Hydrate on first mount OR when parent intentionally bumps version to force reset
     if (!hydratedRef.current || lastVersionRef.current !== config.version) {
       setNodes(config.nodes.length ? config.nodes : getDefaultNodes());
       setMeasurements(config.measurements ?? []);
@@ -797,6 +712,7 @@ export default function StagePlanBuilder({
     }
   }, [config.version, config.nodes, config.measurements]);
 
+  /* ── Debounced upstream sync (prevents feedback loop) ─────────────────── */
   const debouncedPush = useDebouncedFn(
     (n: TStageNodeBuilder[], m: TMeasurement[], v?: number) => {
       onConfigChange({ nodes: n, measurements: m, version: v });
@@ -805,22 +721,18 @@ export default function StagePlanBuilder({
   );
 
   useEffect(() => {
-    if (!hydratedRef.current) return;
+    if (!hydratedRef.current) return; // guard during initial mount
     debouncedPush(nodes, measurements, config.version);
   }, [nodes, measurements, debouncedPush, config.version]);
 
   return (
     <div
-      style={{
-        touchAction: "none", // ✅ Prevents mobile scrolling
-      }}
       id="stage-plan"
       className="md:min-h-none min-h-auto w-full bg-[#1a1a1a] font-sans text-white"
     >
       <div className="max-w-full p-3 sm:p-5">
         <p className="mb-2 text-xs text-gray-400 sm:text-sm">
-          Desktop: Hold Ctrl + scroll to zoom | Mobile: Double-tap labels to
-          edit
+          To zoom press control and use mousewheel scroll
         </p>
 
         <div className="mb-3 flex flex-wrap items-start gap-2 sm:items-center sm:gap-3">
@@ -870,12 +782,11 @@ export default function StagePlanBuilder({
 
         <div
           ref={containerRef}
-          className="relative w-full overscroll-contain border border-[#333] bg-[#0a0a0a]"
+          className="relative w-full border border-[#333] bg-[#0a0a0a]"
           style={{
-            height: "calc(100dvh - 280px)",
+            height: "calc(100vh - 280px)",
             minHeight: "400px",
             maxHeight: "800px",
-            touchAction: "none",
           }}
         >
           <svg
@@ -888,14 +799,12 @@ export default function StagePlanBuilder({
                 : isMeasurementMode
                 ? "crosshair"
                 : "default",
-              touchAction: "none",
             }}
             viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
-            onPointerCancel={handlePointerCancel}
           >
             <SvgSymbols />
 
