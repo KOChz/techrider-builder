@@ -15,6 +15,8 @@ import {
   DimensionLine,
   TMeasurement,
 } from "../builder/dimension-line/dimension-line";
+import { useUnifiedPointer } from "@/hooks/use-unified-pointer";
+import { usePinchZoom } from "@/hooks/use-pinch-zoom";
 
 interface Vec2 {
   x: number;
@@ -89,6 +91,24 @@ const SvgSymbols: React.FC = () => (
   </defs>
 );
 
+const calculateAngle = (
+  centerX: number,
+  centerY: number,
+  pointX: number,
+  pointY: number
+): number => {
+  const dx = pointX - centerX;
+  const dy = pointY - centerY;
+  return (Math.atan2(dy, dx) * 180) / Math.PI;
+};
+
+const normalizeAngle = (angle: number): number => {
+  angle = angle % 360;
+  if (angle > 180) angle -= 360;
+  if (angle < -180) angle += 360;
+  return angle;
+};
+
 export default function StagePlan({ config }: { config: TStagePlanConfig }) {
   const [nodes, setNodes] = useState<StageNode[]>(config.nodes);
   const [measurements, setMeasurements] = useState<TMeasurement[]>(
@@ -119,6 +139,10 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const panStartRef = useRef<Vec2>({ x: 0, y: 0 });
 
+  const unifiedPointer = useUnifiedPointer();
+  const pinchZoom = usePinchZoom();
+  const lastPinchScaleRef = useRef(1);
+
   const screenToCanvas = useCallback(
     (screenX: number, screenY: number): Vec2 => {
       if (!svgRef.current) return { x: 0, y: 0 };
@@ -132,24 +156,6 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
     [viewBox]
   );
 
-  const calculateAngle = (
-    centerX: number,
-    centerY: number,
-    pointX: number,
-    pointY: number
-  ): number => {
-    const dx = pointX - centerX;
-    const dy = pointY - centerY;
-    return (Math.atan2(dy, dx) * 180) / Math.PI;
-  };
-
-  const normalizeAngle = (angle: number): number => {
-    angle = angle % 360;
-    if (angle > 180) angle -= 360;
-    if (angle < -180) angle += 360;
-    return angle;
-  };
-
   const handleReset = useCallback(() => {
     setViewBox({ x: -500, y: -500, width: 1000, height: 1000 });
     setZoom(1);
@@ -157,8 +163,7 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
 
   const ZOOM_MIN = 0.1;
   const ZOOM_MAX = 10;
-  const ZOOM_SENSITIVITY = 0.0015; // smaller = slower; try 0.001–0.002
-  const BUTTON_STEP = 1.06; // was 1.2; smaller = slower
+  const BUTTON_STEP = 1.06;
 
   // helper to apply zoom anchored at a point
   const zoomTo = useCallback((scale: number, anchor: Vec2) => {
@@ -177,8 +182,8 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
 
   const handleZoomIn = useCallback(() => {
     const center = {
-      x: viewBox.x + viewBox.width / 2,
-      y: viewBox.y + viewBox.height / 2,
+      x: viewBox.x + viewBox.width / 2.5,
+      y: viewBox.y + viewBox.height / 2.5,
     };
     zoomTo(BUTTON_STEP, center);
   }, [viewBox, zoomTo]);
@@ -190,6 +195,64 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
     };
     zoomTo(1 / BUTTON_STEP, center);
   }, [viewBox, zoomTo]);
+
+  const handlePointerDown = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      const pointerEvent = unifiedPointer.handlePointerDown(e);
+      if (!pointerEvent) return;
+
+      if (pointerEvent.isTouch && pointerEvent.touchCount === 2) {
+        const touchEvent = e as React.TouchEvent;
+        const pinchState = pinchZoom.handleTouchStart(touchEvent);
+        if (pinchState) {
+          lastPinchScaleRef.current = zoom;
+          return;
+        }
+      }
+
+      const target = e.target as SVGElement;
+      const isRotationHandle = target.classList.contains("rotation-hitbox");
+      const nodeElement = target.closest(".stage-node");
+
+      if (nodeElement) {
+        const nodeId = nodeElement.getAttribute("data-id");
+        const node = nodes.find((n) => n.id === nodeId);
+        if (!node) return;
+
+        const canvasPos = screenToCanvas(
+          pointerEvent.clientX,
+          pointerEvent.clientY
+        );
+
+        if (
+          isRotationHandle ||
+          (!pointerEvent.isTouch && (e as React.MouseEvent).altKey)
+        ) {
+          setIsRotating(true);
+          setDraggedNodeId(nodeId);
+          const mouseAngle = calculateAngle(
+            node.x,
+            node.y,
+            canvasPos.x,
+            canvasPos.y
+          );
+          setRotationStart({ angle: node.angle, mouseAngle });
+        } else {
+          setIsDragging(true);
+          setDraggedNodeId(nodeId);
+          setDragOffset({ x: canvasPos.x - node.x, y: canvasPos.y - node.y });
+        }
+        pointerEvent.preventDefault();
+      } else {
+        setIsPanning(true);
+        panStartRef.current = {
+          x: pointerEvent.clientX,
+          y: pointerEvent.clientY,
+        };
+      }
+    },
+    [nodes, screenToCanvas, unifiedPointer, pinchZoom, zoom]
+  );
 
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
@@ -295,6 +358,109 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
     ]
   );
 
+  const handlePointerMove = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      const pointerEvent = unifiedPointer.handlePointerMove(e);
+      if (!pointerEvent) return;
+
+      if (pointerEvent.isTouch && pointerEvent.touchCount === 2) {
+        const touchEvent = e as React.TouchEvent;
+        const pinchData = pinchZoom.handleTouchMove(touchEvent, zoom);
+
+        if (pinchData) {
+          pointerEvent.preventDefault();
+          const anchor = screenToCanvas(pinchData.centerX, pinchData.centerY);
+          const targetZoom = lastPinchScaleRef.current * pinchData.scale;
+          const zoomRatio = targetZoom / zoom;
+
+          setZoom(Math.max(ZOOM_MIN, Math.min(targetZoom, ZOOM_MAX)));
+          setViewBox((vb) => ({
+            x: anchor.x - (anchor.x - vb.x) / zoomRatio,
+            y: anchor.y - (anchor.y - vb.y) / zoomRatio,
+            width: vb.width / zoomRatio,
+            height: vb.height / zoomRatio,
+          }));
+          return;
+        }
+      }
+
+      const canvasPos = screenToCanvas(
+        pointerEvent.clientX,
+        pointerEvent.clientY
+      );
+      setMouse(canvasPos);
+
+      if (isRotating && draggedNodeId !== null) {
+        setNodes((prev) =>
+          prev.map((node) => {
+            if (node.id !== draggedNodeId) return node;
+            const currentMouseAngle = calculateAngle(
+              node.x,
+              node.y,
+              canvasPos.x,
+              canvasPos.y
+            );
+            const angleDelta = currentMouseAngle - rotationStart.mouseAngle;
+            return {
+              ...node,
+              angle: normalizeAngle(rotationStart.angle + angleDelta),
+            };
+          })
+        );
+      } else if (isDragging && draggedNodeId !== null) {
+        setNodes((prev) =>
+          prev.map((node) => {
+            if (node.id !== draggedNodeId) return node;
+            return {
+              ...node,
+              x: canvasPos.x - dragOffset.x,
+              y: canvasPos.y - dragOffset.y,
+            };
+          })
+        );
+      } else if (isPanning && svgRef.current) {
+        const rect = svgRef.current.getBoundingClientRect();
+        const dx =
+          ((pointerEvent.clientX - panStartRef.current.x) * viewBox.width) /
+          rect.width;
+        const dy =
+          ((pointerEvent.clientY - panStartRef.current.y) * viewBox.height) /
+          rect.height;
+        setViewBox((vb) => ({ ...vb, x: vb.x - dx, y: vb.y - dy }));
+        panStartRef.current = {
+          x: pointerEvent.clientX,
+          y: pointerEvent.clientY,
+        };
+      }
+    },
+    [
+      isRotating,
+      isDragging,
+      isPanning,
+      draggedNodeId,
+      dragOffset,
+      rotationStart,
+      screenToCanvas,
+      viewBox,
+      unifiedPointer,
+      pinchZoom,
+      zoom,
+      nodes,
+    ]
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      unifiedPointer.handlePointerUp(e);
+      pinchZoom.handleTouchEnd();
+      setIsPanning(false);
+      setIsDragging(false);
+      setIsRotating(false);
+      setDraggedNodeId(null);
+    },
+    [unifiedPointer, pinchZoom]
+  );
+
   const handleMouseUp = useCallback(() => {
     setIsPanning(false);
     setIsDragging(false);
@@ -358,6 +524,10 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchStart={handlePointerDown}
+            onTouchMove={handlePointerMove}
+            onTouchEnd={handlePointerUp}
+            onTouchCancel={handlePointerUp}
           >
             <SvgSymbols />
             <rect

@@ -209,3 +209,16 @@
 .stage-node .rotation-icon {
   transition: opacity 0.1s ease 0.1s; /* 0.1s delay before hiding */
 }
+
+#stage-plan svg {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.stage-node {
+  cursor: move;
+  touch-action: none;
+}
