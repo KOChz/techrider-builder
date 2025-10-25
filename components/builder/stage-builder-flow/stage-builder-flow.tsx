@@ -24,6 +24,12 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { nanoid } from "nanoid";
+import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
+import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
+import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-icon";
+import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
+import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
+import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
 
 // ---------- Domain types ----------
 export type EquipmentType =
@@ -102,81 +108,33 @@ function EquipmentNode({ data }: { data: EquipmentData }) {
   const icon = useMemo(() => {
     switch (data.kind) {
       case "drumkit":
-        return (
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
-            <circle cx="7" cy="14" r="4" fill="#1f2937" />
-            <circle cx="16" cy="16" r="3" fill="#1f2937" />
-            <rect x="5" y="7" width="12" height="2" rx="1" fill="#1f2937" />
-          </svg>
-        );
+        return <DrumkitIcon className="scale-200" />;
       case "amp":
-        return (
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
-            <rect x="4" y="5" width="16" height="14" rx="2" fill="#1f2937" />
-            <circle cx="9" cy="12" r="3" fill="#0ea5e9" />
-            <circle cx="15" cy="12" r="3" fill="#0ea5e9" />
-          </svg>
-        );
+        return <AmpIcon />;
       case "monitor":
-        return (
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
-            <rect x="6" y="6" width="12" height="8" rx="1.5" fill="#1f2937" />
-            <rect x="9" y="15" width="6" height="2" rx="1" fill="#1f2937" />
-          </svg>
-        );
+        return <MonitorIcon />;
       case "mic-stand":
-        return (
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
-            <rect x="11" y="4" width="2" height="14" fill="#1f2937" />
-            <rect x="7" y="18" width="10" height="2" rx="1" fill="#1f2937" />
-            <circle cx="12" cy="3" r="2" fill="#0ea5e9" />
-          </svg>
-        );
+        return <MicStandIcon />;
       case "power-extension":
-        return (
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
-            <rect x="5" y="7" width="14" height="10" rx="2" fill="#1f2937" />
-            <circle cx="10" cy="12" r="1.2" fill="#0ea5e9" />
-            <circle cx="14" cy="12" r="1.2" fill="#0ea5e9" />
-          </svg>
-        );
+        return <PowerExtensionIcon />;
       case "di-box":
-        return (
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
-            <rect x="6" y="6" width="12" height="12" rx="2" fill="#1f2937" />
-            <rect x="9" y="11" width="6" height="2" rx="1" fill="#0ea5e9" />
-          </svg>
-        );
+        return <DIBoxIcon />;
       default:
         return null;
     }
   }, [data.kind]);
 
   return (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "6px 10px",
-        background: "#f8fafc",
-        border: "1px solid #cbd5e1",
-        borderRadius: 10,
-        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-        userSelect: "none",
-      }}
-    >
+    <>
       {icon}
-      <span style={{ fontSize: 12, color: "#0f172a", fontWeight: 600 }}>
-        {data.label}
-      </span>
+      <span style={{ fontSize: 10, color: "#0f172a" }}>{data.label}</span>
 
       {/* hidden handles enable draw-to-measure */}
       <Handle type="source" position={Position.Right} style={handleStyle} />
       <Handle type="target" position={Position.Left} style={handleStyle} />
       <Handle type="source" position={Position.Bottom} style={handleStyle} />
       <Handle type="target" position={Position.Top} style={handleStyle} />
-    </div>
+    </>
   );
 }
 
