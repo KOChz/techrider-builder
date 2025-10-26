@@ -864,15 +864,64 @@ function Palette({ onAddNode }: IPaletteProps) {
 export default function StagePlanCanvas() {
   const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
     {
+      id: "up-stage",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Upstage",
+        rotation: -180,
+      },
+      position: { x: -0, y: -200 },
+    },
+    {
+      id: "down-stage",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Downstage / Audience",
+      },
+      position: { x: 0, y: 400 },
+    },
+    {
+      id: "stage-left",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Stage Left",
+      },
+      position: { x: -500, y: 200 },
+    },
+    {
+      id: "stage-right",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Stage Right",
+      },
+      position: { x: 500, y: 200 },
+    },
+    {
       id: nanoid(),
       type: "equipment",
-      position: { x: 120, y: 120 },
+      position: { x: -120, y: 120 },
       data: { label: "Drumkit", kind: "drumkit" },
     },
     {
       id: nanoid(),
       type: "equipment",
-      position: { x: 420, y: 160 },
+      position: { x: 80, y: 160 },
       data: { label: "Bass Amp", kind: "amp" },
     },
   ]);
@@ -894,10 +943,8 @@ export default function StagePlanCanvas() {
   }, [pxPerMeter]);
 
   const onNodesChange = useCallback(
-    (changes: NodeChange[]) =>
-      setNodes((nds) =>
-        applyNodeChanges<Node<TEquipmentData>>(changes as any, nds)
-      ),
+    (changes: NodeChange<Node<TEquipmentData>>[]) =>
+      setNodes((nds) => applyNodeChanges(changes, nds)),
     []
   );
 
@@ -961,14 +1008,14 @@ export default function StagePlanCanvas() {
 
   const handleAddNode = useCallback(
     (kind: TEquipmentType) => {
-      const newNode: Node = {
+      const newNode = {
         id: `${kind}-${Date.now()}`,
         type: "equipment",
         position: { x: 420, y: 160 },
         data: { kind, label: kind },
       };
 
-      setNodes((prevNodes) => [...prevNodes, newNode as any]);
+      setNodes((prevNodes) => [...prevNodes, newNode]);
     },
     [setNodes]
   );
