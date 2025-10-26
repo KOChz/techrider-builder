@@ -618,7 +618,7 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           {icon}
 
           {isLabelEditing ? (
-            <div className="relative flex items-center gap-1">
+            <div className="relative flex w-min items-center gap-1">
               <input
                 ref={inputRef}
                 type="text"
@@ -626,7 +626,7 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
                 onChange={(e) => setTempLabel(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
-                className="w-16 rounded border border-blue-500 bg-white px-1 text-center text-[8px] text-slate-900 outline-none"
+                className="min-w-[80px] rounded border border-green-700/80 bg-white py-0.5 text-center text-base text-slate-900 outline-none sm:text-sm"
                 aria-label="Edit equipment label"
                 maxLength={50}
               />
@@ -634,9 +634,9 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
                 onClick={handleCloseEdit}
                 onMouseDown={(e) => e.preventDefault()}
                 aria-label="Cancel editing"
-                className="flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-gray-500 text-white shadow-sm hover:bg-gray-600"
+                className="flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-500 text-white shadow-sm hover:bg-gray-600"
               >
-                <X className="h-2 w-2" />
+                <X className="h-2.5 w-2.5" />
               </button>
             </div>
           ) : (

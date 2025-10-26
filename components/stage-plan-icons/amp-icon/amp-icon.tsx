@@ -9,7 +9,7 @@ export type AmpIconProps = React.SVGProps<SVGSVGElement> & {
 
 export const AmpIcon = React.memo(
   React.forwardRef<SVGSVGElement, AmpIconProps>(function AmpIcon(
-    { title = "Amp", className, hitboxPadding = 5, ...props },
+    { title = "Amp", className, hitboxPadding = 5, width, height, ...props },
     ref
   ) {
     const uid = React.useId();
@@ -25,6 +25,8 @@ export const AmpIcon = React.memo(
         role="img"
         aria-label={title}
         className={className}
+        width={width || 55}
+        height={height || 55}
         {...props}
       >
         <title>{title}</title>
