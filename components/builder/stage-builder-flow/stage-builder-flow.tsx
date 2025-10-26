@@ -203,7 +203,19 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [tempLabel, setTempLabel] = useState("");
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Detect touch device on mount
+  useEffect(() => {
+    const checkTouchDevice = () => {
+      setIsTouchDevice(
+        "ontouchstart" in window || navigator.maxTouchPoints > 0
+      );
+    };
+
+    checkTouchDevice();
+  }, []);
 
   const snapped = calculateSnappedCoordinates(
     sourceX,
@@ -347,6 +359,9 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
     targetY: snapped.endY,
   });
 
+  // Determine if delete button should be visible
+  const isDeleteButtonVisible = isTouchDevice ? selected : false;
+
   return (
     <>
       {connectors.sourceConnector && (
@@ -389,7 +404,11 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
         >
           <button
             onClick={handleDelete}
-            className="pointer-events-auto absolute -top-7 left-1/2 flex h-6 w-6 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white opacity-0 shadow-md transition-opacity hover:bg-slate-100 group-hover:opacity-100"
+            className={`pointer-events-auto absolute -top-7 left-1/2 flex h-6 w-6 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white shadow-md transition-opacity hover:bg-slate-100 ${
+              isDeleteButtonVisible
+                ? "opacity-100"
+                : "opacity-0 group-hover:opacity-100"
+            }`}
             aria-label="Delete measurement"
             type="button"
           >
