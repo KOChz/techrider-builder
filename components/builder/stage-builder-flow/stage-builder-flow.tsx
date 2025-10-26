@@ -28,6 +28,7 @@ import {
   type ReactFlowInstance,
   useReactFlow,
   BackgroundVariant,
+  NodeProps,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { nanoid } from "nanoid";
@@ -241,7 +242,6 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
   );
 
   const displayValue = data?.customLabel || `${calculatedMeters.toFixed(2)} m`;
-  const hasCustomLabel = !!data?.customLabel;
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -444,7 +444,7 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
 
 const edgeTypes = { measure: MeasureEdge };
 
-export interface IEquipmentNodeProps {
+export interface IEquipmentNodeProps extends NodeProps {
   data: TEquipmentData;
   id: string;
   selected: boolean;
@@ -529,31 +529,6 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
     [data.label]
   );
 
-  const handleResize = useCallback(
-    (_event: unknown, params: { width: number; height: number }) => {
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (node.id === id) {
-            return {
-              ...node,
-              // Update actual node dimensions
-              width: params.width,
-              height: params.height,
-              // Also update data for persistence
-              data: {
-                ...node.data,
-                width: params.width,
-                height: params.height,
-              },
-            };
-          }
-          return node;
-        })
-      );
-    },
-    [setNodes, id]
-  );
-
   const saveLabel = useCallback(() => {
     const trimmedLabel = tempLabel.trim();
     if (trimmedLabel && trimmedLabel !== data.label) {
@@ -607,15 +582,6 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
 
   return (
     <>
-      {/* <NodeResizer
-        color="green"
-        isVisible={selected}
-        minWidth={100}
-        minHeight={30}
-        onResize={handleResize}
-        keepAspectRatio
-      /> */}
-
       <div
         className="group relative"
         style={{
@@ -623,21 +589,27 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           height: height ? `${height}px` : "100%",
         }}
       >
-        <button
-          onClick={handleRotate}
-          aria-label={`Rotate ${data.label}`}
-          className="absolute -right-2 -top-2 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white opacity-0 shadow-md transition-opacity hover:bg-blue-600 group-hover:opacity-100"
-        >
-          <RotateCw className="h-2 w-2" />
-        </button>
+        <>
+          <button
+            onClick={handleRotate}
+            aria-label={`Rotate ${data.label}`}
+            className={`absolute -right-2 -top-2 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-opacity hover:bg-blue-600 ${
+              selected ? "opacity-100" : "opacity-0 md:group-hover:opacity-100"
+            }`}
+          >
+            <RotateCw className="h-2 w-2" />
+          </button>
 
-        <button
-          onClick={handleDelete}
-          aria-label={`Delete ${data.label}`}
-          className="absolute -right-2 -top-5 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white opacity-0 shadow-md transition-opacity hover:bg-red-600 group-hover:opacity-100"
-        >
-          <X className="h-2 w-2" />
-        </button>
+          <button
+            onClick={handleDelete}
+            aria-label={`Delete ${data.label}`}
+            className={`absolute -right-2 -top-5 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-opacity hover:bg-red-600 ${
+              selected ? "opacity-100" : "opacity-0 md:group-hover:opacity-100"
+            }`}
+          >
+            <X className="h-2 w-2" />
+          </button>
+        </>
 
         <div
           style={{ transform: `rotate(${rotation}deg)` }}
