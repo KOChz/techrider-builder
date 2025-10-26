@@ -469,6 +469,26 @@ export interface IEquipmentNodeProps extends NodeProps {
   selected: boolean;
 }
 
+interface IAnnotationNodeProps extends NodeProps {
+  data: TEquipmentData;
+}
+
+function AnnotationNode({ data }: IAnnotationNodeProps) {
+  const rotation = data.rotation ?? 0;
+
+  return (
+    <div
+      className="pointer-events-none flex items-center justify-center"
+      style={{
+        transform: `rotate(${rotation}deg)`,
+        whiteSpace: "nowrap",
+      }}
+    >
+      <span className="text-sm font-semibold text-slate-600">{data.label}</span>
+    </div>
+  );
+}
+
 function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
   const { deleteElements, setNodes } = useReactFlow();
   const [isLabelEditing, setIsLabelEditing] = useState(false);
@@ -693,7 +713,7 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
   );
 }
 
-const nodeTypes = { equipment: EquipmentNode };
+const nodeTypes = { equipment: EquipmentNode, annotation: AnnotationNode };
 
 // ---------- DnD Palette ----------
 function PaletteItem({
@@ -872,7 +892,6 @@ export default function StagePlanCanvas() {
       data: {
         kind: "amp",
         label: "Upstage",
-        rotation: -180,
       },
       position: { x: -0, y: -200 },
     },
@@ -897,8 +916,9 @@ export default function StagePlanCanvas() {
       data: {
         kind: "amp",
         label: "Stage Left",
+        rotation: -90,
       },
-      position: { x: -500, y: 200 },
+      position: { x: -400, y: 200 },
     },
     {
       id: "stage-right",
@@ -909,19 +929,20 @@ export default function StagePlanCanvas() {
       data: {
         kind: "amp",
         label: "Stage Right",
+        rotation: 90,
       },
-      position: { x: 500, y: 200 },
+      position: { x: 400, y: 200 },
     },
     {
       id: nanoid(),
       type: "equipment",
-      position: { x: -120, y: 120 },
+      position: { x: -120, y: 0 },
       data: { label: "Drumkit", kind: "drumkit" },
     },
     {
       id: nanoid(),
       type: "equipment",
-      position: { x: 80, y: 160 },
+      position: { x: 80, y: 35 },
       data: { label: "Bass Amp", kind: "amp" },
     },
   ]);
