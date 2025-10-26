@@ -10,9 +10,11 @@ interface IDrumkitIconProps extends SVGProps<SVGSVGElement> {
   hitboxPadding?: number;
 }
 
+const VIEWBOX_SIZE = 1024;
+
 export function DrumkitIcon({
-  width = 24,
-  height = 24,
+  width = 100,
+  height = 100,
   title = "Drumkit",
   description = "A musical drumkit illustration",
   className,
@@ -23,7 +25,6 @@ export function DrumkitIcon({
   const titleId = `${baseId}-title`;
   const descId = `${baseId}-desc`;
 
-  // Only set aria-labelledby if the corresponding nodes exist
   const labelledBy = useMemo(() => {
     const ids: string[] = [];
     if (title) ids.push(titleId);
@@ -31,12 +32,26 @@ export function DrumkitIcon({
     return ids.length ? ids.join(" ") : undefined;
   }, [title, description, titleId, descId]);
 
+  const scaledPadding = useMemo(() => {
+    const numericWidth = typeof width === "string" ? parseFloat(width) : width;
+    const numericHeight =
+      typeof height === "string" ? parseFloat(height) : height;
+
+    const scaleX = numericWidth / VIEWBOX_SIZE;
+    const scaleY = numericHeight / VIEWBOX_SIZE;
+    const scale = Math.min(scaleX, scaleY);
+
+    return hitboxPadding / scale;
+  }, [width, height, hitboxPadding]);
+
   return (
     <svg
       id="drumkit"
       width={width}
       height={height}
-      viewBox="0 0 1024 1024"
+      style={{ scale: 1.2 }}
+      preserveAspectRatio="xMidYMid meet"
+      viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
@@ -49,10 +64,10 @@ export function DrumkitIcon({
       {description ? <desc id={descId}>{description}</desc> : null}
 
       <rect
-        x={-hitboxPadding}
-        y={-hitboxPadding}
-        width={50 + hitboxPadding * 2}
-        height={50 + hitboxPadding * 2}
+        x={-scaledPadding}
+        y={-scaledPadding}
+        width={50 + scaledPadding * 2}
+        height={50 + scaledPadding * 2}
         fill="transparent"
       />
 

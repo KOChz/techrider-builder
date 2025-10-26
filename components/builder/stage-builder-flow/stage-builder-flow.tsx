@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ReactFlow,
   Background,
@@ -21,6 +27,7 @@ import {
   type EdgeProps,
   type ReactFlowInstance,
   useReactFlow,
+  BackgroundVariant,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { nanoid } from "nanoid";
@@ -30,9 +37,11 @@ import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-
 import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
+import { RotateCw, X } from "lucide-react";
+import { getStraightPath } from "reactflow";
 
 // ---------- Domain types ----------
-export type EquipmentType =
+export type TEquipmentType =
   | "drumkit"
   | "amp"
   | "monitor"
@@ -40,52 +49,393 @@ export type EquipmentType =
   | "power-extension"
   | "di-box";
 
-export type EquipmentData = {
+export type TEquipmentData = {
   label: string;
-  kind: EquipmentType;
+  kind: TEquipmentType;
+  rotation?: number;
+  width?: number;
+  height?: number;
 };
 
-// visual scaling: pixels per meter (tweak at runtime)
-const DEFAULT_PX_PER_METER = 50;
+const DEFAULT_PX_PER_METER = 100;
 
-// ---------- Custom Measure Edge ----------
-function MeasureEdge(props: EdgeProps) {
-  const { sourceX, sourceY, targetX, targetY, selected } = props;
+const CONNECTOR_THRESHOLD = 20;
 
-  const dx = targetX - sourceX;
-  const dy = targetY - sourceY;
-  const px = Math.hypot(dx, dy);
+interface IConnectorLines {
+  sourceConnector: { x1: number; y1: number; x2: number; y2: number } | null;
+  targetConnector: { x1: number; y1: number; x2: number; y2: number } | null;
+}
 
-  // read from CSS var for live scale control
-  const pxPerMeter =
-    Number(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--px-per-meter"
+export function calculateConnectorLines(
+  sourceX: number,
+  sourceY: number,
+  targetX: number,
+  targetY: number,
+  snappedStartX: number,
+  snappedStartY: number,
+  snappedEndX: number,
+  snappedEndY: number,
+  axis: "horizontal" | "vertical"
+): IConnectorLines {
+  const sourceDistance =
+    axis === "horizontal"
+      ? Math.abs(sourceY - snappedStartY)
+      : Math.abs(sourceX - snappedStartX);
+
+  const targetDistance =
+    axis === "horizontal"
+      ? Math.abs(targetY - snappedEndY)
+      : Math.abs(targetX - snappedEndX);
+
+  return {
+    sourceConnector:
+      sourceDistance > CONNECTOR_THRESHOLD
+        ? {
+            x1: sourceX,
+            y1: sourceY,
+            x2: snappedStartX,
+            y2: snappedStartY,
+          }
+        : null,
+    targetConnector:
+      targetDistance > CONNECTOR_THRESHOLD
+        ? {
+            x1: targetX,
+            y1: targetY,
+            x2: snappedEndX,
+            y2: snappedEndY,
+          }
+        : null,
+  };
+}
+
+interface IConnectorLineProps {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  isSelected: boolean;
+}
+
+export function ConnectorLine({
+  x1,
+  y1,
+  x2,
+  y2,
+  isSelected,
+}: IConnectorLineProps) {
+  return (
+    <path
+      d={`M ${x1},${y1} L ${x2},${y2}`}
+      stroke={isSelected ? "#64748b" : "#cbd5e1"}
+      strokeWidth={1}
+      strokeDasharray="3,3"
+      fill="none"
+      className="pointer-events-none"
+    />
+  );
+}
+
+type TSnapAxis = "horizontal" | "vertical";
+
+interface ISnappedCoordinates {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  midX: number;
+  midY: number;
+  distance: number;
+  axis: TSnapAxis;
+}
+
+export function calculateSnappedCoordinates(
+  sourceX: number,
+  sourceY: number,
+  targetX: number,
+  targetY: number
+): ISnappedCoordinates {
+  const horizontalDistance = Math.abs(targetX - sourceX);
+  const verticalDistance = Math.abs(targetY - sourceY);
+
+  const isHorizontal = horizontalDistance >= verticalDistance;
+
+  let startX: number, startY: number, endX: number, endY: number;
+
+  if (isHorizontal) {
+    const alignedY = (sourceY + targetY) / 2;
+    startX = sourceX;
+    startY = alignedY;
+    endX = targetX;
+    endY = alignedY;
+  } else {
+    const alignedX = (sourceX + targetX) / 2;
+    startX = alignedX;
+    startY = sourceY;
+    endX = alignedX;
+    endY = targetY;
+  }
+
+  const distance = Math.hypot(endX - startX, endY - startY);
+  const midX = (startX + endX) / 2;
+  const midY = (startY + endY) / 2;
+
+  return {
+    startX,
+    startY,
+    endX,
+    endY,
+    midX,
+    midY,
+    distance,
+    axis: isHorizontal ? "horizontal" : "vertical",
+  };
+}
+
+interface IMeasureEdgeData extends Edge {
+  data: { customLabel: string };
+}
+
+function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
+  const { id, sourceX, sourceY, targetX, targetY, selected, data } = props;
+  const { deleteElements, setEdges } = useReactFlow();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempLabel, setTempLabel] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const snapped = calculateSnappedCoordinates(
+    sourceX,
+    sourceY,
+    targetX,
+    targetY
+  );
+
+  const connectors = calculateConnectorLines(
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    snapped.startX,
+    snapped.startY,
+    snapped.endX,
+    snapped.endY,
+    snapped.axis
+  );
+
+  const pxPerMeter = useMemo(() => {
+    if (typeof window === "undefined") return DEFAULT_PX_PER_METER;
+
+    return (
+      Number(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--px-per-meter"
+        )
+      ) || DEFAULT_PX_PER_METER
+    );
+  }, []);
+
+  const calculatedMeters = useMemo(
+    () => snapped.distance / pxPerMeter,
+    [snapped.distance, pxPerMeter]
+  );
+
+  const displayValue = data?.customLabel || `${calculatedMeters.toFixed(2)} m`;
+  const hasCustomLabel = !!data?.customLabel;
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  const handleDelete = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      deleteElements({ edges: [{ id }] });
+    },
+    [deleteElements, id]
+  );
+
+  const handleLabelClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setIsEditing(true);
+      setTempLabel(
+        (data?.customLabel as string) || calculatedMeters.toFixed(2)
+      );
+    },
+    [data?.customLabel, calculatedMeters]
+  );
+
+  const saveLabel = useCallback(() => {
+    const trimmedLabel = tempLabel.trim();
+
+    setEdges((edges) =>
+      edges.map((edge) =>
+        edge.id === id
+          ? {
+              ...edge,
+              data: {
+                ...edge.data,
+                customLabel: trimmedLabel || undefined,
+              },
+            }
+          : edge
       )
-    ) || DEFAULT_PX_PER_METER;
+    );
 
-  const meters = px / pxPerMeter;
-  const mx = sourceX + dx / 2;
-  const my = sourceY + dy / 2;
+    setIsEditing(false);
+  }, [tempLabel, setEdges, id]);
+
+  const cancelEdit = useCallback(() => {
+    setTempLabel((data?.customLabel as string) || calculatedMeters.toFixed(2));
+    setIsEditing(false);
+  }, [data?.customLabel, calculatedMeters]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        saveLabel();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        cancelEdit();
+      }
+    },
+    [saveLabel, cancelEdit]
+  );
+
+  const handleBlur = useCallback(() => {
+    saveLabel();
+  }, [saveLabel]);
+
+  const handleCloseEdit = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      cancelEdit();
+    },
+    [cancelEdit]
+  );
+
+  const handleResetLabel = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+
+      setEdges((edges) =>
+        edges.map((edge) =>
+          edge.id === id
+            ? {
+                ...edge,
+                data: {
+                  ...edge.data,
+                  customLabel: undefined,
+                },
+              }
+            : edge
+        )
+      );
+    },
+    [setEdges, id]
+  );
+
+  const [edgePath] = getStraightPath({
+    sourceX: snapped.startX,
+    sourceY: snapped.startY,
+    targetX: snapped.endX,
+    targetY: snapped.endY,
+  });
 
   return (
     <>
-      <BaseEdge path={`M ${sourceX},${sourceY} L ${targetX},${targetY}`} />
+      {connectors.sourceConnector && (
+        <ConnectorLine
+          x1={connectors.sourceConnector.x1}
+          y1={connectors.sourceConnector.y1}
+          x2={connectors.sourceConnector.x2}
+          y2={connectors.sourceConnector.y2}
+          isSelected={!!selected}
+        />
+      )}
+
+      {connectors.targetConnector && (
+        <ConnectorLine
+          x1={connectors.targetConnector.x1}
+          y1={connectors.targetConnector.y1}
+          x2={connectors.targetConnector.x2}
+          y2={connectors.targetConnector.y2}
+          isSelected={!!selected}
+        />
+      )}
+
+      <BaseEdge
+        id={id}
+        path={edgePath}
+        style={{
+          strokeDasharray: "5,5",
+          strokeWidth: selected ? 2 : 1,
+          stroke: selected ? "#0f172a" : "#94a3b8",
+        }}
+      />
+
       <EdgeLabelRenderer>
         <div
           style={{
             position: "absolute",
-            transform: `translate(-50%, -50%) translate(${mx}px, ${my}px)`,
-            pointerEvents: "none",
-            background: "white",
-            border: selected ? "1px solid #0f172a" : "1px solid #cbd5e1",
-            borderRadius: 8,
-            padding: "2px 6px",
-            fontSize: 12,
-            boxShadow: "0 1px 2px rgba(0,0,0,0.08)",
+            transform: `translate(-50%, -50%) translate(${snapped.midX}px, ${snapped.midY}px)`,
           }}
+          className="group pointer-events-none"
         >
-          {meters.toFixed(2)} m
+          <button
+            onClick={handleDelete}
+            className="pointer-events-auto absolute -top-7 left-1/2 flex h-6 w-6 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full bg-white opacity-0 shadow-md transition-opacity hover:bg-slate-100 group-hover:opacity-100"
+            aria-label="Delete measurement"
+            type="button"
+          >
+            <X className="h-3.5 w-3.5 text-slate-600" />
+          </button>
+
+          <div
+            style={{
+              borderColor: selected ? "#0f172a" : "#cbd5e1",
+            }}
+            className="pointer-events-auto flex items-center gap-1.5 rounded-lg border bg-white px-2 py-1 text-xs shadow-sm"
+          >
+            {isEditing ? (
+              <div className="relative flex items-center gap-1">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={tempLabel}
+                  onChange={(e) => setTempLabel(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onBlur={handleBlur}
+                  className="w-20 rounded border border-blue-500 bg-white px-1 text-center text-xs outline-none"
+                  aria-label="Edit measurement value"
+                  maxLength={20}
+                />
+                <button
+                  onClick={handleCloseEdit}
+                  onMouseDown={(e) => e.preventDefault()}
+                  aria-label="Cancel editing"
+                  className="flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-gray-500 text-white shadow-sm hover:bg-gray-600"
+                  type="button"
+                >
+                  <X className="h-2 w-2" />
+                </button>
+              </div>
+            ) : (
+              <>
+                <span
+                  onClick={handleLabelClick}
+                  className="cursor-pointer hover:underline"
+                >
+                  {displayValue}
+                </span>
+              </>
+            )}
+          </div>
         </div>
       </EdgeLabelRenderer>
     </>
@@ -94,46 +444,260 @@ function MeasureEdge(props: EdgeProps) {
 
 const edgeTypes = { measure: MeasureEdge };
 
-// ---------- Custom Node (SVG icon + hidden handles) ----------
-const handleStyle: React.CSSProperties = {
-  width: 8,
-  height: 8,
-  borderRadius: 4,
-  background: "#64748b",
-  border: "1px solid #334155",
-  opacity: 0.0001, // effectively hidden but connectable
-};
+export interface IEquipmentNodeProps {
+  data: TEquipmentData;
+  id: string;
+  selected: boolean;
+}
 
-function EquipmentNode({ data }: { data: EquipmentData }) {
+function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
+  const { deleteElements, setNodes } = useReactFlow();
+  const [isLabelEditing, setIsLabelEditing] = useState(false);
+  const [tempLabel, setTempLabel] = useState(data.label);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const width = data.width ?? undefined;
+  const height = data.height ?? undefined;
+
   const icon = useMemo(() => {
+    const iconProps = { width, height };
+
     switch (data.kind) {
       case "drumkit":
-        return <DrumkitIcon className="scale-200" />;
+        return <DrumkitIcon {...iconProps} />;
       case "amp":
-        return <AmpIcon />;
+        return <AmpIcon {...iconProps} />;
       case "monitor":
-        return <MonitorIcon />;
+        return <MonitorIcon {...iconProps} />;
       case "mic-stand":
-        return <MicStandIcon />;
+        return <MicStandIcon {...iconProps} />;
       case "power-extension":
-        return <PowerExtensionIcon />;
+        return <PowerExtensionIcon {...iconProps} />;
       case "di-box":
-        return <DIBoxIcon />;
+        return <DIBoxIcon {...iconProps} />;
       default:
         return null;
     }
   }, [data.kind]);
 
+  const rotation = data.rotation ?? 0;
+
+  useEffect(() => {
+    if (isLabelEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isLabelEditing]);
+
+  const handleDelete = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      deleteElements({ nodes: [{ id }] });
+    },
+    [deleteElements, id]
+  );
+
+  const handleRotate = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      const newRotation = (rotation + 90) % 360;
+
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                rotation: newRotation,
+              },
+            };
+          }
+          return node;
+        })
+      );
+    },
+    [rotation, setNodes, id]
+  );
+
+  const handleLabelClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setIsLabelEditing(true);
+      setTempLabel(data.label);
+    },
+    [data.label]
+  );
+
+  const handleResize = useCallback(
+    (_event: unknown, params: { width: number; height: number }) => {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              // Update actual node dimensions
+              width: params.width,
+              height: params.height,
+              // Also update data for persistence
+              data: {
+                ...node.data,
+                width: params.width,
+                height: params.height,
+              },
+            };
+          }
+          return node;
+        })
+      );
+    },
+    [setNodes, id]
+  );
+
+  const saveLabel = useCallback(() => {
+    const trimmedLabel = tempLabel.trim();
+    if (trimmedLabel && trimmedLabel !== data.label) {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                label: trimmedLabel,
+              },
+            };
+          }
+          return node;
+        })
+      );
+    }
+    setIsLabelEditing(false);
+  }, [tempLabel, data.label, setNodes, id]);
+
+  const cancelEdit = useCallback(() => {
+    setTempLabel(data.label);
+    setIsLabelEditing(false);
+  }, [data.label]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        saveLabel();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        cancelEdit();
+      }
+    },
+    [saveLabel, cancelEdit]
+  );
+
+  const handleBlur = useCallback(() => {
+    saveLabel();
+  }, [saveLabel]);
+
+  const handleCloseEdit = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      cancelEdit();
+    },
+    [cancelEdit]
+  );
+
   return (
     <>
-      {icon}
-      <span style={{ fontSize: 10, color: "#0f172a" }}>{data.label}</span>
+      {/* <NodeResizer
+        color="green"
+        isVisible={selected}
+        minWidth={100}
+        minHeight={30}
+        onResize={handleResize}
+        keepAspectRatio
+      /> */}
 
-      {/* hidden handles enable draw-to-measure */}
-      <Handle type="source" position={Position.Right} style={handleStyle} />
-      <Handle type="target" position={Position.Left} style={handleStyle} />
-      <Handle type="source" position={Position.Bottom} style={handleStyle} />
-      <Handle type="target" position={Position.Top} style={handleStyle} />
+      <div
+        className="group relative"
+        style={{
+          width: width ? `${width}px` : "100%",
+          height: height ? `${height}px` : "100%",
+        }}
+      >
+        <button
+          onClick={handleRotate}
+          aria-label={`Rotate ${data.label}`}
+          className="absolute -right-2 -top-2 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white opacity-0 shadow-md transition-opacity hover:bg-blue-600 group-hover:opacity-100"
+        >
+          <RotateCw className="h-2 w-2" />
+        </button>
+
+        <button
+          onClick={handleDelete}
+          aria-label={`Delete ${data.label}`}
+          className="absolute -right-2 -top-5 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white opacity-0 shadow-md transition-opacity hover:bg-red-600 group-hover:opacity-100"
+        >
+          <X className="h-2 w-2" />
+        </button>
+
+        <div
+          style={{ transform: `rotate(${rotation}deg)` }}
+          className="flex flex-col items-center transition-transform duration-200 ease-in-out"
+        >
+          {icon}
+
+          {isLabelEditing ? (
+            <div className="relative flex items-center gap-1">
+              <input
+                ref={inputRef}
+                type="text"
+                value={tempLabel}
+                onChange={(e) => setTempLabel(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+                className="w-16 rounded border border-blue-500 bg-white px-1 text-center text-[8px] text-slate-900 outline-none"
+                aria-label="Edit equipment label"
+                maxLength={50}
+              />
+              <button
+                onClick={handleCloseEdit}
+                onMouseDown={(e) => e.preventDefault()}
+                aria-label="Cancel editing"
+                className="flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-gray-500 text-white shadow-sm hover:bg-gray-600"
+              >
+                <X className="h-2 w-2" />
+              </button>
+            </div>
+          ) : (
+            <span
+              onClick={handleLabelClick}
+              className="cursor-pointer text-[10px] text-slate-900 hover:underline"
+            >
+              {data.label}
+            </span>
+          )}
+        </div>
+
+        <Handle
+          type="source"
+          position={Position.Right}
+          className="bg-red !h-full !w-2 opacity-0"
+        />
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="bg-red !h-full !w-2 opacity-0"
+        />
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          className="!h-2 !w-full bg-none opacity-0"
+        />
+        <Handle
+          type="target"
+          position={Position.Top}
+          className="!h-2 !w-full bg-none opacity-0"
+        />
+      </div>
     </>
   );
 }
@@ -141,7 +705,34 @@ function EquipmentNode({ data }: { data: EquipmentData }) {
 const nodeTypes = { equipment: EquipmentNode };
 
 // ---------- DnD Palette ----------
-function PaletteItem({ kind, label }: { kind: EquipmentType; label: string }) {
+function PaletteItem({
+  kind,
+  label,
+  onAddNode,
+}: {
+  kind: TEquipmentType;
+  label: string;
+  onAddNode: (kind: TEquipmentType) => void;
+}) {
+  const icon = () => {
+    switch (kind) {
+      case "drumkit":
+        return <DrumkitIcon width={50} height={50} />;
+      case "amp":
+        return <AmpIcon width={50} height={50} />;
+      case "monitor":
+        return <MonitorIcon width={50} height={50} />;
+      case "mic-stand":
+        return <MicStandIcon width={50} height={50} />;
+      case "power-extension":
+        return <PowerExtensionIcon width={50} height={50} />;
+      case "di-box":
+        return <DIBoxIcon width={50} height={50} />;
+      default:
+        return null;
+    }
+  };
+
   const onDragStart = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.dataTransfer.setData("application/reactflow", kind);
@@ -150,46 +741,137 @@ function PaletteItem({ kind, label }: { kind: EquipmentType; label: string }) {
     [kind]
   );
 
+  const handleClick = useCallback(() => {
+    onAddNode(kind);
+  }, [kind, onAddNode]);
+
   return (
     <div
       draggable
       onDragStart={onDragStart}
-      style={{
-        fontSize: 12,
-        padding: "6px 8px",
-        border: "1px solid #e2e8f0",
-        borderRadius: 8,
-        background: "white",
-        cursor: "grab",
-      }}
+      onClick={handleClick}
+      className="justify-items-end-safe flex cursor-grab items-center gap-4 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs"
     >
-      {label}
+      {icon()} <span className="font-bold"> {label}</span>
     </div>
   );
 }
 
-function Palette() {
+interface IPaletteProps {
+  onAddNode: (kind: TEquipmentType) => void;
+}
+
+function Palette({ onAddNode }: IPaletteProps) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        event.target instanceof Node &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  const handleAddNode = (kind: TEquipmentType) => {
+    onAddNode(kind);
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gap: 8,
-        gridAutoRows: "min-content",
-      }}
-    >
-      <PaletteItem kind="drumkit" label="Drumkit" />
-      <PaletteItem kind="monitor" label="Monitor" />
-      <PaletteItem kind="amp" label="Amp" />
-      <PaletteItem kind="mic-stand" label="Mic Stand" />
-      <PaletteItem kind="power-extension" label="Power Strip" />
-      <PaletteItem kind="di-box" label="DI Box" />
-    </div>
+    <>
+      {/* Mobile Dropdown */}
+      <div className="relative md:hidden" ref={dropdownRef}>
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="flex w-full items-center justify-between rounded-lg border border-slate-400/90 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"
+          aria-expanded={isDropdownOpen}
+          aria-haspopup="true"
+        >
+          <span>Add Equipment</span>
+          <svg
+            className={`h-5 w-5 transition-transform ${
+              isDropdownOpen ? "rotate-180" : ""
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        {isDropdownOpen && (
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-lg border border-slate-400 bg-white shadow-lg">
+            <div className="grid auto-rows-min gap-2 p-2">
+              <PaletteItem
+                kind="drumkit"
+                label="Drumkit"
+                onAddNode={handleAddNode}
+              />
+              <PaletteItem
+                kind="monitor"
+                label="Monitor"
+                onAddNode={handleAddNode}
+              />
+              <PaletteItem kind="amp" label="Amp" onAddNode={handleAddNode} />
+              <PaletteItem
+                kind="mic-stand"
+                label="Mic Stand"
+                onAddNode={handleAddNode}
+              />
+              <PaletteItem
+                kind="power-extension"
+                label="Power Strip"
+                onAddNode={handleAddNode}
+              />
+              {/* <PaletteItem
+                kind="di-box"
+                label="DI Box"
+                onAddNode={handleAddNode}
+              /> */}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Grid */}
+      <div className="hidden md:grid md:auto-rows-min md:gap-2">
+        <PaletteItem kind="drumkit" label="Drumkit" onAddNode={onAddNode} />
+        <PaletteItem kind="monitor" label="Monitor" onAddNode={onAddNode} />
+        <PaletteItem kind="amp" label="Amp" onAddNode={onAddNode} />
+        <PaletteItem kind="mic-stand" label="Mic Stand" onAddNode={onAddNode} />
+        <PaletteItem
+          kind="power-extension"
+          label="Power Strip"
+          onAddNode={onAddNode}
+        />
+        <PaletteItem kind="di-box" label="DI Box" onAddNode={onAddNode} />
+      </div>
+    </>
   );
 }
 
 // ---------- Main Canvas ----------
 export default function StagePlanCanvas() {
-  const [nodes, setNodes] = useState<Node<EquipmentData>[]>([
+  const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
     {
       id: nanoid(),
       type: "equipment",
@@ -206,7 +888,7 @@ export default function StagePlanCanvas() {
 
   const [edges, setEdges] = useState<Edge[]>([]);
 
-  const rfRef = useRef<ReactFlowInstance<Node<EquipmentData>> | null>(null);
+  const rfRef = useRef<ReactFlowInstance<Node<TEquipmentData>> | null>(null);
 
   const [pxPerMeter, setPxPerMeter] = useState<number>(DEFAULT_PX_PER_METER);
   const flowRef = useRef<HTMLDivElement | null>(null);
@@ -223,7 +905,7 @@ export default function StagePlanCanvas() {
   const onNodesChange = useCallback(
     (changes: NodeChange[]) =>
       setNodes((nds) =>
-        applyNodeChanges<Node<EquipmentData>>(changes as any, nds)
+        applyNodeChanges<Node<TEquipmentData>>(changes as any, nds)
       ),
     []
   );
@@ -249,7 +931,7 @@ export default function StagePlanCanvas() {
     e.preventDefault();
     const kind = e.dataTransfer.getData(
       "application/reactflow"
-    ) as EquipmentType;
+    ) as TEquipmentType;
     if (!kind || !rfRef.current) return;
 
     // v12: use screenToFlowPosition with raw client coords
@@ -258,10 +940,11 @@ export default function StagePlanCanvas() {
       y: e.clientY,
     });
 
-    const node: Node<EquipmentData> = {
+    const node: Node<TEquipmentData> = {
       id: nanoid(),
       type: "equipment",
       position,
+
       data: {
         kind,
         label:
@@ -285,6 +968,20 @@ export default function StagePlanCanvas() {
     touchAction: "none", // avoid browser-native panning conflicting with canvas
   };
 
+  const handleAddNode = useCallback(
+    (kind: TEquipmentType) => {
+      const newNode: Node = {
+        id: `${kind}-${Date.now()}`,
+        type: "equipment",
+        position: { x: 420, y: 160 },
+        data: { kind, label: kind },
+      };
+
+      setNodes((prevNodes) => [...prevNodes, newNode as any]);
+    },
+    [setNodes]
+  );
+
   return (
     <div className="flex flex-col gap-2 md:flex-row md:justify-between">
       {/* Sidebar */}
@@ -300,7 +997,7 @@ export default function StagePlanCanvas() {
         }}
       >
         <div style={{ display: "grid", gap: 6 }}>
-          <strong style={{ fontSize: 12, color: "#0f172a" }}>Scale</strong>
+          {/* <strong style={{ fontSize: 12, color: "#0f172a" }}>Scale</strong>
           <label
             style={{
               display: "flex",
@@ -324,7 +1021,8 @@ export default function StagePlanCanvas() {
               }}
             />
             <span>px / meter</span>
-          </label>
+          </label> */}
+
           <span style={{ fontSize: 12, color: "#475569" }}>
             Connect two nodes to show distance.
           </span>
@@ -333,9 +1031,9 @@ export default function StagePlanCanvas() {
         <div style={{ height: 1, background: "#e2e8f0" }} />
         <div style={{ display: "grid", gap: 8 }}>
           <strong style={{ fontSize: 12, color: "#0f172a" }}>Equipment</strong>
-          <Palette />
+          <Palette onAddNode={handleAddNode} />
           <span style={{ fontSize: 12, color: "#475569" }}>
-            Drag from here into the canvas.
+            Drag from here into the canvas on click on mobile.
           </span>
         </div>
       </div>
@@ -348,7 +1046,7 @@ export default function StagePlanCanvas() {
         onDragOver={onDragOver}
         className="md:flex-1"
       >
-        <ReactFlow<Node<EquipmentData>>
+        <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
           nodes={nodes}
           edges={edges}
@@ -372,7 +1070,19 @@ export default function StagePlanCanvas() {
           snapGrid={[10, 10]}
         >
           <MiniMap pannable zoomable className="scale-70 md:scale-100" />
-          <Background gap={20} />
+          <Background
+            id="1"
+            gap={10}
+            color="#f1f1f1"
+            variant={BackgroundVariant.Lines}
+          />
+
+          <Background
+            id="2"
+            gap={100}
+            color="#ccc"
+            variant={BackgroundVariant.Lines}
+          />
           <Controls position="bottom-right" />
         </ReactFlow>
       </div>
