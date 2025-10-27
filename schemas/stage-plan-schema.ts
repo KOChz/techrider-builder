@@ -32,7 +32,6 @@ export const measurement = z.object({
 
 export const stagePlanConfigSchema = z.object({
   nodes: z.array(zStageNode),
-  measurements: z.array(measurement),
   version: z.number().int().optional(),
 });
 

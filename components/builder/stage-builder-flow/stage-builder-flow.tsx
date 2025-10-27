@@ -40,6 +40,8 @@ import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-ic
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
 import { RotateCw, X } from "lucide-react";
 import { getStraightPath } from "reactflow";
+import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 // ---------- Domain types ----------
 export type TEquipmentType =
@@ -48,7 +50,12 @@ export type TEquipmentType =
   | "monitor"
   | "mic-stand"
   | "power-extension"
-  | "di-box";
+  | "di-box"
+  | "equipment"
+  | "microphone"
+  | "instrument"
+  | "speaker"
+  | "custom";
 
 export type TEquipmentData = {
   label: string;
@@ -193,8 +200,11 @@ export function calculateSnappedCoordinates(
   };
 }
 
-interface IMeasureEdgeData extends Edge {
-  data: { customLabel: string };
+export type TMeasurmentData = {
+  customLabel?: string;
+};
+export interface IMeasureEdgeData extends Edge {
+  data: TMeasurmentData;
 }
 
 function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
@@ -329,27 +339,6 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
       cancelEdit();
     },
     [cancelEdit]
-  );
-
-  const handleResetLabel = useCallback(
-    (event: React.MouseEvent) => {
-      event.stopPropagation();
-
-      setEdges((edges) =>
-        edges.map((edge) =>
-          edge.id === id
-            ? {
-                ...edge,
-                data: {
-                  ...edge.data,
-                  customLabel: undefined,
-                },
-              }
-            : edge
-        )
-      );
-    },
-    [setEdges, id]
   );
 
   const [edgePath] = getStraightPath({
@@ -881,82 +870,109 @@ function Palette({ onAddNode }: IPaletteProps) {
 }
 
 // ---------- Main Canvas ----------
-export default function StagePlanCanvas() {
-  const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
-    {
-      id: "up-stage",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
+export default function StagePlanCanvas({
+  stagePlanConfig,
+  setStagePlanConfig,
+}: {
+  stagePlanConfig?: IStagePlanFlowConfig;
+  setStagePlanConfig: (config: IStagePlanFlowConfig) => void;
+}) {
+  const [nodes, setNodes] = useState<Node<TEquipmentData>[]>(
+    stagePlanConfig?.nodes || [
+      {
+        id: "up-stage",
+        type: "annotation",
+        draggable: false,
+        selectable: false,
 
-      data: {
-        kind: "amp",
-        label: "Upstage",
+        data: {
+          kind: "amp",
+          label: "Upstage",
+        },
+        position: { x: -0, y: -200 },
       },
-      position: { x: -0, y: -200 },
-    },
-    {
-      id: "down-stage",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
+      {
+        id: "down-stage",
+        type: "annotation",
+        draggable: false,
+        selectable: false,
 
-      data: {
-        kind: "amp",
-        label: "Downstage / Audience",
+        data: {
+          kind: "amp",
+          label: "Downstage / Audience",
+        },
+        position: { x: 0, y: 400 },
       },
-      position: { x: 0, y: 400 },
-    },
-    {
-      id: "stage-left",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
+      {
+        id: "stage-left",
+        type: "annotation",
+        draggable: false,
+        selectable: false,
 
-      data: {
-        kind: "amp",
-        label: "Stage Left",
-        rotation: -90,
+        data: {
+          kind: "amp",
+          label: "Stage Left",
+          rotation: -90,
+        },
+        position: { x: -400, y: 200 },
       },
-      position: { x: -400, y: 200 },
-    },
-    {
-      id: "stage-right",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
+      {
+        id: "stage-right",
+        type: "annotation",
+        draggable: false,
+        selectable: false,
 
-      data: {
-        kind: "amp",
-        label: "Stage Right",
-        rotation: 90,
+        data: {
+          kind: "amp",
+          label: "Stage Right",
+          rotation: 90,
+        },
+        position: { x: 400, y: 200 },
       },
-      position: { x: 400, y: 200 },
-    },
-    {
-      id: nanoid(),
-      type: "equipment",
-      position: { x: -120, y: 0 },
-      data: { label: "Drumkit", kind: "drumkit" },
-    },
-    {
-      id: nanoid(),
-      type: "equipment",
-      position: { x: 80, y: 35 },
-      data: { label: "Bass Amp", kind: "amp" },
-    },
-  ]);
+      {
+        id: nanoid(),
+        type: "equipment",
+        position: { x: -120, y: 0 },
+        data: { label: "Drumkit", kind: "drumkit" },
+      },
+      {
+        id: nanoid(),
+        type: "equipment",
+        position: { x: 80, y: 35 },
+        data: { label: "Bass Amp", kind: "amp" },
+      },
+    ]
+  );
 
-  const [edges, setEdges] = useState<Edge[]>([]);
+  const [edges, setEdges] = useState<Edge<TMeasurmentData>[]>(
+    stagePlanConfig?.edges || []
+  );
+
+  const saveStagePlan = useDebouncedCallback(
+    (n: Node<TEquipmentData>[], e: Edge<TMeasurmentData>[]) => {
+      const config: IStagePlanFlowConfig = {
+        ...stagePlanConfig!,
+        nodes: n,
+        edges: e,
+      };
+      console.log("🚀 ~ StagePlanCanvas ~ config:", config);
+
+      setStagePlanConfig(config);
+    },
+    800
+  );
+
+  useEffect(() => {
+    saveStagePlan(nodes, edges);
+  }, [nodes, edges, saveStagePlan]);
 
   const rfRef = useRef<ReactFlowInstance<Node<TEquipmentData>> | null>(null);
 
   const [pxPerMeter, setPxPerMeter] = useState<number>(DEFAULT_PX_PER_METER);
   const flowRef = useRef<HTMLDivElement | null>(null);
-  const rf = useReactFlow();
 
   // reflect current scale into a CSS var for the MeasureEdge
-  React.useEffect(() => {
+  useEffect(() => {
     document.documentElement.style.setProperty(
       "--px-per-meter",
       String(pxPerMeter)
@@ -1056,32 +1072,6 @@ export default function StagePlanCanvas() {
         }}
       >
         <div style={{ display: "grid", gap: 6 }}>
-          {/* <strong style={{ fontSize: 12, color: "#0f172a" }}>Scale</strong>
-          <label
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              fontSize: 12,
-            }}
-          >
-            <input
-              type="number"
-              min={10}
-              step={5}
-              value={pxPerMeter}
-              onChange={(e) => setPxPerMeter(Number(e.target.value) || 10)}
-              style={{
-                width: 100,
-                padding: "6px 8px",
-                border: "1px solid #cbd5e1",
-                borderRadius: 8,
-                background: "white",
-              }}
-            />
-            <span>px / meter</span>
-          </label> */}
-
           <span style={{ fontSize: 12, color: "#475569" }}>
             Connect two nodes to show distance.
           </span>
@@ -1094,6 +1084,22 @@ export default function StagePlanCanvas() {
           <span style={{ fontSize: 12, color: "#475569" }}>
             Drag from here into the canvas on click on mobile.
           </span>
+
+          {/* <button
+            onClick={() => {
+              const config: IStagePlanFlowConfig = {
+                ...stagePlanConfig!,
+                nodes,
+                edges,
+              };
+
+              console.log("🚀 ~ StagePlanCanvas ~ config:", config);
+              setStagePlanConfig(config);
+            }}
+            className="cursor-pointer rounded-xl bg-green-700/80 px-4 py-3 text-white shadow-sm"
+          >
+            Save Stage Plan
+          </button> */}
         </div>
       </div>
 

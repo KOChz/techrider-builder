@@ -72,7 +72,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <StagePlan config={project.stagePlanConfig} />
+      {/* <StagePlan config={project.stagePlanConfig} /> */}
 
       <footer className="w-full" id="contact">
         <h3>Get in Touch</h3>

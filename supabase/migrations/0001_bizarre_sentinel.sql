@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ALTER COLUMN "stage_plan_config" SET DEFAULT '{"nodes":[],"version":1}'::jsonb;

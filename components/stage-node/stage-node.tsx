@@ -1,4 +1,4 @@
-import { TStageNodeType } from "@/schemas/stage-plan";
+import { TStageNodeType } from "@/schemas/stage-plan-schema";
 import { StageNodeHandle } from "../stage-node-handle/stage-node-handle";
 import { equipmentConfig } from "../stage-plan/stage-plan";
 

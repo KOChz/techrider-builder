@@ -1,6 +1,6 @@
 "use client";
 
-import { TStageNodeType } from "@/schemas/stage-plan";
+import { TStageNodeType } from "@/schemas/stage-plan-schema";
 import * as React from "react";
 
 // exclude "text" on purpose—no SVG symbol.

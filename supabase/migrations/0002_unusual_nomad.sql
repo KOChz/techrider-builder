@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ALTER COLUMN "stage_plan_config" DROP NOT NULL;

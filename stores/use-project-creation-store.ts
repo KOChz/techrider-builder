@@ -2,67 +2,78 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
-import { TStageNodeBuilder } from "@/components/builder/stage-node-builder/stage-node-builder";
 import { TMeasurement } from "@/components/builder/dimension-line/dimension-line";
-import { TStagePlanConfig } from "@/schemas/stage-plan";
+import {
+  TEquipmentData,
+  TMeasurmentData,
+} from "@/components/builder/stage-builder-flow/stage-builder-flow";
+import { Edge, type Node } from "@xyflow/react";
+
+export interface IStagePlanFlowConfig {
+  nodes: Node<TEquipmentData>[];
+  edges: Edge<TMeasurmentData>[];
+  version?: number;
+  position: { x: number; y: number };
+}
 
 interface IProjectStore {
-  // ========================================
-  // State Properties
-  // ========================================
   name: string;
   notes: string;
   isPublic: boolean;
-  stagePlanConfig: TStagePlanConfig;
+  stagePlanConfig: IStagePlanFlowConfig;
   members: TBandMemberBuilder[];
 
-  // ========================================
-  // Basic Setters
-  // ========================================
   setName: (name: string) => void;
   setNotes: (notes: string) => void;
-  setIsPublic: (isPublic: boolean) => void;
-  setStagePlanConfig: (config: TStagePlanConfig) => void;
 
-  // ========================================
-  // Stage Plan Node Operations
-  // ========================================
-  addNode: (node: TStageNodeBuilder) => void;
+  setIsPublic: (isPublic: boolean) => void;
+  setStagePlanConfig: (config: IStagePlanFlowConfig) => void;
+
+  addNode: (node: Node<TEquipmentData>[]) => void;
   updateNodeLabel: (nodeId: string, newLabel: string) => void;
   deleteNode: (nodeId: string) => void;
 
-  // ========================================
-  // Stage Plan Measurement Operations
-  // ========================================
-  addMeasurement: (measurement: TMeasurement) => void; // ← Add this
+  addMeasurement: (measurement: TMeasurement) => void;
   updateMeasurementDistance: (measurementId: number, distance: string) => void;
   deleteMeasurement: (measurementId: number) => void;
 
-  // ========================================
-  // Member Operations
-  // ========================================
   addMember: (member: TBandMemberBuilder) => void;
   updateMember: (id: string, member: TBandMemberBuilder) => void;
   removeMember: (id: string) => void;
 
   initializeWithProject: (projectData: Partial<IProjectStore>) => void;
-
-  // ========================================
-  // Form Control
-  // ========================================
   resetForm: () => void;
 }
 
-const getInitialStore = () => ({
+const getInitialStore = (): Omit<
+  IProjectStore,
+  | "setName"
+  | "setNotes"
+  | "setIsPublic"
+  | "setStagePlanConfig"
+  | "addNode"
+  | "updateNodeLabel"
+  | "deleteNode"
+  | "addMeasurement"
+  | "updateMeasurementDistance"
+  | "deleteMeasurement"
+  | "addMember"
+  | "updateMember"
+  | "removeMember"
+  | "initializeWithProject"
+  | "resetForm"
+  | "setEdges"
+> => ({
   name: "",
   notes: "",
   isPublic: false,
   stagePlanConfig: {
     nodes: [],
-    measurements: [],
+    edges: [],
     version: 1,
-  } as TStagePlanConfig,
-  members: [] as TBandMemberBuilder[],
+    position: { x: 100, y: 100 },
+  },
+  members: [],
 });
 
 export const useProjectStore = create<IProjectStore>()(
@@ -92,9 +103,6 @@ export const useProjectStore = create<IProjectStore>()(
         set((state) => ({
           stagePlanConfig: {
             ...state.stagePlanConfig,
-            measurements: state.stagePlanConfig.measurements.map((m) =>
-              m.id === measurementId ? { ...m, customDistance: distance } : m
-            ),
           },
         })),
 
@@ -103,9 +111,6 @@ export const useProjectStore = create<IProjectStore>()(
           stagePlanConfig: {
             ...state.stagePlanConfig,
             nodes: state.stagePlanConfig.nodes.filter((n) => n.id !== nodeId),
-            measurements: state.stagePlanConfig.measurements.filter(
-              (m) => m.startNodeId !== nodeId && m.endNodeId !== nodeId
-            ),
           },
         })),
 
@@ -113,9 +118,6 @@ export const useProjectStore = create<IProjectStore>()(
         set((state) => ({
           stagePlanConfig: {
             ...state.stagePlanConfig,
-            measurements: state.stagePlanConfig.measurements.filter(
-              (m) => m.id !== measurementId
-            ),
           },
         })),
 
@@ -128,7 +130,6 @@ export const useProjectStore = create<IProjectStore>()(
         set((state) => ({
           stagePlanConfig: {
             ...state.stagePlanConfig,
-            measurements: [...state.stagePlanConfig.measurements, measurement],
           },
         })),
 
@@ -136,7 +137,6 @@ export const useProjectStore = create<IProjectStore>()(
         set((state) => ({
           stagePlanConfig: {
             ...state.stagePlanConfig,
-            nodes: [...state.stagePlanConfig.nodes, node],
           },
         })),
 

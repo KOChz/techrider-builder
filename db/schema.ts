@@ -1,5 +1,5 @@
 import { TEquipmentItemBuilder } from "@/components/builder/member-card-builder/member-card-builder";
-import { TStagePlanConfig } from "@/schemas/stage-plan";
+import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { relations, sql } from "drizzle-orm";
 import {
   pgTable,
@@ -33,10 +33,11 @@ export const projects = pgTable(
       .notNull()
       .references(() => profiles.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    // Updated to match your actual data structure
     stagePlanConfig: jsonb("stage_plan_config")
-      .$type<TStagePlanConfig>()
-      .notNull()
-      .default(sql`'{"nodes":[],"measurements":[],"version":1}'::jsonb`),
+      .$type<IStagePlanFlowConfig>()
+      .default(sql`'{"nodes":[],"version":1}'::jsonb`),
+
     isPublic: boolean("is_public").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -44,9 +45,7 @@ export const projects = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
-
     slug: text("slug").notNull().unique(),
-
     notes: text("notes"),
   },
   (t) => ({

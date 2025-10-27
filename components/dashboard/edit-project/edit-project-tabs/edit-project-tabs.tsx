@@ -9,9 +9,12 @@ import { BandInfoContent } from "@/components/builder/builder-tabs-content/dand-
 import { MembersContent } from "@/components/builder/builder-tabs-content/members-content/members-content";
 import { StagePlanBuilderContent } from "@/components/builder/builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "@/components/builder/builder-tabs-content/settings-content/settings-content";
-import { useProjectStore } from "@/stores/use-project-creation-store";
+import {
+  IStagePlanFlowConfig,
+  useProjectStore,
+} from "@/stores/use-project-creation-store";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
-import { TStagePlanConfig } from "@/schemas/stage-plan";
+import { TStagePlanConfig } from "@/schemas/stage-plan-schema";
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 import { useEditProject } from "@/hooks/use-edit-project";
 import { CREATE_PROJECT_TABS } from "@/components/builder/project-creation-tabs/project-creation-tabs";
@@ -52,7 +55,7 @@ export default function EditProjectTabs({
       name: project.name,
       notes: project.notes ?? "",
       isPublic: project.isPublic,
-      stagePlanConfig: project.stagePlanConfig as TStagePlanConfig,
+      stagePlanConfig: project.stagePlanConfig as IStagePlanFlowConfig,
       members: project.members as TBandMemberBuilder[],
     });
 

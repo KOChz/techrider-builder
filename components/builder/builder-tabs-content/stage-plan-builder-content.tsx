@@ -1,17 +1,12 @@
 "use client";
 
-import { useProjectStore } from "@/stores/use-project-creation-store";
-import StagePlanBuilder from "../stage-plan-builder/stage-plan-builder";
-import { TStagePlanConfig } from "@/schemas/stage-plan";
-import StagePlanCanvas from "../stage-builder-flow/stage-builder-flow";
 import { ReactFlowProvider } from "@xyflow/react";
 
-export function StagePlanBuilderContent() {
-  // const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
+import { useProjectStore } from "@/stores/use-project-creation-store";
+import StagePlanCanvas from "../stage-builder-flow/stage-builder-flow";
 
-  // const handleConfigChange = (config: TStagePlanConfig) => {
-  //   setStagePlanConfig(config);
-  // };
+export function StagePlanBuilderContent() {
+  const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
 
   return (
     <div className="space-y-4">
@@ -22,12 +17,11 @@ export function StagePlanBuilderContent() {
 
       <div className="select-none overscroll-none">
         <ReactFlowProvider>
-          <StagePlanCanvas />
+          <StagePlanCanvas
+            stagePlanConfig={stagePlanConfig}
+            setStagePlanConfig={setStagePlanConfig}
+          />
         </ReactFlowProvider>
-        {/* <StagePlanBuilder
-          config={stagePlanConfig}
-          onConfigChange={handleConfigChange}
-        /> */}
       </div>
     </div>
   );

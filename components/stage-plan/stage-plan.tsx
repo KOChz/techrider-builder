@@ -8,9 +8,9 @@ import { MonitorIcon } from "../stage-plan-icons/monitor-icon/monitop-icon";
 import MicStandIcon from "../stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "../stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "../stage-plan-icons/di-box-icon/di-box-icon";
-import { v4 as uuidv4 } from "uuid";
+
 import { StageNode, StageNodeComponent } from "../stage-node/stage-node";
-import { TStagePlanConfig } from "@/schemas/stage-plan";
+import { TStagePlanConfig } from "@/schemas/stage-plan-schema";
 import {
   DimensionLine,
   TMeasurement,
@@ -111,9 +111,8 @@ const normalizeAngle = (angle: number): number => {
 
 export default function StagePlan({ config }: { config: TStagePlanConfig }) {
   const [nodes, setNodes] = useState<StageNode[]>(config.nodes);
-  const [measurements, setMeasurements] = useState<TMeasurement[]>(
-    config.measurements
-  );
+  const [measurements, setMeasurements] = useState<TMeasurement[]>();
+  // config.measurements
   const [viewBox, setViewBox] = useState<ViewBox>({
     x: -500,
     y: -500,
@@ -564,7 +563,7 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
               />
             ))}
 
-            {measurements.map((measurement) => {
+            {/* {measurements.map((measurement) => {
               const startNode = nodes.find(
                 (n) => n.id === measurement.startNodeId
               );
@@ -582,7 +581,7 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
                   onLeave={() => setHoveredMeasurementId(null)}
                 />
               );
-            })}
+            })} */}
           </svg>
         </div>
 

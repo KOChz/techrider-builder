@@ -111,7 +111,7 @@ export async function editProjectById(
     if (input.notes !== undefined) updateData.notes = input.notes;
     if (input.isPublic !== undefined) updateData.isPublic = input.isPublic;
     if (input.stagePlanConfig !== undefined)
-      updateData.stagePlanConfig = input.stagePlanConfig;
+      updateData.stagePlanConfig = input.stagePlanConfig as any;
 
     updateData.updatedAt = new Date();
 

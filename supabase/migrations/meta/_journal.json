@@ -8,6 +8,20 @@
       "when": 1761165020675,
       "tag": "0000_slim_veda",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1761597050004,
+      "tag": "0001_bizarre_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761598196051,
+      "tag": "0002_unusual_nomad",
+      "breakpoints": true
     }
   ]
 }

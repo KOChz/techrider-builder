@@ -1,6 +1,9 @@
-import ProjectCreationTabs from "@/components/builder/project-creation-tabs/project-creation-tabs";
-import Link from "next/link";
+"use client";
+
 import React from "react";
+import { ReactFlowProvider } from "@xyflow/react";
+
+import ProjectCreationTabs from "@/components/builder/project-creation-tabs/project-creation-tabs";
 
 export default function CreateNewProjectPage() {
   return (

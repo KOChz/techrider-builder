@@ -16,6 +16,7 @@ import {
 import { stagePlanConfigSchema, TStagePlanConfig } from "@/types/zod-types";
 import { TSupabaseUserMetadata } from "@/types/user-types";
 import { slugify } from "@/lib/utils/slugify";
+import { v4 as uuidv4 } from "uuid";
 
 const equipmentExampleSchema = z.object({
   title: z.string(),
@@ -35,7 +36,7 @@ const memberInputSchema = z.object({
   equipment: z.array(equipmentItemSchema).default([]),
 });
 
-const inputSchema = z.object({
+const inputEditSchema = z.object({
   name: z.string().min(1),
   notes: z.string().optional(),
   isPublic: z.boolean().optional(),
@@ -46,13 +47,17 @@ const inputSchema = z.object({
     .optional(),
 });
 
-export type TCreateNewProjectInput = z.infer<typeof inputSchema>;
+export type TCreateNewProjectInput = z.infer<typeof inputEditSchema>;
 export type TCreateNewProjectResult = {
   project: TProject & { members: TProjectMember[] };
 };
 
 export async function createNewProject(raw: TCreateNewProjectInput) {
-  const input = inputSchema.parse(raw);
+  console.log(
+    "🚀 ~ createNewProject ~ raw.stagePlanConfig?.edges:",
+    raw.stagePlanConfig?.edges
+  );
+  const input = inputEditSchema.parse(raw);
 
   const cookieStore = await cookies();
 
@@ -100,24 +105,25 @@ export async function createNewProject(raw: TCreateNewProjectInput) {
       .onConflictDoNothing();
   }
 
+  console.log("input.stagePlanConfig", input.stagePlanConfig);
+
+  const creationDate = new Date();
+
+  const project: TProject = {
+    ownerId: user.id,
+    name: input.name,
+    isPublic: !!input.isPublic,
+    slug: slugify(input.name),
+    stagePlanConfig: input.stagePlanConfig as any,
+    notes: "",
+    id: uuidv4(),
+    createdAt: creationDate,
+    updatedAt: creationDate,
+  };
+
   // Transactional write: project + members
   const createdProject = await db.transaction(async (tx) => {
-    const [proj] = await tx
-      .insert(projects)
-      .values({
-        ownerId: user.id,
-        name: input.name,
-        isPublic: input.isPublic ?? undefined,
-        slug: slugify(input.name),
-        stagePlanConfig:
-          input.stagePlanConfig ??
-          ({
-            nodes: [],
-            measurements: [],
-            version: 1,
-          } as TStagePlanConfig),
-      })
-      .returning();
+    const [proj] = await tx.insert(projects).values(project).returning();
 
     if (!proj) throw new Error("Insert failed: project not returned");
 
@@ -135,6 +141,7 @@ export async function createNewProject(raw: TCreateNewProjectInput) {
 
     return proj;
   });
+  console.log("🚀 ~ createNewProject ~ createdProject:", createdProject);
 
   // Read back with relations for a ready-to-render payload
   const fullProject = await db.query.projects.findFirst({
