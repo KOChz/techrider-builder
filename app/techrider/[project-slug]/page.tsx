@@ -113,7 +113,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <div className="px-3 md:px-40">
+      <div id="stage-plan" className="px-3 md:px-40">
         {project.stagePlanConfig && (
           <StagePlanCanvas stagePlanConfig={project.stagePlanConfig} />
         )}
