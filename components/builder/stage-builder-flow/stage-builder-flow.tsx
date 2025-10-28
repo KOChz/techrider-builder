@@ -881,7 +881,7 @@ export default function StagePlanCanvas({
   setStagePlanConfig,
 }: {
   stagePlanConfig?: IStagePlanFlowConfig;
-  setStagePlanConfig: (config: IStagePlanFlowConfig) => void;
+  setStagePlanConfig?: (config: IStagePlanFlowConfig) => void;
 }) {
   const [nodes, setNodes] = useState<Node<TEquipmentData>[]>(
     stagePlanConfig?.nodes || [
@@ -956,12 +956,13 @@ export default function StagePlanCanvas({
 
   const saveStagePlan = useDebouncedCallback(
     (n: Node<TEquipmentData>[], e: Edge<TMeasurmentData>[]) => {
+      if (!setStagePlanConfig) return;
+
       const config: IStagePlanFlowConfig = {
         ...stagePlanConfig!,
         nodes: n,
         edges: e,
       };
-      console.log("🚀 ~ StagePlanCanvas ~ config:", config);
 
       setStagePlanConfig(config);
     },
@@ -1081,34 +1082,32 @@ export default function StagePlanCanvas({
           <span style={{ fontSize: 12, color: "#475569" }}>
             Connect two nodes to show distance.
           </span>
+
+          <span
+            style={{ fontSize: 12, color: "#475569" }}
+            className="md:display-none"
+          >
+            <span className="font-bold text-green-700/90">Drag</span> from here
+            into the canvas or{" "}
+            <span className="font-bold text-green-700/90">Click</span> on
+            mobile.
+          </span>
         </div>
 
         <div style={{ height: 1, background: "#e2e8f0" }} />
         <div style={{ display: "grid", gap: 8 }}>
           <strong style={{ fontSize: 12, color: "#0f172a" }}>Equipment</strong>
           <Palette onAddNode={handleAddNode} />
-          <span style={{ fontSize: 12, color: "#475569" }}>
+
+          <span
+            style={{ fontSize: 12, color: "#475569" }}
+            className="md:hidden"
+          >
             <span className="font-bold text-green-700/90">Drag</span> from here
             into the canvas or{" "}
             <span className="font-bold text-green-700/90">Click</span> on
             mobile.
           </span>
-
-          {/* <button
-            onClick={() => {
-              const config: IStagePlanFlowConfig = {
-                ...stagePlanConfig!,
-                nodes,
-                edges,
-              };
-
-              console.log("🚀 ~ StagePlanCanvas ~ config:", config);
-              setStagePlanConfig(config);
-            }}
-            className="cursor-pointer rounded-xl bg-green-700/80 px-4 py-3 text-white shadow-sm"
-          >
-            Save Stage Plan
-          </button> */}
         </div>
       </div>
 

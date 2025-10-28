@@ -1,14 +1,15 @@
 import Link from "next/link";
 
-import StagePlan from "@/components/stage-plan/stage-plan";
 import { MemberCard } from "@/components/member-card/member-card";
 
 import { createServerClientService } from "@/lib/supabase/server";
 
 import { getProjectBySlug } from "@/app/actions/get-project-by-slug/get-project-by-slug";
 
-import "./project.css";
 import { TechRiderDropdown } from "@/components/tech-rider-dropdown/tech-rider-dropdown";
+import StagePlanCanvas from "@/components/builder/stage-builder-flow/stage-builder-flow";
+
+import "./project.css";
 
 interface IProjectPageProps {
   params: Promise<{
@@ -29,41 +30,81 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
 
   return (
     <div className="techrider-page">
-      <nav>
-        <div className="nav-container">
-          <a href="#home" className="logo">
-            {project.name}
-          </a>
+      <nav className="border-b border-gray-100 !bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            <a href="#home" className="text-3xl font-bold text-green-600">
+              {project.name}
+            </a>
 
-          <ul className="nav-links">
-            <TechRiderDropdown members={project.members} />
-
-            <li>
-              <Link href="#contact">Contact</Link>
-            </li>
-
-            {user && (
+            <ul className="flex items-center gap-8">
               <li>
-                <Link href="/dashboard/my-projects" aria-label="Home">
-                  Home
+                <TechRiderDropdown members={project.members} />
+              </li>
+
+              <li>
+                <Link
+                  href="#contact"
+                  className="text-sm font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900"
+                >
+                  Contact
                 </Link>
               </li>
-            )}
-          </ul>
+
+              {user && (
+                <li>
+                  <Link
+                    href="/dashboard/my-projects"
+                    aria-label="Home"
+                    className="text-sm font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900"
+                  >
+                    Home
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
       </nav>
 
       <section id="home" className="hero">
         <div>
-          <h1>{project.name}</h1>
-          <a href="#tech-rider" className="cta-button">
-            View Tech Rider
+          <h1 className="mb-20 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+            {project.name}
+          </h1>
+          <a
+            href="#tech-rider"
+            className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-emerald-700 to-green-700 px-8 py-4 text-2xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-500/50"
+            aria-label="Scroll to Tech Rider section"
+          >
+            <div className="relative z-10 text-white">View Tech Rider</div>
+
+            {/* Animated scroll icon */}
+            <svg
+              className="h-6 w-6 animate-bounce transition-transform group-hover:translate-y-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+
+            {/* Shine effect on hover */}
+            <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-emerald-500/80 to-green-500/80 opacity-0 blur transition-opacity duration-300 group-hover:opacity-100" />
           </a>
         </div>
       </section>
 
       <section id="tech-rider" className="container">
-        <h2 className="section-title">Technical Requirements</h2>
+        <h2 className="bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
+          Technical Requirements
+        </h2>
 
         <div className="tech-grid">
           {project.members.map((member) => (
@@ -72,7 +113,11 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      {/* <StagePlan config={project.stagePlanConfig} /> */}
+      <div className="px-0 md:px-40">
+        {project.stagePlanConfig && (
+          <StagePlanCanvas stagePlanConfig={project.stagePlanConfig} />
+        )}
+      </div>
 
       <footer className="w-full" id="contact">
         <h3>Get in Touch</h3>
