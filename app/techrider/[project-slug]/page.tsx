@@ -31,13 +31,13 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
   return (
     <div className="techrider-page">
       <nav className="border-b border-gray-100 !bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="mx-auto max-w-7xl px-3 py-4 md:px-6">
+          <div className="flex items-center md:justify-between">
             <a href="#home" className="text-3xl font-bold text-green-600">
               {project.name}
             </a>
 
-            <ul className="flex items-center gap-8">
+            <ul className="flex w-full scale-75 items-end gap-3 md:scale-100 md:items-center md:gap-8">
               <li>
                 <TechRiderDropdown members={project.members} />
               </li>
@@ -102,7 +102,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
       </section>
 
       <section id="tech-rider" className="container">
-        <h2 className="bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
+        <h2 className="mb-16 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
           Technical Requirements
         </h2>
 
@@ -113,7 +113,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <div className="px-0 md:px-40">
+      <div className="px-3 md:px-40">
         {project.stagePlanConfig && (
           <StagePlanCanvas stagePlanConfig={project.stagePlanConfig} />
         )}

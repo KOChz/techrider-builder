@@ -300,7 +300,7 @@
 
 .techrider-page .member-card {
   background: var(--color-surface);
-  border-radius: 8px;
+  border-radius: 18px;
   padding: var(--spacing-sm);
   transition: transform var(--transition-base),
     box-shadow var(--transition-base), border-color var(--transition-base);
@@ -325,7 +325,6 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
   border-bottom: 2px solid var(--color-border);
 }
