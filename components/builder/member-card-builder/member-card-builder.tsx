@@ -269,7 +269,7 @@ export function MemberCardBuilder({
                                 e.target.value
                               )
                             }
-                            className="flex-1 rounded-l border border-r-0 border-gray-300 px-3 py-1 text-sm placeholder-slate-500 focus:z-10 focus:border-green-500 focus:outline-none"
+                            className="flex-1 rounded-l border border-r-0 border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:z-10 focus:border-green-500 focus:outline-none"
                             placeholder="Example item"
                           />
                           <button
