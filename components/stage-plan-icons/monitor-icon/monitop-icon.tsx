@@ -9,7 +9,14 @@ export type MonitorIconProps = React.SVGProps<SVGSVGElement> & {
 
 export const MonitorIcon = React.memo(
   React.forwardRef<SVGSVGElement, MonitorIconProps>(function MonitorIcon(
-    { title = "Monitor", className, hitboxPadding = 5, ...props },
+    {
+      title = "Monitor",
+      className,
+      hitboxPadding = 5,
+      width,
+      height,
+      ...props
+    },
     ref
   ) {
     const uid = React.useId();
@@ -24,14 +31,16 @@ export const MonitorIcon = React.memo(
         role="img"
         aria-label={title}
         className={className}
+        width={width || 55 + hitboxPadding * 2}
+        height={height || 55 + hitboxPadding * 2}
         {...props}
       >
         <title>{title}</title>
         <rect
           x={-hitboxPadding}
           y={-hitboxPadding}
-          width={50 + hitboxPadding * 2}
-          height={50 + hitboxPadding * 2}
+          width={width || 70 + hitboxPadding * 2}
+          height={height || 70 + hitboxPadding * 2}
           fill="transparent"
         />
         <defs>

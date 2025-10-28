@@ -621,7 +621,7 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           <button
             onClick={handleRotate}
             aria-label={`Rotate ${data.label}`}
-            className={`absolute -right-2 -top-2 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-opacity hover:bg-blue-600 ${
+            className={`absolute -right-3 -top-1 z-10 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-opacity hover:bg-blue-600 ${
               selected ? "opacity-100" : "opacity-0 md:group-hover:opacity-100"
             }`}
           >
@@ -631,7 +631,7 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           <button
             onClick={handleDelete}
             aria-label={`Delete ${data.label}`}
-            className={`absolute -right-2 -top-5 z-10 flex h-3 w-3 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-opacity hover:bg-red-600 ${
+            className={`absolute -left-3 -top-1 z-10 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-opacity hover:bg-red-600 ${
               selected ? "opacity-100" : "opacity-0 md:group-hover:opacity-100"
             }`}
           >
@@ -654,7 +654,7 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
                 onChange={(e) => setTempLabel(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
-                className="min-w-[80px] rounded border border-green-700/80 bg-white py-0.5 text-center text-base text-slate-900 outline-none sm:text-sm"
+                className="min-w-20 rounded border border-green-700/80 bg-white py-0.5 text-center text-base text-slate-900 outline-none sm:text-sm"
                 aria-label="Edit equipment label"
                 maxLength={50}
               />
@@ -680,22 +680,26 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
         <Handle
           type="source"
           position={Position.Right}
-          className="bg-red !h-full !w-2 opacity-0"
+          className="bg-red !h-full !w-3 opacity-0"
+          isValidConnection={(c) => c.source !== c.target}
         />
         <Handle
           type="target"
           position={Position.Left}
-          className="bg-red !h-full !w-2 opacity-0"
+          className="bg-red !h-full !w-3 opacity-0"
+          isValidConnection={(c) => c.source !== c.target}
         />
         <Handle
           type="source"
           position={Position.Bottom}
-          className="!h-2 !w-full bg-none opacity-0"
+          className="!h-3 !w-full bg-none opacity-0"
+          isValidConnection={(c) => c.source !== c.target}
         />
         <Handle
           type="target"
           position={Position.Top}
-          className="!h-2 !w-full bg-none opacity-0"
+          className="!h-3 !w-full bg-none opacity-0"
+          isValidConnection={(c) => c.source !== c.target}
         />
       </div>
     </>
@@ -869,6 +873,8 @@ function Palette({ onAddNode }: IPaletteProps) {
   );
 }
 
+export const egdeMeasure = "measure" as const;
+
 // ---------- Main Canvas ----------
 export default function StagePlanCanvas({
   stagePlanConfig,
@@ -993,7 +999,7 @@ export default function StagePlanCanvas({
 
   const onConnect = useCallback(
     (c: Connection) =>
-      setEdges((eds) => addEdge({ ...c, type: "measure" }, eds)),
+      setEdges((eds) => addEdge({ ...c, type: egdeMeasure }, eds)),
     []
   );
 
@@ -1082,7 +1088,10 @@ export default function StagePlanCanvas({
           <strong style={{ fontSize: 12, color: "#0f172a" }}>Equipment</strong>
           <Palette onAddNode={handleAddNode} />
           <span style={{ fontSize: 12, color: "#475569" }}>
-            Drag from here into the canvas on click on mobile.
+            <span className="font-bold text-green-700/90">Drag</span> from here
+            into the canvas or{" "}
+            <span className="font-bold text-green-700/90">Click</span> on
+            mobile.
           </span>
 
           {/* <button
