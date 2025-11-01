@@ -3,7 +3,7 @@ import React from "react";
 export default function Loading(): React.JSX.Element {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-white"
+      className="fixed inset-0 z-50 flex items-center justify-center"
       role="status"
       aria-label="Loading content"
     >
