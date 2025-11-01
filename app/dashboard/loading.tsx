@@ -13,7 +13,7 @@ export default function Loading(): React.JSX.Element {
           <div className="absolute inset-0 rounded-full border-4 border-gray-200" />
 
           {/* Animated spinner with dark green accent */}
-          <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-emerald-700" />
+          <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-emerald-600" />
         </div>
 
         <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
