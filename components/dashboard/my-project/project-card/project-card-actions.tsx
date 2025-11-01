@@ -3,6 +3,7 @@
 import { Copy, Pencil, Trash2, Check } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { DownloadPdfButton } from "../../download-pdf-button/download-pdf-button";
 
 interface IProjectCardActionsProps {
   projectSlug: string;
@@ -76,6 +77,8 @@ export function ProjectCardActions({
           <Trash2 className="h-4 w-4" />
         </button>
       )}
+
+      <DownloadPdfButton projectName={projectSlug} />
     </div>
   );
 }
