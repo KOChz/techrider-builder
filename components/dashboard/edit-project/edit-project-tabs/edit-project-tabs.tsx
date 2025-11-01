@@ -119,7 +119,7 @@ export default function EditProjectTabs({
       <div className="mt-6 flex justify-between gap-3">
         <Link
           href="/dashboard/my-projects"
-          className="hover:bg-red-700/15 inline-block w-auto cursor-pointer rounded-lg border border-red-700/50 px-12 py-2 transition-all duration-200"
+          className="rounded-lg bg-red-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </Link>
@@ -128,7 +128,7 @@ export default function EditProjectTabs({
           type="button"
           onClick={editProject}
           disabled={isEditing}
-          className="cursor-pointer rounded-md bg-green-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isEditing ? "Saving..." : "Save"}
         </button>

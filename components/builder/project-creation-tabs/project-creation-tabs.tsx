@@ -97,7 +97,7 @@ export default function ProjectCreationTabs() {
       <div className="mt-6 flex justify-between gap-3">
         <Link
           href="/dashboard/my-projects"
-          className="rounded-md bg-red-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg bg-red-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </Link>
@@ -106,7 +106,7 @@ export default function ProjectCreationTabs() {
           type="button"
           onClick={createProject}
           disabled={isCreating}
-          className="cursor-pointer rounded-md bg-green-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isCreating ? "Creating..." : "Create Project"}
         </button>
