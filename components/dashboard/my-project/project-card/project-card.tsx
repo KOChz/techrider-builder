@@ -88,6 +88,7 @@ export function ProjectCard({ project }: IProjectCardProps) {
           <ProjectCardActions
             onEdit={() => router.push(`/dashboard/edit-project/${project.id}`)}
             onDelete={onDelete}
+            projectSlug={slugify(project.name)}
           />
         </div>
       </div>
