@@ -33,14 +33,6 @@ export function ProjectCard({ project }: IProjectCardProps) {
     }
   }
 
-  // helper to stop the <Link> navigation when clicking mobile buttons
-  const intercept =
-    (cb: () => void) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      cb();
-    };
-
   return (
     <Link
       href={`/techrider/${slugify(project.name)}`}
@@ -59,38 +51,11 @@ export function ProjectCard({ project }: IProjectCardProps) {
           </div>
         </div>
 
-        {/* Mobile: always-visible inline actions */}
-        <div className="flex items-center gap-2 sm:hidden">
-          <button
-            type="button"
-            aria-label="Edit project"
-            onClick={intercept(() =>
-              router.push(`/dashboard/edit-project/${project.id}`)
-            )}
-            className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 active:scale-[.98]"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-            Edit
-          </button>
-          <button
-            type="button"
-            aria-label="Delete project"
-            onClick={intercept(onDelete)}
-            className="inline-flex items-center gap-1 rounded-md border border-red-200 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50 active:scale-[.98]"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            Delete
-          </button>
-        </div>
-
-        {/* Desktop/Tablet: keep your existing hover/ellipsis actions */}
-        <div className="hidden sm:block">
-          <ProjectCardActions
-            onEdit={() => router.push(`/dashboard/edit-project/${project.id}`)}
-            onDelete={onDelete}
-            projectSlug={slugify(project.name)}
-          />
-        </div>
+        <ProjectCardActions
+          onEdit={() => router.push(`/dashboard/edit-project/${project.id}`)}
+          onDelete={onDelete}
+          projectSlug={slugify(project.name)}
+        />
       </div>
     </Link>
   );

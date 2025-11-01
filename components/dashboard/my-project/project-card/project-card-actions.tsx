@@ -46,7 +46,7 @@ export function ProjectCardActions({
   };
 
   return (
-    <div className="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+    <div className="flex items-center gap-1 transition-opacity duration-200 group-hover:opacity-100">
       <button
         onClick={handleCopyUrl}
         className="cursor-pointer rounded-lg p-2 text-slate-400 transition-colors hover:bg-purple-50 hover:text-purple-600"
