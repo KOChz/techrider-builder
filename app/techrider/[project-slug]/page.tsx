@@ -116,7 +116,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
 
       <h1
         id="stage-plan"
-        className="min-h-36 text-shadow-2xs bg-linear-to-r pt-18 mb-6 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl"
+        className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 mb-6 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl"
       >
         Stage Plan
       </h1>
