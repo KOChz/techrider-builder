@@ -377,13 +377,26 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
         />
       )}
 
+      {/* White outline for contrast */}
+      <BaseEdge
+        id={`${id}-outline`}
+        path={edgePath}
+        style={{
+          strokeDasharray: "5,5",
+          strokeWidth: selected ? 5 : 4,
+          stroke: "#ffffff",
+          opacity: 0.8,
+        }}
+      />
+
+      {/* Main edge line */}
       <BaseEdge
         id={id}
         path={edgePath}
         style={{
           strokeDasharray: "5,5",
-          strokeWidth: selected ? 2 : 1,
-          stroke: selected ? "#0f172a" : "#94a3b8",
+          strokeWidth: selected ? 3 : 2,
+          stroke: selected ? "#3CB371" : "#334155",
         }}
       />
 
@@ -870,7 +883,7 @@ function Palette({ onAddNode }: IPaletteProps) {
       </div>
 
       {/* Desktop Grid */}
-      <div className="hidden lg:grid lg:auto-rows-min lg:gap-2">
+      <div className="hidden xl:grid xl:auto-rows-min xl:gap-2">
         <PaletteItem kind="drumkit" label="Drumkit" onAddNode={onAddNode} />
         <PaletteItem kind="monitor" label="Monitor" onAddNode={onAddNode} />
         <PaletteItem kind="amp" label="Amp" onAddNode={onAddNode} />

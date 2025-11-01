@@ -45,7 +45,7 @@ export function ProjectCard({ project }: IProjectCardProps) {
           </div>
 
           <div className="min-w-0 flex-1">
-            <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-green-700">
+            <h3 className="text-2xl font-semibold text-slate-900 transition-colors group-hover:text-green-700">
               {project.name}
             </h3>
           </div>

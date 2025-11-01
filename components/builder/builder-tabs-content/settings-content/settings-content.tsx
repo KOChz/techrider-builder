@@ -6,7 +6,7 @@ export function SettingsContent() {
   const { name, isPublic, setName, setIsPublic } = useProjectStore();
 
   return (
-    <div className="min-h-72 space-y-4">
+    <div className="min-h-72 space-y-2">
       <h3 className="text-2xl font-semibold text-slate-900">
         Project Settings
       </h3>
