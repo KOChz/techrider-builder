@@ -142,7 +142,7 @@ export default function EquipmentSelect({
               className={[
                 // Full-width dropdown under button on mobile; standard popover on sm+
                 "absolute left-0 right-0 top-full z-20 mt-1 w-full",
-                "max-h-[45vh] overflow-y-auto rounded-lg border border-slate-800 bg-slate-950 p-1.5",
+                "max-h-[45dvh] overflow-y-auto rounded-lg border border-slate-800 bg-slate-950 p-1.5",
                 "shadow-xl ring-1 ring-black/10",
               ].join(" ")}
             >

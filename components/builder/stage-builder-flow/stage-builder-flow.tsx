@@ -1137,7 +1137,7 @@ export default function StagePlanBuilder({
   const { isMobile } = useDevice();
 
   return (
-    <div className="flex flex-col gap-2 xl:h-[78vh] xl:flex-row xl:items-stretch xl:justify-between">
+    <div className="flex flex-col gap-2 xl:h-[78dvh] xl:flex-row xl:items-stretch xl:justify-between">
       {/* Sidebar */}
       {isBuilder && (
         <div className="grid min-h-0 content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0">
@@ -1399,7 +1399,7 @@ export function StagePlanCanvasViewer({
   const { isMobile } = useDevice();
 
   return (
-    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 px-2.5 md:h-[50vh] md:max-h-none md:w-full md:flex-row md:justify-between md:px-0 xl:h-[70dvh]">
+    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 px-2.5 md:h-[50dvh] md:max-h-none md:w-full md:flex-row md:justify-between md:px-0 xl:h-[70dvh]">
       {/* Canvas */}
       <div
         ref={flowRef}

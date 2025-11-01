@@ -508,7 +508,7 @@ export default function StagePlan({ config }: { config: TStagePlanConfig }) {
           To zoom press control button and scroll
         </p>
 
-        <div className="relative h-[70vh] w-full border border-[#333] bg-[#0a0a0a]">
+        <div className="relative h-[70dvh] w-full border border-[#333] bg-[#0a0a0a]">
           <svg
             ref={svgRef}
             className="select-none"
