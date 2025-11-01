@@ -29,8 +29,8 @@ const DIBoxIcon: React.FC<IDIBoxProps> = ({
   return (
     <svg
       id="di-box"
-      width={width / 2}
-      height={finalHeight / 2}
+      width={width / 2.5}
+      height={finalHeight / 2.5}
       viewBox="0 0 60 40"
       className={className}
       xmlns="http://www.w3.org/2000/svg"

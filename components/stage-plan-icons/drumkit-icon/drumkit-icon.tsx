@@ -13,8 +13,8 @@ interface IDrumkitIconProps extends SVGProps<SVGSVGElement> {
 const VIEWBOX_SIZE = 1024;
 
 export function DrumkitIcon({
-  width = 100,
-  height = 100,
+  width = 160,
+  height = 160,
   title = "Drumkit",
   description = "A musical drumkit illustration",
   className,
@@ -49,7 +49,7 @@ export function DrumkitIcon({
       id="drumkit"
       width={width}
       height={height}
-      style={{ scale: 1.2 }}
+      // style={{ scale: 1.6 }}
       preserveAspectRatio="xMidYMid meet"
       viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
       fill="none"

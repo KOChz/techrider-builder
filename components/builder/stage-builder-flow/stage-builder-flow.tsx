@@ -500,7 +500,11 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
 
     switch (data.kind) {
       case "drumkit":
-        return <DrumkitIcon {...iconProps} />;
+        return (
+          <DrumkitIcon
+          // {...{ width: (width || 0) * 2, height: (height || 0) * 2 }}
+          />
+        );
       case "amp":
         return <AmpIcon {...iconProps} />;
       case "monitor":
