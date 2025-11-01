@@ -63,7 +63,7 @@ export function StagePlanViewer({
         kind: "amp",
         label: "Downstage / Audience",
       },
-      position: { x: 0, y: 400 },
+      position: { x: -50, y: 400 },
     },
     {
       id: "stage-left",
@@ -76,7 +76,7 @@ export function StagePlanViewer({
         label: "Stage Left",
         rotation: -90,
       },
-      position: { x: -400, y: 200 },
+      position: { x: -400, y: 100 },
     },
     {
       id: "stage-right",
@@ -89,7 +89,7 @@ export function StagePlanViewer({
         label: "Stage Right",
         rotation: 90,
       },
-      position: { x: 400, y: 200 },
+      position: { x: 400, y: 100 },
     },
   ]);
 

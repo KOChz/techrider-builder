@@ -77,7 +77,7 @@ export default function StagePlanBuilder({
         kind: "amp",
         label: "Downstage / Audience",
       },
-      position: { x: 0, y: 400 },
+      position: { x: -50, y: 400 },
     },
     {
       id: "stage-left",
@@ -90,7 +90,7 @@ export default function StagePlanBuilder({
         label: "Stage Left",
         rotation: -90,
       },
-      position: { x: -400, y: 200 },
+      position: { x: -400, y: 100 },
     },
     {
       id: "stage-right",
@@ -103,7 +103,7 @@ export default function StagePlanBuilder({
         label: "Stage Right",
         rotation: 90,
       },
-      position: { x: 400, y: 200 },
+      position: { x: 400, y: 100 },
     },
   ]);
 
