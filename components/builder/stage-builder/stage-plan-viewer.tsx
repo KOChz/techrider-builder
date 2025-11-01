@@ -235,7 +235,7 @@ export function StagePlanViewer({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          <Controls showInteractive={false} position="bottom-right" />
+          {/* <Controls showInteractive={false} position="bottom-right" /> */}
         </ReactFlow>
       </div>
     </div>

@@ -374,11 +374,11 @@ export default function StagePlanBuilder({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          <Controls
+          {/* <Controls
             showInteractive={false}
             position="bottom-right"
             className="md:scale-125"
-          />
+          /> */}
         </ReactFlow>
       </div>
     </div>
