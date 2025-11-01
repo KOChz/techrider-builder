@@ -3,11 +3,10 @@ import { devtools } from "zustand/middleware";
 
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 import { TMeasurement } from "@/components/builder/dimension-line/dimension-line";
-import {
-  TEquipmentData,
-  TMeasurmentData,
-} from "@/components/builder/stage-builder-flow/stage-builder-flow";
+
 import { Edge, type Node } from "@xyflow/react";
+import { TMeasurmentData } from "@/components/builder/stage-builder/edges/measure-edge";
+import { TEquipmentData } from "@/components/builder/stage-builder/nodes/equipment-node";
 
 export interface IStagePlanFlowConfig {
   nodes: Node<TEquipmentData>[];
