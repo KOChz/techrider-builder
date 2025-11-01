@@ -1109,7 +1109,7 @@ export default function StagePlanCanvas({
           panOnScroll
           panOnDrag
           zoomOnPinch
-          zoomOnScroll
+          zoomOnScroll={false}
           selectionOnDrag
           minZoom={0.25}
           maxZoom={2.5}
@@ -1313,7 +1313,7 @@ export function StagePlanCanvasViewer({
           panOnScroll={false}
           preventScrolling={false}
           // panOnDrag={false}
-          zoomOnPinch={false}
+          zoomOnPinch={true}
           zoomOnScroll={false}
           selectionOnDrag
           minZoom={0.4}
