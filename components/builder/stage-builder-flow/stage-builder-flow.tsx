@@ -45,6 +45,7 @@ import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils/cn";
 import { useDevice } from "@/hooks/use-device";
+import { MeasurementButton } from "../measurement-button/measurement-button";
 
 // ---------- Domain types ----------
 export type TEquipmentType =
@@ -809,7 +810,7 @@ function Palette({ onAddNode }: IPaletteProps) {
   return (
     <>
       {/* Mobile Dropdown */}
-      <div className="relative md:hidden" ref={dropdownRef}>
+      <div className="relative xl:hidden" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="flex w-full items-center justify-between rounded-lg border border-slate-400/90 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-50"
@@ -835,7 +836,7 @@ function Palette({ onAddNode }: IPaletteProps) {
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-lg border border-slate-400 bg-white shadow-lg">
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-lg border border-slate-400/75 bg-white shadow-md">
             <div className="grid auto-rows-min gap-2 p-2">
               <PaletteItem
                 kind="drumkit"
@@ -858,18 +859,18 @@ function Palette({ onAddNode }: IPaletteProps) {
                 label="Power Strip"
                 onAddNode={handleAddNode}
               />
-              {/* <PaletteItem
+              <PaletteItem
                 kind="di-box"
                 label="DI Box"
                 onAddNode={handleAddNode}
-              /> */}
+              />
             </div>
           </div>
         )}
       </div>
 
       {/* Desktop Grid */}
-      <div className="hidden md:grid md:auto-rows-min md:gap-2">
+      <div className="hidden lg:grid lg:auto-rows-min lg:gap-2">
         <PaletteItem kind="drumkit" label="Drumkit" onAddNode={onAddNode} />
         <PaletteItem kind="monitor" label="Monitor" onAddNode={onAddNode} />
         <PaletteItem kind="amp" label="Amp" onAddNode={onAddNode} />
@@ -887,8 +888,8 @@ function Palette({ onAddNode }: IPaletteProps) {
 
 export const egdeMeasure = "measure" as const;
 
-// ---------- Main Canvas ----------
-export default function StagePlanCanvas({
+// ---------- Main Builder ----------
+export default function StagePlanBuilder({
   stagePlanConfig,
   setStagePlanConfig,
   isViewer = false,
@@ -956,6 +957,11 @@ export default function StagePlanCanvas({
     stagePlanConfig?.edges || []
   );
 
+  const [isMeasurementMode, setIsMeasurementMode] = useState(false);
+  const [selectedSourceNode, setSelectedSourceNode] = useState<string | null>(
+    null
+  );
+
   const saveStagePlan = useDebouncedCallback(
     (n: Node<TEquipmentData>[], e: Edge<TMeasurmentData>[]) => {
       if (!setStagePlanConfig) return;
@@ -987,6 +993,44 @@ export default function StagePlanCanvas({
       String(pxPerMeter)
     );
   }, [pxPerMeter]);
+
+  const handleNodeClick = useCallback(
+    (_event: React.MouseEvent, node: Node<TEquipmentData>) => {
+      if (!isMeasurementMode) return;
+
+      // Ignore annotation nodes
+      if (node.type === "annotation") return;
+
+      // First node selection
+      if (!selectedSourceNode) {
+        setSelectedSourceNode(node.id);
+        return;
+      }
+
+      // Second node selection - create the edge
+      if (selectedSourceNode && node.id !== selectedSourceNode) {
+        const newEdge: Edge<TMeasurmentData> = {
+          id: nanoid(),
+          source: selectedSourceNode,
+          target: node.id,
+          type: egdeMeasure,
+          data: {},
+        };
+
+        setEdges((eds) => [...eds, newEdge]);
+
+        // Reset measurement mode
+        setSelectedSourceNode(null);
+        setIsMeasurementMode(false);
+      }
+    },
+    [isMeasurementMode, selectedSourceNode]
+  );
+
+  const handleCancelMeasurement = useCallback(() => {
+    setIsMeasurementMode(false);
+    setSelectedSourceNode(null);
+  }, []);
 
   const onNodesChange = useCallback(
     (changes: NodeChange<Node<TEquipmentData>>[]) =>
@@ -1080,11 +1124,11 @@ export default function StagePlanCanvas({
   const { isMobile } = useDevice();
 
   return (
-    <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+    <div className="flex flex-col gap-2 xl:h-[75vh] xl:flex-row xl:items-stretch xl:justify-between">
       {/* Sidebar */}
       {isBuilder && (
-        <div className="grid content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:max-w-[240px] lg:max-w-none">
-          <div className="grid gap-1.5">
+        <div className="grid min-h-0 content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0">
+          <div className="grid min-h-0 gap-1.5">
             <span className="text-xs text-slate-600">
               Connect two nodes to show distance.
             </span>
@@ -1095,19 +1139,39 @@ export default function StagePlanCanvas({
               <span className="font-bold text-green-700/90">Click</span> on
               mobile.
             </span>
+
+            <div className="hidden md:block">
+              <div className="h-px bg-slate-200" />
+              <MeasurementButton
+                isMeasurementMode={isMeasurementMode}
+                selectedSourceNode={selectedSourceNode}
+                onStartMeasurement={() => setIsMeasurementMode(true)}
+                onCancelMeasurement={handleCancelMeasurement}
+              />
+            </div>
           </div>
 
           <div className="h-px bg-slate-200" />
-          <div className="grid gap-2">
+
+          <div className="grid min-h-0 gap-2">
             <strong className="text-xs text-slate-900">Equipment</strong>
             <Palette onAddNode={handleAddNode} />
-
             <span className="text-xs text-slate-600 md:hidden">
               <span className="font-bold text-green-700/90">Drag</span> from
               here into the canvas or{" "}
               <span className="font-bold text-green-700/90">Click</span> on
               mobile.
             </span>
+          </div>
+
+          <div className="md:hidden">
+            <div className="h-px bg-slate-200" />
+            <MeasurementButton
+              isMeasurementMode={isMeasurementMode}
+              selectedSourceNode={selectedSourceNode}
+              onStartMeasurement={() => setIsMeasurementMode(true)}
+              onCancelMeasurement={handleCancelMeasurement}
+            />
           </div>
         </div>
       )}
@@ -1117,10 +1181,11 @@ export default function StagePlanCanvas({
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="aspect-square h-[55vh] touch-none select-none overflow-auto rounded-xl border border-slate-200 md:aspect-auto md:h-[70vh] md:flex-1"
+        className="aspect-square h-[45dvh] min-h-0 touch-none select-none overflow-auto rounded-xl border border-slate-200 xl:aspect-auto xl:h-full xl:flex-1"
         style={{ WebkitTouchCallout: "none" }}
       >
         <ReactFlow<Node<TEquipmentData>>
+          onNodeClick={handleNodeClick}
           onInit={(inst) => (rfRef.current = inst)}
           nodes={nodes}
           edges={edges}
@@ -1132,16 +1197,16 @@ export default function StagePlanCanvas({
           fitView
           fitViewOptions={{ padding: 0.2 }}
           proOptions={{ hideAttribution: true }}
-          // sensible interaction defaults
           panOnScroll
           panOnDrag
           zoomOnPinch
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={isMobile ? 0.3 : 0.5}
+          minZoom={isMobile ? 0.4 : 0.5}
           maxZoom={2.5}
           snapToGrid
           snapGrid={[10, 10]}
+          style={{ width: "100%", height: "100%" }}
         >
           <Background
             id="1"
@@ -1149,7 +1214,6 @@ export default function StagePlanCanvas({
             color="#f1f1f1"
             variant={BackgroundVariant.Lines}
           />
-
           <Background
             id="2"
             gap={100}
@@ -1322,13 +1386,13 @@ export function StagePlanCanvasViewer({
   const { isMobile } = useDevice();
 
   return (
-    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 px-2.5 md:h-[70dvh] md:max-h-none md:w-full md:flex-row md:justify-between md:px-0">
+    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 px-2.5 md:h-[50vh] md:max-h-none md:w-full md:flex-row md:justify-between md:px-0 xl:h-[70dvh]">
       {/* Canvas */}
       <div
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="h-[50dvh] touch-none overflow-auto rounded-xl border border-gray-200 md:h-[70dvh] md:flex-1"
+        className="h-[50dvh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1 xl:h-[70dvh]"
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}

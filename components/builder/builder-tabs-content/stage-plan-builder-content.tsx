@@ -3,7 +3,7 @@
 import { ReactFlowProvider } from "@xyflow/react";
 
 import { useProjectStore } from "@/stores/use-project-creation-store";
-import StagePlanCanvas from "../stage-builder-flow/stage-builder-flow";
+import StagePlanBuilder from "../stage-builder-flow/stage-builder-flow";
 
 export function StagePlanBuilderContent() {
   const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
@@ -17,7 +17,7 @@ export function StagePlanBuilderContent() {
 
       <div className="select-none overscroll-none">
         <ReactFlowProvider>
-          <StagePlanCanvas
+          <StagePlanBuilder
             stagePlanConfig={stagePlanConfig}
             setStagePlanConfig={setStagePlanConfig}
           />
