@@ -282,25 +282,25 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
         <Handle
           type="source"
           position={Position.Right}
-          className="pointer-events-none! cursor-none! !h-full !w-3 opacity-0"
+          className="pointer-events-none! cursor-none! opacity-0"
           isValidConnection={(c) => c.source !== c.target}
         />
         <Handle
           type="target"
           position={Position.Left}
-          className="pointer-events-none! cursor-none! !h-full !w-3 opacity-0"
+          className="pointer-events-none! cursor-none! opacity-0"
           isValidConnection={(c) => c.source !== c.target}
         />
         <Handle
           type="source"
           position={Position.Bottom}
-          className="pointer-events-none! cursor-none! !h-3 !w-full bg-none opacity-0"
+          className="pointer-events-none! cursor-none! bg-none opacity-0"
           isValidConnection={(c) => c.source !== c.target}
         />
         <Handle
           type="target"
           position={Position.Top}
-          className="pointer-events-none! cursor-none! !h-3 !w-full bg-none opacity-0"
+          className="pointer-events-none! cursor-none! bg-none opacity-0"
           isValidConnection={(c) => c.source !== c.target}
         />
       </div>
