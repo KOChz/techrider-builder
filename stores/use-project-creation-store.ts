@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
-import { TMeasurement } from "@/components/builder/dimension-line/dimension-line";
 
 import { Edge, type Node } from "@xyflow/react";
 import { TMeasurmentData } from "@/components/builder/stage-plan-builder/edges/measure-edge";
@@ -32,7 +31,6 @@ interface IProjectStore {
   updateNodeLabel: (nodeId: string, newLabel: string) => void;
   deleteNode: (nodeId: string) => void;
 
-  addMeasurement: (measurement: TMeasurement) => void;
   updateMeasurementDistance: (measurementId: number, distance: string) => void;
   deleteMeasurement: (measurementId: number) => void;
 
@@ -123,13 +121,6 @@ export const useProjectStore = create<IProjectStore>()(
       addMember: (member) =>
         set((state) => ({
           members: [...state.members, member],
-        })),
-
-      addMeasurement: (measurement) =>
-        set((state) => ({
-          stagePlanConfig: {
-            ...state.stagePlanConfig,
-          },
         })),
 
       addNode: (node) =>
