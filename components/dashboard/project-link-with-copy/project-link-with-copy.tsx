@@ -43,7 +43,7 @@ export function ProjectLinkWithCopy({
 
       <button
         onClick={handleCopy}
-        className="flex items-center border-l border-green-500/30 px-3 py-2 text-sm text-white transition-all hover:bg-green-700/90"
+        className="flex cursor-pointer items-center border-l border-green-500/30 px-3 py-2 text-sm text-white transition-all hover:bg-green-700/90"
         aria-label={isCopied ? "URL copied" : "Copy project URL"}
       >
         {isCopied ? (
