@@ -207,7 +207,7 @@ export function MemberCardBuilder({
                       name: e.target.value,
                     })
                   }
-                  className="flex-1 rounded border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                  className="w-min flex-1 rounded border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
                   placeholder="Equipment name"
                 />
 
@@ -220,13 +220,13 @@ export function MemberCardBuilder({
                         quantity: e.target.value,
                       })
                     }
-                    className="w-12 rounded-l border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
-                    placeholder="Qty"
+                    className="w-12 rounded-md border border-gray-300 px-2 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
+                    placeholder="qty"
                   />
                   <button
                     type="button"
                     onClick={() => removeEquipmentItem(equipmentIndex)}
-                    className="flex cursor-pointer items-center justify-center rounded-r border border-l-0 border-red-300 bg-red-600 px-3 text-white transition-colors hover:bg-red-600/30"
+                    className="absolute -right-3 -top-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-lg text-white transition-colors hover:bg-red-600"
                     aria-label="Delete equipment"
                   >
                     <X size={10} className="p-0" />
