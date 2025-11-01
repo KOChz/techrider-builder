@@ -6,7 +6,7 @@ export function BandInfoContent() {
   const { name, notes, setName, setNotes } = useProjectStore();
 
   return (
-    <div className="space-y-4">
+    <div className="min-h-72 space-y-4">
       <h3 className="text-lg font-semibold text-slate-900">Band Information</h3>
       <div className="space-y-3">
         <div>
