@@ -312,13 +312,13 @@
   .techrider-page .member-card:hover {
     transform: translateY(-4px);
     border-color: var(--color-accent);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); */
   }
 }
 
 .techrider-page .member-card:focus-within {
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+  /* box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1); */
 }
 
 .techrider-page .member-header {
@@ -717,9 +717,9 @@
   --color-text-dim: #64748b; /* tertiary text (slate-500) */
 
   /* Accents */
-  --color-accent: #0ea5e9; /* cyan-500 for links/accents */
-  --color-accent-dim: #0ea5e933; /* translucent accent */
-  --color-focus: #0ea5e9; /* focus ring */
+  --color-accent: #4fae77cf; /* cyan-500 for links/accents */
+  --color-accent-dim: #4fae77a3; /* translucent accent */
+  --color-focus: rgba(79, 174, 119, 0.736); /* focus ring */
 
   /* Brand accent previously "dark-green"—keep name, lighten tone */
   --color-dark-green: #166534; /* green-800 for buttons/headers */
@@ -765,3 +765,7 @@
 .techrider-page .section-title {
   color: var(--color-dark-green);
 }
+
+/* react-flow light {
+  overflow: auto !important;
+} */

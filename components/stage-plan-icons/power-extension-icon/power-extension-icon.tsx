@@ -38,14 +38,13 @@ const PowerExtensionIcon = React.forwardRef<
     const ICON_WIDTH = 200;
     const ICON_HEIGHT = 40;
 
-    // Support new API first; fall back to legacy `hitboxPadding`
-    const padX = horizontalPadding ?? hitboxPadding ?? 200; // wide like MicStand
-    const padY = verticalPadding ?? hitboxPadding ?? 50;
+    const padX = horizontalPadding ?? hitboxPadding ?? 0;
+    const padY = verticalPadding ?? hitboxPadding ?? 0;
 
     const hitboxX = -padX;
     const hitboxY = -padY;
     const hitboxWidth = ICON_WIDTH + padX * 2;
-    const hitboxHeight = ICON_HEIGHT + padY * 2;
+    const hitboxHeight = ICON_HEIGHT + padY * 2.5;
 
     // --- paints -------------------------------------------------------------
     const powerStripGradientId = `${autoId}-powerStripGradient`;
@@ -71,7 +70,7 @@ const PowerExtensionIcon = React.forwardRef<
 
         {/* Expanded hover/click hitbox */}
         <rect
-          x={hitboxX}
+          x={hitboxX - 5}
           y={hitboxY}
           width={hitboxWidth}
           height={hitboxHeight}

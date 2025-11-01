@@ -39,9 +39,11 @@ import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
 import { RotateCw, X } from "lucide-react";
-import { getStraightPath } from "reactflow";
+import { getStraightPath } from "@xyflow/react";
+
 import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { cn } from "@/lib/utils/cn";
 
 // ---------- Domain types ----------
 export type TEquipmentType =
@@ -405,10 +407,11 @@ function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
           </button>
 
           <div
-            style={{
-              borderColor: selected ? "#0f172a" : "#cbd5e1",
-            }}
-            className="pointer-events-auto flex items-center gap-1.5 rounded-lg border bg-white px-2 py-1 text-xs shadow-sm"
+            className={cn(
+              "border-slate-300",
+              selected && "border-slate-900",
+              "pointer-events-auto flex items-center gap-1.5 rounded-lg border bg-white px-2 py-1 text-xs shadow-sm"
+            )}
           >
             {isEditing ? (
               <div className="relative flex items-center gap-1">
@@ -462,18 +465,19 @@ interface IAnnotationNodeProps extends NodeProps {
   data: TEquipmentData;
 }
 
-function AnnotationNode({ data }: IAnnotationNodeProps) {
+function AnnotationNode({ data, id }: IAnnotationNodeProps) {
   const rotation = data.rotation ?? 0;
 
   return (
     <div
-      className="pointer-events-none flex items-center justify-center"
+      className="select-noneRetry flex origin-center items-center justify-center whitespace-nowrap rounded bg-transparent text-9xl font-bold"
       style={{
         transform: `rotate(${rotation}deg)`,
-        whiteSpace: "nowrap",
       }}
     >
-      <span className="text-sm font-semibold text-slate-600">{data.label}</span>
+      <span className="text-[12px] font-semibold text-slate-700">
+        {data.label}
+      </span>
     </div>
   );
 }
@@ -486,6 +490,9 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
 
   const width = data.width ?? undefined;
   const height = data.height ?? undefined;
+
+  const ICON_W = width ?? 100; // pick sensible defaults per icon type
+  const ICON_H = height ?? 20;
 
   const icon = useMemo(() => {
     const iconProps = { width, height };
@@ -641,9 +648,9 @@ function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
 
         <div
           style={{ transform: `rotate(${rotation}deg)` }}
-          className="flex flex-col items-center transition-transform duration-200 ease-in-out"
+          className="flex w-fit flex-col items-center justify-center text-center transition-transform duration-200 ease-in-out"
         >
-          {icon}
+          <div>{icon}</div>
 
           {isLabelEditing ? (
             <div className="relative flex w-min items-center gap-1">
@@ -879,76 +886,66 @@ export const egdeMeasure = "measure" as const;
 export default function StagePlanCanvas({
   stagePlanConfig,
   setStagePlanConfig,
+  isViewer = false,
 }: {
   stagePlanConfig?: IStagePlanFlowConfig;
   setStagePlanConfig?: (config: IStagePlanFlowConfig) => void;
+  isViewer?: boolean;
 }) {
-  const [nodes, setNodes] = useState<Node<TEquipmentData>[]>(
-    stagePlanConfig?.nodes || [
-      {
-        id: "up-stage",
-        type: "annotation",
-        draggable: false,
-        selectable: false,
+  const isBuilder = !isViewer;
+  const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
+    ...(stagePlanConfig?.nodes || [])!,
+    {
+      id: "up-stage",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
 
-        data: {
-          kind: "amp",
-          label: "Upstage",
-        },
-        position: { x: -0, y: -200 },
+      data: {
+        kind: "amp",
+        label: "Upstage",
       },
-      {
-        id: "down-stage",
-        type: "annotation",
-        draggable: false,
-        selectable: false,
+      position: { x: -0, y: -200 },
+    },
+    {
+      id: "down-stage",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
 
-        data: {
-          kind: "amp",
-          label: "Downstage / Audience",
-        },
-        position: { x: 0, y: 400 },
+      data: {
+        kind: "amp",
+        label: "Downstage / Audience",
       },
-      {
-        id: "stage-left",
-        type: "annotation",
-        draggable: false,
-        selectable: false,
+      position: { x: 0, y: 400 },
+    },
+    {
+      id: "stage-left",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
 
-        data: {
-          kind: "amp",
-          label: "Stage Left",
-          rotation: -90,
-        },
-        position: { x: -400, y: 200 },
+      data: {
+        kind: "amp",
+        label: "Stage Left",
+        rotation: -90,
       },
-      {
-        id: "stage-right",
-        type: "annotation",
-        draggable: false,
-        selectable: false,
+      position: { x: -400, y: 200 },
+    },
+    {
+      id: "stage-right",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
 
-        data: {
-          kind: "amp",
-          label: "Stage Right",
-          rotation: 90,
-        },
-        position: { x: 400, y: 200 },
+      data: {
+        kind: "amp",
+        label: "Stage Right",
+        rotation: 90,
       },
-      {
-        id: nanoid(),
-        type: "equipment",
-        position: { x: -120, y: 0 },
-        data: { label: "Drumkit", kind: "drumkit" },
-      },
-      {
-        id: nanoid(),
-        type: "equipment",
-        position: { x: 80, y: 35 },
-        data: { label: "Bass Amp", kind: "amp" },
-      },
-    ]
-  );
+      position: { x: 400, y: 200 },
+    },
+  ]);
 
   const [edges, setEdges] = useState<Edge<TMeasurmentData>[]>(
     stagePlanConfig?.edges || []
@@ -1041,15 +1038,6 @@ export default function StagePlanCanvas({
     setNodes((ns) => ns.concat(node));
   }, []);
 
-  // container styles: critical for mobile gestures
-  const containerStyle: React.CSSProperties = {
-    height: "70vh",
-    border: "1px solid #e2e8f0",
-    borderRadius: 12,
-    overflow: "hidden",
-    touchAction: "none", // avoid browser-native panning conflicting with canvas
-  };
-
   const handleAddNode = useCallback(
     (kind: TEquipmentType) => {
       const newNode = {
@@ -1067,57 +1055,43 @@ export default function StagePlanCanvas({
   return (
     <div className="flex flex-col gap-2 md:flex-row md:justify-between">
       {/* Sidebar */}
-      <div
-        style={{
-          border: "1px solid #e2e8f0",
-          borderRadius: 12,
-          padding: 12,
-          background: "#f8fafc",
-          display: "grid",
-          gap: 12,
-          alignContent: "start",
-        }}
-      >
-        <div style={{ display: "grid", gap: 6 }}>
-          <span style={{ fontSize: 12, color: "#475569" }}>
-            Connect two nodes to show distance.
-          </span>
+      {isBuilder && (
+        <div className="grid content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div className="grid gap-1.5">
+            <span className="text-xs text-slate-600">
+              Connect two nodes to show distance.
+            </span>
 
-          <span
-            style={{ fontSize: 12, color: "#475569" }}
-            className="md:display-none"
-          >
-            <span className="font-bold text-green-700/90">Drag</span> from here
-            into the canvas or{" "}
-            <span className="font-bold text-green-700/90">Click</span> on
-            mobile.
-          </span>
+            <span className="md:display-none text-xs text-slate-600">
+              <span className="font-bold text-green-700/90">Drag</span> from
+              here into the canvas or{" "}
+              <span className="font-bold text-green-700/90">Click</span> on
+              mobile.
+            </span>
+          </div>
+
+          <div className="h-px bg-slate-200" />
+          <div className="grid gap-2">
+            <strong className="text-xs text-slate-900">Equipment</strong>
+            <Palette onAddNode={handleAddNode} />
+
+            <span className="text-xs text-slate-600 md:hidden">
+              <span className="font-bold text-green-700/90">Drag</span> from
+              here into the canvas or{" "}
+              <span className="font-bold text-green-700/90">Click</span> on
+              mobile.
+            </span>
+          </div>
         </div>
-
-        <div style={{ height: 1, background: "#e2e8f0" }} />
-        <div style={{ display: "grid", gap: 8 }}>
-          <strong style={{ fontSize: 12, color: "#0f172a" }}>Equipment</strong>
-          <Palette onAddNode={handleAddNode} />
-
-          <span
-            style={{ fontSize: 12, color: "#475569" }}
-            className="md:hidden"
-          >
-            <span className="font-bold text-green-700/90">Drag</span> from here
-            into the canvas or{" "}
-            <span className="font-bold text-green-700/90">Click</span> on
-            mobile.
-          </span>
-        </div>
-      </div>
+      )}
 
       {/* Canvas */}
       <div
         ref={flowRef}
-        style={containerStyle}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="md:flex-1"
+        className="aspect-square h-[50vh] touch-none select-none overflow-auto rounded-xl border border-slate-200 md:aspect-auto md:h-[70vh] md:flex-1 md:p-4"
+        style={{ WebkitTouchCallout: "none" }}
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
@@ -1142,7 +1116,6 @@ export default function StagePlanCanvas({
           snapToGrid
           snapGrid={[10, 10]}
         >
-          <MiniMap pannable zoomable className="scale-70 md:scale-100" />
           <Background
             id="1"
             gap={10}
@@ -1156,7 +1129,215 @@ export default function StagePlanCanvas({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          <Controls position="bottom-right" />
+          <Controls position="bottom-right" className="scale-125" />
+        </ReactFlow>
+      </div>
+    </div>
+  );
+}
+
+export function StagePlanCanvasViewer({
+  stagePlanConfig,
+  setStagePlanConfig,
+}: {
+  stagePlanConfig?: IStagePlanFlowConfig;
+  setStagePlanConfig?: (config: IStagePlanFlowConfig) => void;
+}) {
+  const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
+    ...(stagePlanConfig?.nodes || [])!,
+    {
+      id: "up-stage",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Upstage",
+      },
+      position: { x: -0, y: -200 },
+    },
+    {
+      id: "down-stage",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Downstage / Audience",
+      },
+      position: { x: 0, y: 400 },
+    },
+    {
+      id: "stage-left",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Stage Left",
+        rotation: -90,
+      },
+      position: { x: -400, y: 200 },
+    },
+    {
+      id: "stage-right",
+      type: "annotation",
+      draggable: false,
+      selectable: false,
+
+      data: {
+        kind: "amp",
+        label: "Stage Right",
+        rotation: 90,
+      },
+      position: { x: 400, y: 200 },
+    },
+  ]);
+
+  const [edges, setEdges] = useState<Edge<TMeasurmentData>[]>(
+    stagePlanConfig?.edges || []
+  );
+
+  const saveStagePlan = useDebouncedCallback(
+    (n: Node<TEquipmentData>[], e: Edge<TMeasurmentData>[]) => {
+      if (!setStagePlanConfig) return;
+
+      const config: IStagePlanFlowConfig = {
+        ...stagePlanConfig!,
+        nodes: n,
+        edges: e,
+      };
+
+      setStagePlanConfig(config);
+    },
+    800
+  );
+
+  useEffect(() => {
+    saveStagePlan(nodes, edges);
+  }, [nodes, edges, saveStagePlan]);
+
+  const rfRef = useRef<ReactFlowInstance<Node<TEquipmentData>> | null>(null);
+
+  const [pxPerMeter, setPxPerMeter] = useState<number>(DEFAULT_PX_PER_METER);
+  const flowRef = useRef<HTMLDivElement | null>(null);
+
+  // reflect current scale into a CSS var for the MeasureEdge
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--px-per-meter",
+      String(pxPerMeter)
+    );
+  }, [pxPerMeter]);
+
+  const onNodesChange = useCallback(
+    (changes: NodeChange<Node<TEquipmentData>>[]) =>
+      setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
+
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) =>
+      setEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  );
+
+  const onConnect = useCallback(
+    (c: Connection) =>
+      setEdges((eds) => addEdge({ ...c, type: egdeMeasure }, eds)),
+    []
+  );
+
+  const onDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    const kind = e.dataTransfer.getData(
+      "application/reactflow"
+    ) as TEquipmentType;
+    if (!kind || !rfRef.current) return;
+
+    // v12: use screenToFlowPosition with raw client coords
+    const position = rfRef.current.screenToFlowPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+
+    const node: Node<TEquipmentData> = {
+      id: nanoid(),
+      type: "equipment",
+      position,
+
+      data: {
+        kind,
+        label:
+          kind === "mic-stand"
+            ? "Mic Stand"
+            : kind === "power-extension"
+            ? "Power Strip"
+            : kind.replace("-", " ").replace(/\b\w/g, (m) => m.toUpperCase()),
+      },
+    };
+
+    setNodes((ns) => ns.concat(node));
+  }, []);
+
+  return (
+    <div className="max-w-3/2 flex max-h-[40vh] flex-col gap-2 px-2.5 md:max-h-none md:w-full md:flex-row md:justify-between md:px-0">
+      {/* Canvas */}
+      <div
+        ref={flowRef}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        className="h-[70vh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1"
+      >
+        <ReactFlow<Node<TEquipmentData>>
+          onInit={(inst) => (rfRef.current = inst)}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          fitView
+          fitViewOptions={{ padding: 10 }}
+          // proOptions={{ hideAttribution: true }}
+          // sensible interaction defaults
+          panOnScroll={false}
+          preventScrolling={false}
+          // panOnDrag={false}
+          zoomOnPinch={false}
+          zoomOnScroll={false}
+          selectionOnDrag
+          minZoom={0.4}
+          maxZoom={3}
+          snapToGrid
+          snapGrid={[10, 10]}
+          style={{ overflow: "auto !important" }}
+        >
+          {/* <MiniMap pannable zoomable className="scale-65 md:scale-100" /> */}
+          <Background
+            id="1"
+            gap={10}
+            color="#f1f1f1"
+            variant={BackgroundVariant.Lines}
+          />
+
+          <Background
+            style={{ overflow: "auto" }}
+            id="2"
+            gap={100}
+            color="#ccc"
+            variant={BackgroundVariant.Lines}
+          />
+          <Controls position="bottom-right" className="scale-125" />
         </ReactFlow>
       </div>
     </div>

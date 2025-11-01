@@ -7,7 +7,7 @@ import { createServerClientService } from "@/lib/supabase/server";
 import { getProjectBySlug } from "@/app/actions/get-project-by-slug/get-project-by-slug";
 
 import { TechRiderDropdown } from "@/components/tech-rider-dropdown/tech-rider-dropdown";
-import StagePlanCanvas from "@/components/builder/stage-builder-flow/stage-builder-flow";
+import { StagePlanCanvasViewer } from "@/components/builder/stage-builder-flow/stage-builder-flow";
 
 import "./project.css";
 
@@ -30,17 +30,18 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
 
   return (
     <div className="techrider-page">
-      <nav className="border-b border-gray-100 !bg-white">
-        <div className="mx-auto max-w-7xl px-3 py-4 md:px-6">
-          <div className="flex items-center md:justify-between">
-            <a href="#home" className="text-3xl font-bold text-green-600">
+      <nav className="bg-white! border-b border-gray-100">
+        <div className="mx-auto px-3 py-4 md:px-6">
+          <div className="flex w-full items-center justify-between">
+            <a
+              href="#home"
+              className="shrink-0 text-3xl font-bold text-green-600"
+            >
               {project.name}
             </a>
 
-            <ul className="flex w-full scale-75 items-end gap-3 md:scale-100 md:items-center md:gap-8">
-              <li>
-                <TechRiderDropdown members={project.members} />
-              </li>
+            <ul className="flex w-auto items-center gap-3 md:gap-8 md:pr-2">
+              <TechRiderDropdown members={project.members} />
 
               <li>
                 <Link
@@ -113,9 +114,13 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <div id="#stage-plan" className="px-3 md:px-40">
+      <h1 className="mb-8 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+        Stage Plan
+      </h1>
+
+      <div id="stage-plan" className="px-3 md:px-60">
         {project.stagePlanConfig && (
-          <StagePlanCanvas stagePlanConfig={project.stagePlanConfig} />
+          <StagePlanCanvasViewer stagePlanConfig={project.stagePlanConfig} />
         )}
       </div>
 

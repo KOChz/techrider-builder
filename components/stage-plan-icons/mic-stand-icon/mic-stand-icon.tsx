@@ -2,55 +2,37 @@
 
 import * as React from "react";
 
-export type MicStandIconProps = React.SVGProps<SVGSVGElement> & {
+export type TMicStandIconProps = Omit<
+  React.SVGProps<SVGSVGElement>,
+  "width" | "height"
+> & {
   title?: string;
   titleId?: string;
-  horizontalPadding?: number;
-  verticalPadding?: number;
+  width?: number;
+  height?: number;
 };
 
-const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
+const MicStandIcon = React.forwardRef<SVGSVGElement, TMicStandIconProps>(
   (
-    {
-      title = "Mic stand",
-      titleId,
-      horizontalPadding = 150,
-      verticalPadding = 50,
-      ...props
-    },
+    { title = "Mic stand", titleId, width = 50, height = 120, ...props },
     ref
   ) => {
     const autoId = React.useId();
     const a11yId = title ? titleId ?? `${autoId}-title` : undefined;
 
-    const ICON_WIDTH = 50;
-    const ICON_HEIGHT = 120;
-
-    const hitboxX = -horizontalPadding;
-    const hitboxY = -verticalPadding;
-    const hitboxWidth = ICON_WIDTH + horizontalPadding * 2;
-    const hitboxHeight = ICON_HEIGHT + verticalPadding * 2;
-
     return (
       <svg
         id="mic-stand"
         ref={ref}
-        viewBox={`0 0 ${ICON_WIDTH} ${ICON_HEIGHT}`}
+        viewBox="0 0 50 120"
         role="img"
         aria-labelledby={a11yId}
+        width={width}
+        height={height}
         {...props}
       >
         {title ? <title id={a11yId}>{title}</title> : null}
 
-        <rect
-          x={hitboxX}
-          y={hitboxY}
-          width={hitboxWidth}
-          height={hitboxHeight}
-          fill="transparent"
-        />
-
-        {/* Base tripod legs - matte black powder coat */}
         <line
           x1={25}
           y1={115}
@@ -68,7 +50,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={3}
         />
 
-        {/* Center post connector - black metal */}
         <line
           x1={25}
           y1={115}
@@ -78,7 +59,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={3}
         />
 
-        {/* Main vertical pole - brushed chrome/silver */}
         <line
           x1={25}
           y1={108}
@@ -88,7 +68,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={2.5}
         />
 
-        {/* Boom arm - chrome with slight shadow */}
         <line
           x1={25}
           y1={30}
@@ -98,7 +77,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={2}
         />
 
-        {/* Mic clip bottom - black plastic */}
         <ellipse
           cx={35}
           cy={12}
@@ -109,7 +87,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={1}
         />
 
-        {/* Mic body - dark metal housing */}
         <ellipse
           cx={35}
           cy={8}
@@ -120,7 +97,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={1.5}
         />
 
-        {/* Mic grille mesh - charcoal black */}
         <rect
           x={31}
           y={2}
@@ -132,7 +108,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={1}
         />
 
-        {/* Grille mesh lines - subtle gray */}
         <line
           x1={33}
           y1={3}
@@ -158,7 +133,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={0.5}
         />
 
-        {/* Boom arm joint - chrome knob */}
         <circle
           cx={25}
           cy={30}
@@ -168,7 +142,6 @@ const MicStandIcon = React.forwardRef<SVGSVGElement, MicStandIconProps>(
           strokeWidth={1.5}
         />
 
-        {/* Height adjustment knob - smaller chrome detail */}
         <circle
           cx={25}
           cy={70}

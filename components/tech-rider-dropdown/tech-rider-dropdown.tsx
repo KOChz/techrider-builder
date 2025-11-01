@@ -51,7 +51,7 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
 
   return (
     <div
-      className="relative"
+      className="relative flex flex-row items-center"
       ref={dropdownRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -77,7 +77,7 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
       <div
         className={cn(
           "absolute top-[calc(100%+0.5rem)] left-1/3 -translate-x-1/2",
-          "min-w-[400px] w-max",
+          "min-w-[300px] w-max",
           "md:left-auto md:-right-4 md:translate-x-0",
 
           "transition-all duration-200",
@@ -90,7 +90,6 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
           className={cn(
             "bg-white border border-gray-200 rounded-lg max-w-lg",
             "shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
-
             "before:content-[''] before:absolute before:-top-1 before:left-1/2 before:-translate-x-1/2",
             "before:w-3 before:h-3 before:bg-white before:border-l before:border-t before:border-gray-200",
             "before:rotate-45 before:z-0",
