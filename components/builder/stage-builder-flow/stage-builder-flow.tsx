@@ -1117,7 +1117,7 @@ export default function StagePlanCanvas({
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="aspect-square h-[50vh] touch-none select-none overflow-auto rounded-xl border border-slate-200 md:aspect-auto md:h-[70vh] md:flex-1 md:p-4"
+        className="aspect-square h-[55vh] touch-none select-none overflow-auto rounded-xl border border-slate-200 md:aspect-auto md:h-[70vh] md:flex-1 md:p-4"
         style={{ WebkitTouchCallout: "none" }}
       >
         <ReactFlow<Node<TEquipmentData>>
@@ -1322,13 +1322,13 @@ export function StagePlanCanvasViewer({
   const { isMobile } = useDevice();
 
   return (
-    <div className="max-w-3/2 flex h-[45vh] flex-col gap-2 px-2.5 md:max-h-none md:w-full md:flex-row md:justify-between md:px-0">
+    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 px-2.5 md:h-[70dvh] md:max-h-none md:w-full md:flex-row md:justify-between md:px-0">
       {/* Canvas */}
       <div
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="h-[45vh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1"
+        className="h-[50dvh] touch-none overflow-auto rounded-xl border border-gray-200 md:h-[70dvh] md:flex-1"
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
@@ -1349,7 +1349,7 @@ export function StagePlanCanvasViewer({
           zoomOnPinch={true}
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={isMobile ? 0.35 : 0.8}
+          minZoom={isMobile ? 0.42 : 0.8}
           maxZoom={3}
           snapToGrid
           snapGrid={[10, 10]}
