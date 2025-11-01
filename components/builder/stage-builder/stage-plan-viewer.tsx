@@ -187,7 +187,7 @@ export function StagePlanViewer({
   const { isMobile } = useDevice();
 
   return (
-    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 px-2.5 md:h-[50dvh] md:max-h-none md:w-full md:flex-row md:justify-between md:px-0 xl:h-[70dvh]">
+    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 md:h-[50dvh] md:max-h-none md:w-full md:flex-row md:justify-between xl:h-[70dvh]">
       {/* Canvas */}
       <div
         ref={flowRef}
