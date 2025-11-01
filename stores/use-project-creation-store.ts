@@ -5,8 +5,8 @@ import { TBandMemberBuilder } from "@/components/builder/member-card-builder/mem
 import { TMeasurement } from "@/components/builder/dimension-line/dimension-line";
 
 import { Edge, type Node } from "@xyflow/react";
-import { TMeasurmentData } from "@/components/builder/stage-builder/edges/measure-edge";
-import { TEquipmentData } from "@/components/builder/stage-builder/nodes/equipment-node";
+import { TMeasurmentData } from "@/components/builder/stage-plan-builder/edges/measure-edge";
+import { TEquipmentData } from "@/components/builder/stage-plan-builder/nodes/equipment-node";
 
 export interface IStagePlanFlowConfig {
   nodes: Node<TEquipmentData>[];

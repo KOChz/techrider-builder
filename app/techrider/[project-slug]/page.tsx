@@ -9,7 +9,7 @@ import { getProjectBySlug } from "@/app/actions/get-project-by-slug/get-project-
 import { TechRiderDropdown } from "@/components/tech-rider-dropdown/tech-rider-dropdown";
 
 import "./project.css";
-import { StagePlanViewer } from "@/components/builder/stage-builder/stage-plan-viewer";
+import { StagePlanViewer } from "@/components/builder/stage-plan-builder/stage-plan-viewer";
 
 interface IProjectPageProps {
   params: Promise<{

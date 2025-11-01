@@ -5,7 +5,7 @@ import { useState } from "react";
 import { StagePlanBuilderContent } from "../builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "../builder-tabs-content/settings-content/settings-content";
 import { MembersContent } from "../builder-tabs-content/members-content/members-content";
-import { BandInfoContent } from "../builder-tabs-content/dand-info-content/band-info-content";
+import { BandInfoContent } from "../builder-tabs-content/band-info-content/band-info-content";
 import { useCreateProject } from "@/hooks/use-create-project";
 import Link from "next/link";
 

@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/builder/stage-builder/stage-plan-builder.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/builder/stage-plan-builder/stage-plan-builder.tsx"],
   "exclude": ["node_modules"]
 }

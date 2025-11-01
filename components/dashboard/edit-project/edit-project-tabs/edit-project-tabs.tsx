@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { useCreateProject } from "@/hooks/use-create-project";
 
-import { BandInfoContent } from "@/components/builder/builder-tabs-content/dand-info-content/band-info-content";
+import { BandInfoContent } from "@/components/builder/builder-tabs-content/band-info-content/band-info-content";
 import { MembersContent } from "@/components/builder/builder-tabs-content/members-content/members-content";
 import { StagePlanBuilderContent } from "@/components/builder/builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "@/components/builder/builder-tabs-content/settings-content/settings-content";

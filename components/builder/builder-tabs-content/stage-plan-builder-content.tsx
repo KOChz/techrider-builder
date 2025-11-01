@@ -3,7 +3,7 @@
 import { ReactFlowProvider } from "@xyflow/react";
 
 import { useProjectStore } from "@/stores/use-project-creation-store";
-import StagePlanBuilder from "../stage-builder/stage-plan-builder";
+import StagePlanBuilder from "../stage-plan-builder/stage-plan-builder";
 
 export function StagePlanBuilderContent() {
   const { stagePlanConfig, setStagePlanConfig } = useProjectStore();
