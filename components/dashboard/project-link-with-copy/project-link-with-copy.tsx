@@ -50,7 +50,7 @@ export function ProjectLinkWithCopy({
           <Check
             size={18}
             strokeWidth={2}
-            className="animate-in zoom-in-50 duration-200"
+            className="animate-in zoom-in-50 cursor-pointer duration-200"
           />
         ) : (
           <Copy size={18} strokeWidth={1.5} />
