@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
 
       <section id="home" className="hero">
         <div>
-          <h1 className="mb-20 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+          <h1 className="text-shadow-2xs mb-20 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
             {project.name}
           </h1>
           <a
@@ -103,7 +103,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
       </section>
 
       <section id="tech-rider" className="container">
-        <h2 className="bg-linear-to-r mb-16 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
+        <h2 className="bg-linear-to-r text-shadow-2xs mb-16 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
           Technical Requirements
         </h2>
 
@@ -114,7 +114,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <h1 className="min-h-20 bg-linear-to-r mb-8 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+      <h1 className="min-h-20 text-shadow-2xs bg-linear-to-r mb-8 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
         Stage Plan
       </h1>
 
