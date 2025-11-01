@@ -88,7 +88,7 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
       >
         <button
           type="button"
-          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent pt-0.5 text-[14px] font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
+          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent pt-[1px] text-[14px] font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
           aria-haspopup="true"
           aria-expanded={isOpen}
           onClick={() => setIsClickOpen((v) => !v)}
@@ -96,7 +96,7 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
           Tech Rider
           <span
             className={cn(
-              "text-[0.7rem] transition-transform duration-200",
+              "text-[0.75rem] transition-transform duration-200",
               isOpen && "rotate-180"
             )}
           >

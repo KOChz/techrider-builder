@@ -10,6 +10,8 @@ import { TechRiderDropdown } from "@/components/tech-rider-dropdown/tech-rider-d
 
 import "./project.css";
 import { StagePlanViewer } from "@/components/builder/stage-plan-builder/stage-plan-viewer";
+import { DownloadPageButton } from "@/components/download-page-button/download-page-button";
+import { cn } from "@/lib/utils/cn";
 
 interface IProjectPageProps {
   params: Promise<{
@@ -28,19 +30,19 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const isOwner = user?.id === project.ownerId;
+
   return (
-    <div className="techrider-page">
+    <div id="page-content" className="techrider-page">
       <nav className="bg-white! border-b border-gray-100">
         <div className="flex-end mx-auto flex px-3 py-4 md:px-6">
           <div className="flex-end flex w-full items-center justify-center md:justify-end">
-            {/* <a
-              href="#home"
-              className="shrink-0 text-3xl font-bold text-green-600"
+            <ul
+              className={cn(
+                "flex w-auto items-center gap-3 md:gap-8 md:pr-2",
+                isOwner && "text-xs md:text-md"
+              )}
             >
-              {project.name}
-            </a> */}
-
-            <ul className="flex w-auto items-center gap-3 md:gap-8 md:pr-2">
               <TechRiderDropdown members={project.members} />
 
               <li>
@@ -52,7 +54,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
                 </Link>
               </li>
 
-              {user && (
+              {isOwner && (
                 <li>
                   <Link
                     href="/dashboard/my-projects"
@@ -63,6 +65,8 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
                   </Link>
                 </li>
               )}
+
+              {isOwner && <DownloadPageButton />}
             </ul>
           </div>
         </div>
