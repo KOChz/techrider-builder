@@ -249,7 +249,7 @@ export function MemberCardBuilder({
                     <button
                       type="button"
                       onClick={() => removeExamplesFromItem(equipmentIndex)}
-                      className="cursor-pointer rounded border bg-gray-400 p-1.5 text-xs text-white transition-colors hover:bg-gray-500"
+                      className="cursor-pointer rounded-sm border bg-gray-400 p-[0.40625rem] text-[13px] text-white transition-colors hover:bg-gray-500"
                     >
                       Remove
                     </button>
