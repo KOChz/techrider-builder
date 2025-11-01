@@ -1039,19 +1039,39 @@ export default function StagePlanCanvas({
     setNodes((ns) => ns.concat(node));
   }, []);
 
-  const handleAddNode = useCallback(
-    (kind: TEquipmentType) => {
-      const newNode = {
-        id: `${kind}-${Date.now()}`,
-        type: "equipment",
-        position: { x: 420, y: 160 },
-        data: { kind, label: kind },
-      };
+  const handleAddNode = useCallback((kind: TEquipmentType) => {
+    if (!rfRef.current || !flowRef.current) return;
 
-      setNodes((prevNodes) => [...prevNodes, newNode]);
-    },
-    [setNodes]
-  );
+    // Get the flow container's bounding rectangle
+    const flowBounds = flowRef.current.getBoundingClientRect();
+
+    // Calculate the center point of the viewport
+    const centerX = flowBounds.left + flowBounds.width / 2;
+    const centerY = flowBounds.top + flowBounds.height / 2;
+
+    // Convert screen coordinates to flow coordinates
+    const position = rfRef.current.screenToFlowPosition({
+      x: centerX,
+      y: centerY,
+    });
+
+    const newNode: Node<TEquipmentData> = {
+      id: nanoid(),
+      type: "equipment",
+      position,
+      data: {
+        kind,
+        label:
+          kind === "mic-stand"
+            ? "Mic Stand"
+            : kind === "power-extension"
+            ? "Power Strip"
+            : kind.replace("-", " ").replace(/\b\w/g, (m) => m.toUpperCase()),
+      },
+    };
+
+    setNodes((prevNodes) => [...prevNodes, newNode]);
+  }, []);
 
   const { isMobile } = useDevice();
 
