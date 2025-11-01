@@ -22,13 +22,13 @@ export default function SignUpForm() {
   return (
     <div className="w-full max-w-md">
       <div className="mb-1">
-        <h1 className="text-3xl font-bold text-slate-300">Create account</h1>
-        <p className="text-slate-600">
+        <h1 className="text-3xl font-bold text-green-600/90">Create account</h1>
+        <p className="pb-1 text-sm text-slate-600 opacity-90">
           Spin up access to your tech rider dashboard
         </p>
       </div>
 
-      <div className="space-y-1 rounded-xl border border-slate-200 bg-white p-6 shadow-lg">
+      <div className="shadow-xs space-y-1 rounded-xl border border-slate-200 bg-white p-6">
         {(state.message || oauthError) && (
           <div
             className={`px-4 py-3 rounded-lg text-sm flex items-start gap-3 border ${
@@ -208,7 +208,7 @@ export default function SignUpForm() {
             <button
               type="submit"
               disabled={pending}
-              className="w-full cursor-pointer rounded-lg bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 px-6 py-3.5 font-medium text-white shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="from-green-600/85 w-full cursor-pointer rounded-lg bg-gradient-to-r via-green-600 to-green-600/90 px-6 py-3.5 font-medium text-white shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               aria-label={pending ? "Creating..." : "Create Account"}
             >
               {pending ? "Creating..." : "Create Account"}
@@ -221,7 +221,7 @@ export default function SignUpForm() {
             <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-4 text-slate-500">
+            <span className="bg-white px-4 py-1 text-slate-500">
               Already onboard?
             </span>
           </div>

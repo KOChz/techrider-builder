@@ -7,51 +7,32 @@ interface IAuthLayoutProps {
 
 export default function AuthLayout({ children }: IAuthLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 border-b border-slate-700 bg-black/80 backdrop-blur-sm">
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white backdrop-blur-sm">
         <nav aria-label="Primary">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div
               id="AuthLayoutHeader"
-              className="flex justify-between items-center h-16"
+              className="flex h-16 items-center justify-between"
             >
               <Link
                 href="/"
                 aria-label="TechRider Builder home"
-                className="text-2xl font-bold bg-linear-to-r from-white to-green-700 bg-clip-text text-transparent transition-all duration-200 hover:to-green-600"
+                className="bg-linear-to-r text-shadow-2xs animate-gradient from-emerald-600 via-green-500 to-teal-500 bg-[length:200%_auto] bg-clip-text text-3xl font-bold text-transparent"
               >
                 TechRider Builder
               </Link>
-
-              <ul className="flex items-center gap-6">
-                <li>
-                  <Link
-                    href="/"
-                    className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/#contact"
-                    className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
-              </ul>
             </div>
           </div>
         </nav>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-4">
+      <main className="flex flex-1 items-center justify-center bg-white px-2">
         {children}
       </main>
 
-      <footer className="border-t border-slate-700 bg-black py-8 px-4">
-        <div className="max-w-7xl mx-auto text-center">
+      <footer className="border-t border-slate-200 bg-white px-4 py-8">
+        <div className="mx-auto max-w-7xl text-center">
           <p className="text-sm text-slate-400">
             © 2025 headachee. All rights reserved.
           </p>

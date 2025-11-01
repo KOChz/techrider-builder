@@ -19,13 +19,13 @@ export default function LoginForm() {
   return (
     <div className="w-full max-w-md">
       <div className="mb-1">
-        <h1 className="text-3xl font-bold text-slate-300">Welcome back</h1>
-        <p className="text-slate-600">
+        <h1 className="text-3xl font-bold text-green-600/90">Welcome</h1>
+        <p className="pb-2 text-sm text-slate-600 opacity-90">
           Sign in to access your tech rider dashboard
         </p>
       </div>
 
-      <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-6 shadow-lg">
+      <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-6 shadow-md">
         {(state.message || oauthError) && (
           <div
             className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
