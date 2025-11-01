@@ -44,6 +44,7 @@ import { getStraightPath } from "@xyflow/react";
 import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils/cn";
+import { useDevice } from "@/hooks/use-device";
 
 // ---------- Domain types ----------
 export type TEquipmentType =
@@ -1052,6 +1053,8 @@ export default function StagePlanCanvas({
     [setNodes]
   );
 
+  const { isMobile } = useDevice();
+
   return (
     <div className="flex flex-col gap-2 md:flex-row md:justify-between">
       {/* Sidebar */}
@@ -1111,7 +1114,7 @@ export default function StagePlanCanvas({
           zoomOnPinch
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={0.25}
+          minZoom={isMobile ? 0.3 : 0.5}
           maxZoom={2.5}
           snapToGrid
           snapGrid={[10, 10]}
@@ -1129,7 +1132,11 @@ export default function StagePlanCanvas({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          <Controls position="bottom-right" className="scale-125" />
+          <Controls
+            showInteractive={false}
+            position="bottom-right"
+            className="md:scale-125"
+          />
         </ReactFlow>
       </div>
     </div>
@@ -1288,14 +1295,16 @@ export function StagePlanCanvasViewer({
     setNodes((ns) => ns.concat(node));
   }, []);
 
+  const { isMobile } = useDevice();
+
   return (
-    <div className="max-w-3/2 flex max-h-[40vh] flex-col gap-2 px-2.5 md:max-h-none md:w-full md:flex-row md:justify-between md:px-0">
+    <div className="max-w-3/2 flex h-[45vh] flex-col gap-2 px-2.5 md:max-h-none md:w-full md:flex-row md:justify-between md:px-0">
       {/* Canvas */}
       <div
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="h-[70vh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1"
+        className="h-[45vh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1"
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
@@ -1316,7 +1325,7 @@ export function StagePlanCanvasViewer({
           zoomOnPinch={true}
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={0.4}
+          minZoom={isMobile ? 0.35 : 0.8}
           maxZoom={3}
           snapToGrid
           snapGrid={[10, 10]}
@@ -1337,7 +1346,7 @@ export function StagePlanCanvasViewer({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          <Controls position="bottom-right" className="scale-125" />
+          <Controls showInteractive={false} position="bottom-right" />
         </ReactFlow>
       </div>
     </div>
