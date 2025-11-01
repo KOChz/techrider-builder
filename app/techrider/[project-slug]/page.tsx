@@ -103,7 +103,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
       </section>
 
       <section id="tech-rider" className="container">
-        <h2 className="bg-linear-to-r text-shadow-2xs mb-16 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
+        <h2 className="bg-linear-to-r text-shadow-2xs min-h-32 mb-6 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
           Technical Requirements
         </h2>
 
