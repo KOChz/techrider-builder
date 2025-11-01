@@ -10,12 +10,14 @@ export function AnnotationNode({ data, id }: IAnnotationNodeProps) {
 
   return (
     <div
-      className="select-noneRetry flex origin-center items-center justify-center whitespace-nowrap rounded bg-transparent text-xl font-bold opacity-50"
+      className="select-noneRetry opacity-45 flex origin-center items-center justify-center whitespace-nowrap rounded bg-transparent text-xl font-bold"
       style={{
         transform: `rotate(${rotation}deg)`,
       }}
     >
-      <span className="font-semibold text-slate-700">{data.label}</span>
+      <span className="font-semibold tracking-widest text-slate-700/90">
+        {data.label}
+      </span>
     </div>
   );
 }
