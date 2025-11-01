@@ -49,7 +49,7 @@ export function DownloadStagePlanButton() {
   return (
     <Panel position="top-right">
       <button
-        className="bg-green-600/85 cursor-pointer rounded-lg p-3 text-sm text-white transition-colors duration-200 hover:bg-green-700/90"
+        className="cursor-pointer rounded-lg bg-green-600/80 p-2 text-xs text-white transition-colors duration-200 hover:bg-green-700/90"
         onClick={onClick}
       >
         Download Image
