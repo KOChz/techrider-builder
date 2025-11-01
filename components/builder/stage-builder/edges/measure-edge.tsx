@@ -206,6 +206,7 @@ export function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
         style={{
           strokeDasharray: "5,5",
           strokeWidth: selected ? 3 : 2,
+          stroke: "#3CB371",
         }}
       />
 
