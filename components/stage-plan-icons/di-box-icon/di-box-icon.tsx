@@ -20,7 +20,7 @@ const DIBoxIcon: React.FC<IDIBoxProps> = ({
   height = 80,
   className = "",
   isPowerOn = true,
-  brandName = "DIRECT BOX",
+  brandName,
 }) => {
   const aspectRatio = 60 / 40;
   const calculatedHeight = width / aspectRatio;
@@ -29,8 +29,8 @@ const DIBoxIcon: React.FC<IDIBoxProps> = ({
   return (
     <svg
       id="di-box"
-      width={width}
-      height={finalHeight}
+      width={width / 2}
+      height={finalHeight / 2}
       viewBox="0 0 60 40"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@ const DIBoxIcon: React.FC<IDIBoxProps> = ({
         fontWeight="bold"
         letterSpacing="0.5"
       >
-        {brandName}
+        {brandName || "DIRECT BOX"}
       </text>
 
       {/* Screws on top corners */}

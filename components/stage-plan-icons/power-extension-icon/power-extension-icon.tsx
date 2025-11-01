@@ -24,9 +24,10 @@ const PowerExtensionIcon = React.forwardRef<
       title = "Power extension strip",
       titleId,
       isOn = true,
-      hitboxPadding, // deprecated
       horizontalPadding,
       verticalPadding,
+      width = 100,
+      height = 40,
       ...props
     },
     ref
@@ -35,11 +36,11 @@ const PowerExtensionIcon = React.forwardRef<
     const a11yId = title ? titleId ?? `${autoId}-title` : undefined;
 
     // --- dimensions ---------------------------------------------------------
-    const ICON_WIDTH = 200;
-    const ICON_HEIGHT = 40;
+    const ICON_WIDTH = 160;
+    const ICON_HEIGHT = 30;
 
-    const padX = horizontalPadding ?? hitboxPadding ?? 0;
-    const padY = verticalPadding ?? hitboxPadding ?? 0;
+    const padX = horizontalPadding ?? 0;
+    const padY = verticalPadding ?? 0;
 
     const hitboxX = -padX;
     const hitboxY = -padY;
@@ -64,13 +65,15 @@ const PowerExtensionIcon = React.forwardRef<
         role="img"
         aria-labelledby={a11yId}
         focusable="false"
+        width={width}
+        height={height}
         {...props}
       >
         {title ? <title id={a11yId}>{title}</title> : null}
 
         {/* Expanded hover/click hitbox */}
         <rect
-          x={hitboxX - 5}
+          x={hitboxX - 10}
           y={hitboxY}
           width={hitboxWidth}
           height={hitboxHeight}
