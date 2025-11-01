@@ -103,7 +103,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
       </section>
 
       <section id="tech-rider" className="container">
-        <h2 className="mb-16 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
+        <h2 className="bg-linear-to-r mb-16 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
           Technical Requirements
         </h2>
 
@@ -114,11 +114,11 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <h1 className="mb-8 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+      <h1 className="min-h-20 bg-linear-to-r mb-2 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
         Stage Plan
       </h1>
 
-      <div id="stage-plan" className="px-3 md:px-60">
+      <div id="stage-plan" className="px-3 md:px-10 xl:px-60">
         {project.stagePlanConfig && (
           <StagePlanCanvasViewer stagePlanConfig={project.stagePlanConfig} />
         )}

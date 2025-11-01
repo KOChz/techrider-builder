@@ -766,7 +766,7 @@ function PaletteItem({
       draggable
       onDragStart={onDragStart}
       onClick={handleClick}
-      className="justify-items-end-safe flex cursor-grab items-center gap-4 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs"
+      className="justify-items-end-safe items- min-h-16 flex cursor-grab items-center gap-4 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs"
     >
       {icon()} <span className="font-bold"> {label}</span>
     </div>
@@ -1083,7 +1083,7 @@ export default function StagePlanCanvas({
     <div className="flex flex-col gap-2 md:flex-row md:justify-between">
       {/* Sidebar */}
       {isBuilder && (
-        <div className="grid content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+        <div className="grid content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:max-w-[240px] lg:max-w-none">
           <div className="grid gap-1.5">
             <span className="text-xs text-slate-600">
               Connect two nodes to show distance.
@@ -1117,7 +1117,7 @@ export default function StagePlanCanvas({
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="aspect-square h-[55vh] touch-none select-none overflow-auto rounded-xl border border-slate-200 md:aspect-auto md:h-[70vh] md:flex-1 md:p-4"
+        className="aspect-square h-[55vh] touch-none select-none overflow-auto rounded-xl border border-slate-200 md:aspect-auto md:h-[70vh] md:flex-1"
         style={{ WebkitTouchCallout: "none" }}
       >
         <ReactFlow<Node<TEquipmentData>>
