@@ -7,9 +7,9 @@ import { createServerClientService } from "@/lib/supabase/server";
 import { getProjectBySlug } from "@/app/actions/get-project-by-slug/get-project-by-slug";
 
 import { TechRiderDropdown } from "@/components/tech-rider-dropdown/tech-rider-dropdown";
-import { StagePlanCanvasViewer } from "@/components/builder/stage-builder-flow/stage-builder-flow";
 
 import "./project.css";
+import { StagePlanViewer } from "@/components/builder/stage-builder/stage-plan-viewer";
 
 interface IProjectPageProps {
   params: Promise<{
@@ -120,7 +120,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
 
       <div id="stage-plan" className="px-3 md:px-10 xl:px-60">
         {project.stagePlanConfig && (
-          <StagePlanCanvasViewer stagePlanConfig={project.stagePlanConfig} />
+          <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
         )}
       </div>
 
