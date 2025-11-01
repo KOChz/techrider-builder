@@ -1,149 +1,144 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
 import { TProjectMember } from "@/db/schema";
+import { useClickAway, useHover } from "@uidotdev/usehooks";
 
 interface ITechRiderDropdownProps {
   members: TProjectMember[];
 }
 
 export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [hoverRef, isHovering] = useHover<HTMLDivElement>();
+  const [isClickOpen, setIsClickOpen] = useState(false);
+  const isOpen = isHovering || isClickOpen;
+
+  const awayClickRef = useClickAway<HTMLDivElement>(() => {
+    if (isClickOpen) setIsClickOpen(false);
+  });
 
   useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
+    if (!isClickOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsClickOpen(false);
     };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isClickOpen]);
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [isOpen]);
-
-  const handleMouseEnter = () => {
-    setIsOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsOpen(false);
-  };
-
-  return (
-    <div
-      className="relative flex flex-row items-center"
-      ref={dropdownRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <a
-        type="button"
-        className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent text-[14px] font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((prev) => !prev)}
-      >
-        Tech Rider
-        <span
-          className={cn(
-            "text-[0.8rem] transition-transform duration-200",
-            isOpen && "rotate-180"
-          )}
-        >
-          ▾
-        </span>
-      </a>
-
-      <div
-        className={cn(
-          "absolute top-[calc(100%+0.5rem)] left-1/3 -translate-x-1/2",
-          "min-w-[300px] w-max",
-          "md:left-auto md:-right-4 md:translate-x-0",
-
-          "transition-all duration-200",
-
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        )}
-        role="menu"
-      >
-        <div
-          className={cn(
-            "bg-white border border-gray-200 rounded-lg max-w-lg",
-            "shadow-[0_8px_30px_rgba(0,0,0,0.12)]",
-            "before:content-[''] before:absolute before:-top-1 before:left-1/2 before:-translate-x-1/2",
-            "before:w-3 before:h-3 before:bg-white before:border-l before:border-t before:border-gray-200",
-            "before:rotate-45 before:z-0",
-            "md:before:left-auto md:before:right-5 md:before:translate-x-0"
-          )}
-        >
-          {members.map((member) => (
-            <a
-              key={member.id}
-              href={`#${member.name}`}
-              className={cn(
-                "flex gap-4 px-4 py-4",
-                "relative z-10",
-                "text-gray-900 no-underline",
-                "transition-colors duration-200",
-                "border-b border-gray-100",
-                "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
-                "first:rounded-t-lg last:rounded-b-lg last:border-b-0",
-                "md:px-8 md:py-5 md:min-h-14"
-              )}
-              role="menuitem"
-              onClick={() => setIsOpen(false)}
-            >
-              <span className="shrink-0 text-2xl grayscale">{member.icon}</span>
-              <div className="flex flex-col">
-                <span className="text-[0.95rem] font-semibold tracking-tight">
-                  {member.name}
-                </span>
-                <span className="font-mono text-xs uppercase tracking-wider text-gray-500">
-                  {member.role}
-                </span>
-              </div>
-            </a>
-          ))}
+  const menuItems = useMemo(
+    () => (
+      <div className="cursor-pointer">
+        {members.map((member) => (
           <a
-            href="#stage-plan"
+            key={member.id}
+            href={`#${member.name}`}
             className={cn(
-              "flex items-center gap-4 px-4 py-4",
-              "text-gray-900 no-underline",
-              "transition-colors duration-200",
-              "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
-              "last:rounded-b-lg",
+              "flex cursor-pointer gap-4 px-4 py-4",
+              "relative z-10 text-gray-900 no-underline transition-colors duration-200",
+              "border-b border-gray-100 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
+              "first:rounded-t-lg last:rounded-b-lg last:border-b-0",
               "md:px-8 md:py-5 md:min-h-14"
             )}
             role="menuitem"
-            onClick={() => setIsOpen(false)}
+            onClick={() => setIsClickOpen(false)}
           >
-            <span className="shrink-0 text-2xl grayscale">🏟️</span>
+            <span className="shrink-0 text-2xl grayscale">{member.icon}</span>
             <div className="flex flex-col">
               <span className="text-[0.95rem] font-semibold tracking-tight">
-                Stage Plan
+                {member.name}
+              </span>
+              <span className="font-mono text-xs uppercase tracking-wider text-gray-500">
+                {member.role}
               </span>
             </div>
           </a>
+        ))}
+        <a
+          href="#stage-plan"
+          className={cn(
+            "flex items-center gap-4 px-4 py-4 text-gray-900 no-underline transition-colors duration-200",
+            "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none last:rounded-b-lg",
+            "md:px-8 md:py-5 md:min-h-14"
+          )}
+          role="menuitem"
+          onClick={() => setIsClickOpen(false)}
+        >
+          <span className="shrink-0 text-2xl grayscale">🏟️</span>
+          <div className="flex flex-col">
+            <span className="text-[0.95rem] font-semibold tracking-tight">
+              Stage Plan
+            </span>
+          </div>
+        </a>
+      </div>
+    ),
+    [members]
+  );
+
+  return (
+    <div ref={awayClickRef}>
+      <div
+        ref={hoverRef}
+        className="relative flex flex-row items-center"
+        // note: no manual onMouseEnter/Leave — useHover handles this
+      >
+        <button
+          type="button"
+          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent pt-0.5 text-[14px] font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          onClick={() => setIsClickOpen((v) => !v)}
+        >
+          Tech Rider
+          <span
+            className={cn(
+              "text-[0.7rem] transition-transform duration-200",
+              isOpen && "rotate-180"
+            )}
+          >
+            ▾
+          </span>
+        </button>
+
+        {/* Hover buffer to keep the “air gap” hoverable between trigger and panel */}
+        <div
+          aria-hidden
+          className="pointer-events-auto absolute left-0 right-0 top-full h-2"
+        />
+
+        <div
+          className={cn(
+            "absolute top-full z-50",
+            // mobile: center under trigger, never overflow
+            "left-3/4 -translate-x-1/2 min-w-[260px] max-w-[92vw] w-max",
+            // ≥md: right-align to trigger
+            "md:left-auto md:right-0 md:translate-x-0 md:min-w-[300px]",
+            // visibility/animation
+            "transition-opacity duration-200",
+            isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          )}
+          role="menu"
+        >
+          <div
+            className={cn(
+              "relative bg-white border border-gray-200 rounded-lg shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+            )}
+          >
+            {/* caret: centered on mobile, right on ≥md */}
+            <span
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute -top-1 left-1/2 -translate-x-1/2 block h-3 w-3 rotate-45 rounded-sm bg-white",
+                "border-l border-t border-gray-200",
+                "md:left-auto md:right-5 md:translate-x-0"
+              )}
+            />
+            {menuItems}
+          </div>
         </div>
       </div>
     </div>

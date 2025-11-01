@@ -31,14 +31,14 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
   return (
     <div className="techrider-page">
       <nav className="bg-white! border-b border-gray-100">
-        <div className="mx-auto px-3 py-4 md:px-6">
-          <div className="flex w-full items-center justify-between">
-            <a
+        <div className="flex-end mx-auto flex px-3 py-4 md:px-6">
+          <div className="flex-end flex w-full items-center justify-center md:justify-end">
+            {/* <a
               href="#home"
               className="shrink-0 text-3xl font-bold text-green-600"
             >
               {project.name}
-            </a>
+            </a> */}
 
             <ul className="flex w-auto items-center gap-3 md:gap-8 md:pr-2">
               <TechRiderDropdown members={project.members} />
