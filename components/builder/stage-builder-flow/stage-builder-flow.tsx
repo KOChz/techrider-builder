@@ -1341,7 +1341,7 @@ export function StagePlanCanvasViewer({
           edgeTypes={edgeTypes}
           fitView
           fitViewOptions={{ padding: 10 }}
-          // proOptions={{ hideAttribution: true }}
+          proOptions={{ hideAttribution: true }}
           // sensible interaction defaults
           panOnScroll={false}
           preventScrolling={false}
