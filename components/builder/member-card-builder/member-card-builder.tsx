@@ -220,7 +220,7 @@ export function MemberCardBuilder({
                         quantity: e.target.value,
                       })
                     }
-                    className="w-12 rounded-l border border-gray-300 px-3 py-2 placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
+                    className="w-12 rounded-l border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
                     placeholder="Qty"
                   />
                   <button
