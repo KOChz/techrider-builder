@@ -10,6 +10,7 @@ import { DownloadPageButton } from "../download-page-button/download-page-button
 import { MemberCard } from "../member-card/member-card";
 import { StagePlanViewer } from "../builder/stage-plan-builder/stage-plan-viewer";
 import { User } from "@supabase/supabase-js";
+import { slugify } from "@/lib/utils/slugify";
 
 export function TechRiderClientPage({
   isOwner,
@@ -64,7 +65,12 @@ export function TechRiderClientPage({
                 </li>
               )}
 
-              {isOwner && <DownloadPageButton onClick={handleDownload} />}
+              {isOwner && (
+                <DownloadPageButton
+                  onClick={handleDownload}
+                  fileName={`tech-rider-${slugify(project.name)}`}
+                />
+              )}
             </ul>
           </div>
         </div>

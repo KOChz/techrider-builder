@@ -31,7 +31,7 @@ interface IDownloadPageButtonProps {
  */
 export function DownloadPageButton({
   targetElementId = "page-content",
-  fileName = "tech-rider-page.png",
+  fileName = `tech-rider-page.png`,
   backgroundColor = "white",
   className,
   onClick,
