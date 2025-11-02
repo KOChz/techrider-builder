@@ -25,7 +25,7 @@ interface IMemberCardProps {
 
 export function MemberCard({ member }: IMemberCardProps) {
   return (
-    <div className="member-card" id={member.name}>
+    <div className="member-card cursor-pointer" id={member.name}>
       <div className="member-header">
         <span className="member-icon">{member.icon}</span>
         <div className="member-info">

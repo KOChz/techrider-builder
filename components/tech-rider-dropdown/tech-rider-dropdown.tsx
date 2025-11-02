@@ -81,14 +81,10 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
 
   return (
     <div ref={awayClickRef}>
-      <div
-        ref={hoverRef}
-        className="relative flex flex-row items-center"
-        // note: no manual onMouseEnter/Leave — useHover handles this
-      >
+      <div ref={hoverRef} className="relative flex flex-row items-center">
         <button
           type="button"
-          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent pt-[1px] text-[14px] font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
+          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent text-xs font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none md:pt-[3px] md:text-[14px]"
           aria-haspopup="true"
           aria-expanded={isOpen}
           onClick={() => setIsClickOpen((v) => !v)}

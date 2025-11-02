@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { toPng } from "html-to-image";
+import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface IDownloadPageButtonProps {
   /**
@@ -55,6 +57,8 @@ export function DownloadPageButton({
       link.download = fileName;
       link.href = dataUrl;
       link.click();
+
+      toast.success("Image generated!");
     } catch (error) {
       console.error("Failed to download page:", error);
     } finally {
@@ -68,12 +72,12 @@ export function DownloadPageButton({
       disabled={isDownloading}
       className={
         className ||
-        "text-sm font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+        "relative md:text-sm text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
       }
       aria-label="Download page as image"
       aria-busy={isDownloading}
     >
-      {isDownloading ? "Downloading..." : "Download"}
+      Download
     </button>
   );
 }

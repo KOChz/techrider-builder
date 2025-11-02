@@ -33,14 +33,14 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
   const isOwner = user?.id === project.ownerId;
 
   return (
-    <div id="page-content" className="techrider-page">
+    <div className="techrider-page">
       <nav className="bg-white! border-b border-gray-100">
         <div className="flex-end mx-auto flex px-3 py-4 md:px-6">
           <div className="flex-end flex w-full items-center justify-center md:justify-end">
             <ul
               className={cn(
                 "flex w-auto items-center gap-3 md:gap-8 md:pr-2",
-                isOwner && "text-xs md:text-md"
+                isOwner && "text-xs! md:text-md"
               )}
             >
               <TechRiderDropdown members={project.members} />
@@ -48,7 +48,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
               <li>
                 <Link
                   href="#contact"
-                  className="text-sm font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900"
+                  className="text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 md:text-sm"
                 >
                   Contact
                 </Link>
@@ -59,7 +59,7 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
                   <Link
                     href="/dashboard/my-projects"
                     aria-label="Home"
-                    className="text-sm font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900"
+                    className="text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 md:text-sm"
                   >
                     Home
                   </Link>
@@ -106,41 +106,43 @@ export default async function ProjectPage({ params }: IProjectPageProps) {
         </div>
       </section>
 
-      <section id="tech-rider" className="container">
-        <h2 className="bg-linear-to-r text-shadow-2xs min-h-32 mb-6 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-5xl font-bold text-transparent">
-          Technical Requirements
-        </h2>
+      <div id="page-content">
+        <section id="tech-rider" className="container">
+          <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 mb-6 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-4xl font-bold text-transparent">
+            Technical Requirements
+          </h2>
 
-        <div className="tech-grid">
-          {project.members.map((member) => (
-            <MemberCard key={member.id} member={member} />
-          ))}
+          <div className="tech-grid">
+            {project.members.map((member) => (
+              <MemberCard key={member.id} member={member} />
+            ))}
+          </div>
+        </section>
+
+        <h1
+          id="stage-plan"
+          className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl"
+        >
+          Stage Plan
+        </h1>
+
+        <div className="px-4 md:px-10 xl:px-60">
+          {project.stagePlanConfig && (
+            <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
+          )}
         </div>
-      </section>
 
-      <h1
-        id="stage-plan"
-        className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 mb-6 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl"
-      >
-        Stage Plan
-      </h1>
-
-      <div className="px-4 md:px-10 xl:px-60">
-        {project.stagePlanConfig && (
-          <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
-        )}
+        <footer className="w-full" id="contact">
+          <h3>Get in Touch</h3>
+          <p>For bookings and technical questions:</p>
+          <p>
+            <a href={user?.email}>{user?.email}</a>
+          </p>
+          <p className="mt-(--spacing-md) text-[0.85rem]">
+            © 2025 {project.name}. All rights reserved.
+          </p>
+        </footer>
       </div>
-
-      <footer className="w-full" id="contact">
-        <h3>Get in Touch</h3>
-        <p>For bookings and technical questions:</p>
-        <p>
-          <a href={user?.email}>{user?.email}</a>
-        </p>
-        <p className="mt-(--spacing-md) text-[0.85rem]">
-          © 2025 {project.name}. All rights reserved.
-        </p>
-      </footer>
     </div>
   );
 }
