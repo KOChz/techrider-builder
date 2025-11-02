@@ -32,6 +32,8 @@ const xyFlowNodeSchema = z.object({
           "di-box",
           "mic-stand",
           "amp",
+          "synth-stand",
+          "mic",
         ])
       ),
 

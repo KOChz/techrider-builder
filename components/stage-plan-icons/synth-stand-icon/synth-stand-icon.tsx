@@ -31,7 +31,7 @@ const SynthStandIcon = React.forwardRef<SVGSVGElement, TSynthStandIconProps>(
 
     return (
       <svg
-        id="synth-stage"
+        id="synth-stand"
         viewBox="0 0 64 120"
         ref={ref}
         role="img"
