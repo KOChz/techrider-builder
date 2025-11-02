@@ -112,7 +112,7 @@ export function TechRiderClientPage({
       </section>
 
       <div id="page-content">
-        <section id="tech-rider" className="container">
+        <section id="tech-rider" className="pb-0! container">
           <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 mb-6 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-4xl font-bold text-transparent">
             Technical Requirements
           </h2>

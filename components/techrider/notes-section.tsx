@@ -26,7 +26,10 @@ export function NotesSection({ notes, className }: NotesSectionProps) {
   return (
     <section
       id="notes"
-      className={cn("container w-full px-4 md:px-6 lg:px-10", className)}
+      className={cn(
+        "container w-full px-4 md:px-6 lg:pt-0 pt-0! lg:px-10",
+        className
+      )}
       aria-labelledby="notes-heading"
     >
       <div
