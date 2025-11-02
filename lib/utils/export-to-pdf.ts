@@ -1,3 +1,4 @@
+// lib/export-stitched-pdf.ts
 import html2canvas from "html2canvas-pro";
 import { toCanvas as toCanvasHtml2Image } from "html-to-image";
 import jsPDF from "jspdf";
@@ -18,6 +19,11 @@ interface IExportStitchedPDFOptions {
   autoRotateForWidth?: boolean;
   /** DPI multiplier just for stage plan */
   bottomPixelRatio?: number; // default 3
+
+  /** Virtual CSS width (px) to render the TOP section at. Forces desktop-ish layout on mobile. */
+  topVirtualWidthPx?: number; // default 960
+  /** Extra pixel ratio just for TOP (to match bottom crispness if desired). */
+  topPixelRatio?: number; // default = device DPR (min 2)
 }
 
 export async function exportStitchedPDF({
@@ -38,15 +44,17 @@ export async function exportStitchedPDF({
   pagePaddingMm = 1.2,
   autoRotateForWidth = true,
   bottomPixelRatio = 3,
+  topVirtualWidthPx = 960,
+  topPixelRatio,
 }: IExportStitchedPDFOptions) {
   const topEl = document.getElementById(firstElementId);
   const bottomEl = document.getElementById(secondElementId);
   if (!topEl || !bottomEl) throw new Error("Elements not found");
-  if ("fonts" in document) await document.fonts.ready;
+  if ("fonts" in document) await (document as any).fonts.ready;
 
   const dpr = Math.max(2, Math.floor(window.devicePixelRatio || 1));
 
-  // --- sanitize styles on clone for both captures
+  // --- shared: sanitize styles in clones for export
   const injectSanitizer = (doc: Document) => {
     const style = doc.createElement("style");
     style.textContent = `
@@ -60,22 +68,23 @@ export async function exportStitchedPDF({
         -webkit-text-fill-color:${exportTextColor}!important; color:${exportTextColor}!important; opacity:1!important;
       }
       .export-simplify .sticky { position:static!important; top:auto!important; }
+      /* Make Tailwind's .container expand for the forced viewport width */
+      .container { max-width: none !important; padding-left: 4px; padding-right: 4px; }
+      html, body { margin:0!important; }
     `;
     doc.head.appendChild(style);
   };
 
-  // --- TOP (html2canvas is fine)
+  // ---------------- TOP CAPTURE (force wider virtual viewport on mobile)
+  const forcedCssWidth = Math.max(topVirtualWidthPx, bottomEl.clientWidth);
   const topCanvas = await html2canvas(topEl, {
-    scale: dpr,
     backgroundColor,
+    scale: topPixelRatio ?? dpr,
     useCORS: true,
     allowTaint: false,
     logging: false,
-    windowWidth: Math.max(
-      topEl.scrollWidth,
-      topEl.clientWidth,
-      topEl.offsetWidth
-    ),
+    // Force media queries and layout to reflow as if the page were wider
+    windowWidth: forcedCssWidth,
     windowHeight: Math.max(
       topEl.scrollHeight,
       topEl.clientHeight,
@@ -83,8 +92,16 @@ export async function exportStitchedPDF({
     ),
     onclone: (doc) => {
       injectSanitizer(doc);
+
+      // Make the cloned document "think" it's as wide as forcedCssWidth
+      doc.documentElement.style.width = `${forcedCssWidth}px`;
+      (doc.body as HTMLBodyElement).style.width = `${forcedCssWidth}px`;
+      (doc.body as HTMLBodyElement).style.margin = "0 auto";
+
       const cloned = doc.getElementById(firstElementId);
       cloned?.classList.add("export-simplify");
+
+      // Strip target backgrounds inside TOP
       if (stripBgSelectors.length && cloned) {
         for (const sel of stripBgSelectors) {
           cloned.querySelectorAll<HTMLElement>(sel).forEach((n) => {
@@ -97,18 +114,15 @@ export async function exportStitchedPDF({
     },
   });
 
-  // --- BOTTOM (use html-to-image directly on the on-screen viewport)
-  // Capture the ReactFlow viewport if present; otherwise capture the section.
+  // ---------------- BOTTOM CAPTURE (ReactFlow / stage plan)
   const rfViewport =
     bottomEl.querySelector<HTMLElement>(".react-flow__viewport") || bottomEl;
 
-  const rect = rfViewport.getBoundingClientRect();
-  const pixelRatio = dpr * bottomPixelRatio;
-
+  const pixelRatio = Math.max(1, (dpr * bottomPixelRatio) / 2); // html-to-image is sensitive to very large DPRs
   const bottomCanvas = await toCanvasHtml2Image(bottomEl, {
     backgroundColor,
     cacheBust: true,
-    pixelRatio: pixelRatio / 2,
+    pixelRatio,
     width: bottomEl.clientWidth,
     height: bottomEl.clientHeight,
     style: {
@@ -124,7 +138,7 @@ export async function exportStitchedPDF({
     },
   });
 
-  // --- compose
+  // ---------------- COMPOSE
   const gap = Math.round(spacingPx * dpr);
   const tailPad = Math.round(bottomPaddingPx * dpr);
   const compositeWidth = Math.max(topCanvas.width, bottomCanvas.width);
@@ -148,7 +162,7 @@ export async function exportStitchedPDF({
   const img = composite.toDataURL("image/jpeg", 0.95);
   const ar = composite.width / composite.height;
 
-  // auto-orient for max width
+  // ---------------- PDF LAYOUT + OPTIONAL AUTO-ORIENTATION
   let pageOrientation: Orientation = orientation;
   if (autoRotateForWidth) {
     const best = (w: number, h: number) => {
@@ -162,6 +176,7 @@ export async function exportStitchedPDF({
       }
       return dw;
     };
+    // Compare landscape (297x210) vs portrait (210x297)
     if (best(297, 210) > best(210, 297)) pageOrientation = "landscape";
   }
 
@@ -169,8 +184,8 @@ export async function exportStitchedPDF({
   const pdfH = pageOrientation === "portrait" ? 297 : 210;
   const innerW = Math.max(0, pdfW - pagePaddingMm * 2);
   const innerH = Math.max(0, pdfH - pagePaddingMm * 2);
-  let drawW = innerW,
-    drawH = drawW / ar;
+  let drawW = innerW;
+  let drawH = drawW / ar;
   if (drawH > innerH) {
     drawH = innerH;
     drawW = drawH * ar;
@@ -184,6 +199,7 @@ export async function exportStitchedPDF({
     format: "a4",
     compress: false,
   });
+
   pdf.addImage(img, "JPEG", x, y, drawW, drawH, undefined, "FAST");
   pdf.save(fileName);
 }
