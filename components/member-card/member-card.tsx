@@ -90,7 +90,7 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
                 <span>
                   {item.name}
                   {item.quantity && (
-                    <span className="quantity"> {item.quantity}</span>
+                    <span className="quantity"> x {item.quantity}</span>
                   )}
                 </span>
               </div>
@@ -112,7 +112,7 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
               <span>
                 {item.name}
                 {item.quantity && (
-                  <span className="quantity"> {item.quantity}</span>
+                  <span className="quantity">x {item.quantity}</span>
                 )}
               </span>
             </li>
