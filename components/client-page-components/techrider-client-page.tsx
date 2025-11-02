@@ -68,7 +68,7 @@ export function TechRiderClientPage({
 
               {isOwner && (
                 <DownloadPageButton
-                  onClick={handleDownload}
+                  onBeforeStart={handleDownload}
                   fileName={`tech-rider-${slugify(project.name)}`}
                 />
               )}
@@ -111,7 +111,7 @@ export function TechRiderClientPage({
         </div>
       </section>
 
-      <div id="page-content">
+      <>
         <section id="tech-rider" className="pb-0! container">
           <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 mb-6 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-4xl font-bold text-transparent">
             Technical Requirements
@@ -126,22 +126,20 @@ export function TechRiderClientPage({
               />
             ))}
           </div>
+          {project.notes && <NotesSection notes={project.notes} />}
         </section>
 
-        {project.notes && <NotesSection notes={project.notes} />}
+        <section id="stage-plan" className="container">
+          <h1 className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+            Stage Plan
+          </h1>
 
-        <h1
-          id="stage-plan"
-          className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl"
-        >
-          Stage Plan
-        </h1>
-
-        <div className="px-4 md:px-10 xl:px-60">
-          {project.stagePlanConfig && (
-            <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
-          )}
-        </div>
+          <div>
+            {project.stagePlanConfig && (
+              <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
+            )}
+          </div>
+        </section>
 
         <footer className="w-full" id="contact">
           <h3>Get in Touch</h3>
@@ -153,7 +151,7 @@ export function TechRiderClientPage({
             © 2025 {project.name}. All rights reserved.
           </p>
         </footer>
-      </div>
+      </>
     </div>
   );
 }

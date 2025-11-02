@@ -1,87 +1,128 @@
 "use client";
 
 import { useState } from "react";
-import { toPng } from "html-to-image";
+import { toCanvas } from "html-to-image";
 import toast from "react-hot-toast";
 
-interface IDownloadPageButtonProps {
-  /**
-   * The ID of the element to capture. Defaults to 'page-content'
-   */
-  targetElementId?: string;
-  /**
-   * Filename for the downloaded image. Defaults to 'tech-rider-page.png'
-   */
+type Props = {
+  firstElementId?: string; // "tech-rider-section"
+  secondElementId?: string; // "stage-plan-section"
   fileName?: string;
-  /**
-   * Background color for the captured image. Defaults to 'white'
-   */
   backgroundColor?: string;
-  /**
-   * Optional CSS classes for styling
-   */
+  spacingPx?: number;
+  pixelRatio?: number;
   className?: string;
+  onBeforeStart?: () => void;
+  onAfterFinish?: () => void;
+};
 
-  onClick?: () => void;
-}
-
-/**
- * Client component that captures and downloads a full page screenshot
- * Uses html-to-image library to convert DOM elements to PNG
- */
 export function DownloadPageButton({
-  targetElementId = "page-content",
-  fileName = `tech-rider-page.png`,
-  backgroundColor = "white",
+  firstElementId = "tech-rider",
+  secondElementId = "stage-plan",
+  fileName = "tech-rider-full.png",
+  backgroundColor = "#ffffff",
+  spacingPx = 32,
+  pixelRatio = 2,
   className,
-  onClick,
-}: IDownloadPageButtonProps) {
-  const [isDownloading, setIsDownloading] = useState(false);
+  onBeforeStart,
+  onAfterFinish,
+}: Props) {
+  const [busy, setBusy] = useState(false);
 
-  const handleDownload = async () => {
-    onClick?.();
+  async function handleDownload() {
+    const firstEl = document.getElementById(firstElementId);
+    console.log("🚀 ~ handleDownload ~ firstEl:", firstEl);
+    const bottomEl = document.getElementById(secondElementId);
+    console.log("🚀 ~ handleDownload ~ bottomEl:", bottomEl);
+    if (!firstEl || !bottomEl) return;
 
-    setTimeout(async () => {
-      const element = document.getElementById(targetElementId);
+    setBusy(true);
+    onBeforeStart?.();
 
-      if (!element) {
-        console.error(`Element with ID "${targetElementId}" not found`);
-        return;
-      }
+    try {
+      // Ensure fonts/images are ready to avoid a tainted canvas
+      if ("fonts" in document) await (document as any).fonts.ready;
 
-      setIsDownloading(true);
+      // Render both regions
+      const [topCanvas, bottomCanvas] = await Promise.all([
+        toCanvas(firstEl, { backgroundColor, pixelRatio, cacheBust: true }),
+        toCanvas(bottomEl, { backgroundColor, pixelRatio, cacheBust: true }),
+      ]);
 
-      try {
-        const dataUrl = await toPng(element, {
-          backgroundColor,
-          pixelRatio: 2,
-          cacheBust: true,
-          quality: 1,
-        });
+      // Normalize width, keep aspect ratios
+      const targetWidth = Math.max(topCanvas.width, bottomCanvas.width);
+      const sTop = targetWidth / topCanvas.width;
+      const sBottom = targetWidth / bottomCanvas.width;
 
-        const link = document.createElement("a");
-        link.download = fileName;
-        link.href = dataUrl;
-        link.click();
-      } catch (error) {
-        console.error("Failed to download page:", error);
-      } finally {
-        setIsDownloading(false);
+      const topH = Math.round(topCanvas.height * sTop);
+      const bottomH = Math.round(bottomCanvas.height * sBottom);
+      const gap = Math.round(spacingPx * pixelRatio);
+      const totalH = topH + gap + bottomH;
+
+      const composite = document.createElement("canvas");
+      composite.width = targetWidth;
+      composite.height = totalH;
+
+      const ctx = composite.getContext("2d")!;
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, targetWidth, totalH);
+
+      // Draw top
+      ctx.drawImage(
+        topCanvas,
+        0,
+        0,
+        topCanvas.width,
+        topCanvas.height,
+        0,
+        0,
+        targetWidth,
+        topH
+      );
+
+      // Draw bottom
+      ctx.drawImage(
+        bottomCanvas,
+        0,
+        0,
+        bottomCanvas.width,
+        bottomCanvas.height,
+        0,
+        topH + gap,
+        targetWidth,
+        bottomH
+      );
+
+      // Export and download (single gesture; iOS-safe)
+      composite.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.download = fileName;
+        a.href = url;
+        a.click();
+        URL.revokeObjectURL(url);
         toast.success("Image generated!");
-      }
-    }, 500);
-  };
+      }, "image/png");
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to generate image");
+    } finally {
+      onAfterFinish?.();
+      setBusy(false);
+    }
+  }
 
   return (
     <button
       onClick={handleDownload}
-      disabled={isDownloading}
+      disabled={busy}
       className={
         className ||
         "relative cursor-pointer md:text-sm text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
       }
-      aria-label="Download page as image"
-      aria-busy={isDownloading}
+      aria-label="Download stitched PNG"
+      aria-busy={busy}
     >
       Download
     </button>
