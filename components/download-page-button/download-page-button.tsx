@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toPng } from "html-to-image";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useIsIOS } from "@/hooks/use-is-ios";
 
 interface IDownloadPageButtonProps {
   /**
@@ -39,6 +40,8 @@ export function DownloadPageButton({
 }: IDownloadPageButtonProps) {
   const [isDownloading, setIsDownloading] = useState(false);
 
+  const isIOSDevice = useIsIOS();
+
   const handleDownload = async () => {
     onClick?.();
 
@@ -60,12 +63,26 @@ export function DownloadPageButton({
           quality: 1,
         });
 
-        const link = document.createElement("a");
-        link.download = fileName;
-        link.href = dataUrl;
-        link.click();
+        if (isIOSDevice) {
+          // iOS: Open in new tab for long-press save
+          const newWindow = window.open();
+          if (newWindow) {
+            newWindow.document.write(
+              `<img src="${dataUrl}" alt="${fileName}" style="max-width:100%;height:auto;" />`
+            );
+            newWindow.document.close();
+            toast.success("Image opened - long press to save!");
+          } else {
+            toast.error("Please allow popups to save image");
+          }
+        } else {
+          const link = document.createElement("a");
+          link.download = fileName;
+          link.href = dataUrl;
+          link.click();
 
-        toast.success("Image generated!");
+          toast.success("Image generated!");
+        }
       } catch (error) {
         console.error("Failed to download page:", error);
       } finally {
