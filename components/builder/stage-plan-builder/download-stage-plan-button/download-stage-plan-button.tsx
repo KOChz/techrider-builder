@@ -7,11 +7,12 @@ import {
 } from "@xyflow/react";
 import { toPng } from "html-to-image";
 import toast from "react-hot-toast";
+import { ImagePlus } from "lucide-react";
 
 function downloadImage(dataUrl: string) {
   const a = document.createElement("a");
 
-  a.setAttribute("download", "reactflow.png");
+  a.setAttribute("download", "stage-plan.png");
   a.setAttribute("href", dataUrl);
   a.click();
   toast.success("Image donwloaded!");
@@ -22,10 +23,8 @@ const imageHeight = 768;
 
 export function DownloadStagePlanButton() {
   const { getNodes } = useReactFlow();
+
   const onClick = () => {
-    // we calculate a transform for the nodes so that all nodes are visible
-    // we then overwrite the transform of the `.react-flow__viewport` element
-    // with the style option of the html-to-image library
     const nodesBounds = getNodesBounds(getNodes());
     const viewport = getViewportForBounds(
       nodesBounds,
@@ -52,10 +51,11 @@ export function DownloadStagePlanButton() {
   return (
     <Panel position="top-right">
       <button
-        className="cursor-pointer rounded-lg bg-green-600/80 p-2 text-xs text-white transition-colors duration-200 hover:bg-green-700/90"
+        className="flex cursor-pointer flex-row items-center justify-between gap-2 rounded-lg bg-green-600/80 p-2 text-xs text-white transition-colors duration-200 hover:bg-green-700/90"
         onClick={onClick}
       >
-        Download Image
+        <ImagePlus strokeWidth={1.3} size={20} />
+        <span>Download as image</span>
       </button>
     </Panel>
   );
