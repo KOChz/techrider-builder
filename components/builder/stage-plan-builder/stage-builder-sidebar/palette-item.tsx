@@ -3,10 +3,12 @@ import { useCallback } from "react";
 import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
 import { TEquipmentType } from "../nodes/equipment-node";
 import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
-import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-icon";
+import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitor-icon";
 import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
+import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
+import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
 
 export function PaletteItem({
   kind,
@@ -23,8 +25,12 @@ export function PaletteItem({
         return <DrumkitIcon width={50} height={50} />;
       case "amp":
         return <AmpIcon width={50} height={50} />;
+      case "mic":
+        return <MicIcon width={25} height={25} />;
       case "monitor":
         return <MonitorIcon width={50} height={50} />;
+      case "synth-stand":
+        return <SynthStandIcon width={50} height={50} />;
       case "mic-stand":
         return <MicStandIcon width={50} height={50} />;
       case "power-extension":

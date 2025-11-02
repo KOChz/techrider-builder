@@ -7,34 +7,11 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  ReactFlow,
-  Background,
-  Controls,
-  MiniMap,
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
-  BaseEdge,
-  EdgeLabelRenderer,
-  Position,
-  Handle,
-  type Node,
-  type Edge,
-  type Connection,
-  type EdgeChange,
-  type NodeChange,
-  type EdgeProps,
-  type ReactFlowInstance,
-  useReactFlow,
-  BackgroundVariant,
-  NodeProps,
-} from "@xyflow/react";
+import { Position, Handle, useReactFlow, NodeProps } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { nanoid } from "nanoid";
 import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
 import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
-import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-icon";
+import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitor-icon";
 import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
@@ -45,6 +22,8 @@ import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { cn } from "@/lib/utils/cn";
 import { useDevice } from "@/hooks/use-device";
+import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
+import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
 
 export type TEquipmentType =
   | "drumkit"
@@ -57,6 +36,8 @@ export type TEquipmentType =
   | "microphone"
   | "instrument"
   | "speaker"
+  | "synth-stand"
+  | "mic"
   | "custom";
 
 export type TEquipmentData = {
@@ -90,13 +71,13 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
 
     switch (data.kind) {
       case "drumkit":
-        return (
-          <DrumkitIcon
-          // {...{ width: (width || 0) * 2, height: (height || 0) * 2 }}
-          />
-        );
+        return <DrumkitIcon />;
       case "amp":
         return <AmpIcon {...iconProps} />;
+      case "mic":
+        return <MicIcon {...iconProps} />;
+      case "synth-stand":
+        return <SynthStandIcon {...iconProps} />;
       case "monitor":
         return <MonitorIcon {...iconProps} />;
       case "mic-stand":

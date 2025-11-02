@@ -72,6 +72,11 @@ export function Palette({ onAddNode }: IPaletteProps) {
                 onAddNode={handleAddNode}
               />
               <PaletteItem
+                kind="synth-stand"
+                label="Synth Stand"
+                onAddNode={handleAddNode}
+              />
+              <PaletteItem
                 kind="monitor"
                 label="Monitor"
                 onAddNode={handleAddNode}
@@ -92,6 +97,7 @@ export function Palette({ onAddNode }: IPaletteProps) {
                 label="DI Box"
                 onAddNode={handleAddNode}
               />
+              <PaletteItem kind="mic" label="Mic" onAddNode={handleAddNode} />
             </div>
           </div>
         )}
@@ -101,7 +107,13 @@ export function Palette({ onAddNode }: IPaletteProps) {
       <div className="hidden xl:grid xl:auto-rows-min xl:gap-2">
         <PaletteItem kind="drumkit" label="Drumkit" onAddNode={onAddNode} />
         <PaletteItem kind="monitor" label="Monitor" onAddNode={onAddNode} />
+        <PaletteItem
+          kind="synth-stand"
+          label="Synth Stand"
+          onAddNode={handleAddNode}
+        />
         <PaletteItem kind="amp" label="Amp" onAddNode={onAddNode} />
+        <PaletteItem kind="mic" label="Mic" onAddNode={handleAddNode} />
         <PaletteItem kind="mic-stand" label="Mic Stand" onAddNode={onAddNode} />
         <PaletteItem
           kind="power-extension"
