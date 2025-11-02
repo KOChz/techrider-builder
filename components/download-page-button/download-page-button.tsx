@@ -64,7 +64,7 @@ export function DownloadPageButton({
         link.target = "_blank";
         link.rel = "noopener noreferrer";
 
-        window.open(dataUrl, "_blank", "noopener,noreferrer");
+        link.click();
 
         toast.success("Image generated!");
       } catch (error) {
