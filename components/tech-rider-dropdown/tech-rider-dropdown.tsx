@@ -14,70 +14,39 @@ interface ITechRiderDropdownProps {
 export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
   const [hoverRef, isHovering] = useHover<HTMLDivElement>();
   const [isClickOpen, setIsClickOpen] = useState(false);
-  const isOpen = isHovering || isClickOpen;
+  const [isInteractedByClick, setIsInteractedByClick] = useState(false);
+
+  const isOpen = isClickOpen || (isHovering && !isInteractedByClick);
 
   const awayClickRef = useClickAway<HTMLDivElement>(() => {
-    if (isClickOpen) setIsClickOpen(false);
+    if (isClickOpen) {
+      setIsClickOpen(false);
+      setIsInteractedByClick(false);
+    }
   });
 
   useEffect(() => {
     if (!isClickOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsClickOpen(false);
+      if (e.key === "Escape") {
+        setIsClickOpen(false);
+        setIsInteractedByClick(false);
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [isClickOpen]);
 
-  const menuItems = useMemo(
-    () => (
-      <div className="cursor-pointer">
-        {members.map((member) => (
-          <a
-            key={member.id}
-            href={`#${member.name}`}
-            className={cn(
-              "flex cursor-pointer gap-4 px-4 py-4",
-              "relative z-10 text-gray-900 no-underline transition-colors duration-200",
-              "border-b border-gray-100 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
-              "first:rounded-t-lg last:rounded-b-lg last:border-b-0",
-              "md:px-8 md:py-5 md:min-h-14"
-            )}
-            role="menuitem"
-            onClick={() => setIsClickOpen(false)}
-          >
-            <span className="shrink-0 text-2xl grayscale">{member.icon}</span>
-            <div className="flex flex-col">
-              <span className="text-[0.95rem] font-semibold tracking-tight">
-                {member.name}
-              </span>
-              <span className="font-mono text-xs uppercase tracking-wider text-gray-500">
-                {member.role}
-              </span>
-            </div>
-          </a>
-        ))}
-        <a
-          href="#stage-plan"
-          className={cn(
-            "flex items-center gap-4 px-4 py-4 text-gray-900 no-underline transition-colors duration-200",
-            "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none last:rounded-b-lg",
-            "md:px-8 md:py-5 md:min-h-14"
-          )}
-          role="menuitem"
-          onClick={() => setIsClickOpen(false)}
-        >
-          <span className="shrink-0 text-2xl grayscale">🏟️</span>
-          <div className="flex flex-col">
-            <span className="text-[0.95rem] font-semibold tracking-tight">
-              Stage Plan
-            </span>
-          </div>
-        </a>
-      </div>
-    ),
-    [members]
-  );
+  const handleButtonClick = () => {
+    const willOpen = !isClickOpen;
+    setIsClickOpen(willOpen);
+    setIsInteractedByClick(willOpen);
+  };
+
+  const handleMenuItemClick = () => {
+    setIsClickOpen(false);
+    setIsInteractedByClick(true);
+  };
 
   return (
     <div ref={awayClickRef}>
@@ -87,7 +56,7 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
           className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent text-xs font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none md:pt-[3px] md:text-[14px]"
           aria-haspopup="true"
           aria-expanded={isOpen}
-          onClick={() => setIsClickOpen((v) => !v)}
+          onClick={handleButtonClick}
         >
           Tech Rider
           <span
@@ -133,7 +102,52 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
                 "md:left-auto md:right-5 md:translate-x-0"
               )}
             />
-            {menuItems}
+            <div className="cursor-pointer">
+              {members.map((member) => (
+                <a
+                  key={member.id}
+                  href={`#${member.name}`}
+                  className={cn(
+                    "flex cursor-pointer gap-4 px-4 py-4",
+                    "relative z-10 text-gray-900 no-underline transition-colors duration-200",
+                    "border-b border-gray-100 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
+                    "first:rounded-t-lg last:rounded-b-lg last:border-b-0",
+                    "md:px-8 md:py-5 md:min-h-14"
+                  )}
+                  role="menuitem"
+                  onClick={handleMenuItemClick}
+                >
+                  <span className="shrink-0 text-2xl grayscale">
+                    {member.icon}
+                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-[0.95rem] font-semibold tracking-tight">
+                      {member.name}
+                    </span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-gray-500">
+                      {member.role}
+                    </span>
+                  </div>
+                </a>
+              ))}
+              <a
+                href="#stage-plan"
+                className={cn(
+                  "flex items-center gap-4 px-4 py-4 text-gray-900 no-underline transition-colors duration-200",
+                  "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none last:rounded-b-lg",
+                  "md:px-8 md:py-5 md:min-h-14"
+                )}
+                role="menuitem"
+                onClick={handleMenuItemClick}
+              >
+                <span className="shrink-0 text-2xl grayscale">🏟️</span>
+                <div className="flex flex-col">
+                  <span className="text-[0.95rem] font-semibold tracking-tight">
+                    Stage Plan
+                  </span>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
