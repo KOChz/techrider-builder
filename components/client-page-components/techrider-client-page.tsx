@@ -43,7 +43,7 @@ export function TechRiderClientPage({
                 isOwner && "text-xs! md:text-md"
               )}
             >
-              <TechRiderDropdown members={project.members} />
+              {/* <TechRiderDropdown members={project.members} /> */}
 
               <li>
                 <Link
