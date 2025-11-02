@@ -336,7 +336,7 @@ export default function StagePlanBuilder({
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="aspect-square h-[500px] min-h-0 touch-none select-none overflow-auto rounded-xl border border-slate-200 xl:aspect-auto xl:h-full xl:flex-1"
+        className="aspect-square h-[400px] min-h-0 touch-none select-none overflow-auto rounded-xl border border-slate-200 xl:aspect-auto xl:h-full xl:flex-1"
         style={{ WebkitTouchCallout: "none" }}
       >
         <ReactFlow<Node<TEquipmentData>>
