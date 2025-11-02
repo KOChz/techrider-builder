@@ -207,7 +207,10 @@ export function MemberCardBuilder({
                 className="group relative min-w-[330px] overflow-hidden rounded-lg border border-gray-200"
                 open={!item.name}
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-gray-50">
+                <summary
+                  style={{ listStyle: "none" }}
+                  className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-gray-50 [&::-webkit-details-marker]:hidden"
+                >
                   <div className="flex min-w-0 items-center gap-2">
                     <ChevronDown
                       size={16}
