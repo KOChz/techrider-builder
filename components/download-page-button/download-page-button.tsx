@@ -69,13 +69,13 @@ export function DownloadPageButton({
               const url = URL.createObjectURL(blob);
               const anchor = document.createElement("a");
               anchor.href = url;
-              anchor.download = fileName;
               anchor.target = "_blank";
+              anchor.rel = "noopener noreferrer";
               document.body.appendChild(anchor);
               anchor.click();
               document.body.removeChild(anchor);
-              URL.revokeObjectURL(url);
-              toast.success("Image opened - tap and hold to save");
+              setTimeout(() => URL.revokeObjectURL(url), 100);
+              toast.success("Tap and hold image to save");
             })
             .catch(() => {
               toast.error("Failed to open image");
