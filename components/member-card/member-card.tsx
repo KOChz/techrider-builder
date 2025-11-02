@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TProjectMember } from "@/db/schema";
 
 export type TEquipmentExample = {
@@ -38,6 +38,18 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
       [index]: !prev[index],
     }));
   };
+
+  useEffect(() => {
+    if (isOpened) {
+      const allExpanded = member.equipment.reduce((acc, _, index) => {
+        acc[index] = true;
+        return acc;
+      }, {} as Record<number, boolean>);
+      setExpandedItems(allExpanded);
+    } else {
+      setExpandedItems({});
+    }
+  }, [isOpened, member.equipment]);
 
   const isItemExpanded = (index: number) => expandedItems[index] ?? isOpened;
 
