@@ -227,9 +227,9 @@ export function MemberCardBuilder({
                     onClick={() => removeEquipmentItem(equipmentIndex)}
                     className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
                     aria-label="Delete equipment"
-                    onMouseDown={(e) => e.preventDefault()} // prevent toggling details on click
+                    onMouseDown={(e) => e.preventDefault()}
                   >
-                    <X size={10} />
+                    <X size={14} />
                   </button>
                 </summary>
 
