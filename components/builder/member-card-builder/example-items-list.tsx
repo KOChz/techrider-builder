@@ -73,9 +73,9 @@ function ExampleItem({
         onChange={(e) =>
           onUpdateExample(equipmentIndex, exampleIndex, e.target.value)
         }
-        className="no-scrollbar w-full resize-none rounded border border-gray-300 px-3 py-1 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
+        className="no-scrollbar min-h-full w-full resize-none rounded border border-gray-300 px-3 py-1 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
         placeholder="Example item"
-        rows={1}
+        rows={2}
         onFocus={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       />
