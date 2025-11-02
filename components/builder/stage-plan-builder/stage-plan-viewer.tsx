@@ -25,6 +25,11 @@ import { useDevice } from "@/hooks/use-device";
 import { TEquipmentData, TEquipmentType } from "./nodes/equipment-node";
 import { TMeasurmentData } from "./edges/measure-edge";
 
+export const nodeViewerTypes = {
+  equipment: EquipmentViewNode,
+  annotation: AnnotationNode,
+};
+
 import {
   DEFAULT_PX_PER_METER,
   edgeTypes,
@@ -32,6 +37,8 @@ import {
   nodeTypes,
 } from "./stage-plan-builder";
 import { cn } from "@/lib/utils/cn";
+import { AnnotationNode } from "./nodes/annotation-node";
+import { EquipmentViewNode } from "./nodes/equipment-node-view";
 
 export function StagePlanViewer({
   stagePlanConfig,
@@ -211,7 +218,7 @@ export function StagePlanViewer({
           // onNodesChange={onNodesChange}
           // onEdgesChange={onEdgesChange}
           // onConnect={onConnect}
-          nodeTypes={nodeTypes}
+          nodeTypes={nodeViewerTypes}
           edgeTypes={edgeTypes}
           fitView
           fitViewOptions={{ padding: 10 }}
