@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { toPng } from "html-to-image";
-import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useIsIOS } from "@/hooks/use-is-ios";
 
@@ -64,17 +63,23 @@ export function DownloadPageButton({
         });
 
         if (isIOSDevice) {
-          // iOS: Open in new tab for long-press save
-          const newWindow = window.open();
-          if (newWindow) {
-            newWindow.document.write(
-              `<img src="${dataUrl}" alt="${fileName}" style="max-width:100%;height:auto;" />`
-            );
-            newWindow.document.close();
-            toast.success("Image opened - long press to save!");
-          } else {
-            toast.error("Please allow popups to save image");
-          }
+          fetch(dataUrl)
+            .then((res) => res.blob())
+            .then((blob) => {
+              const url = URL.createObjectURL(blob);
+              const anchor = document.createElement("a");
+              anchor.href = url;
+              anchor.download = fileName;
+              anchor.target = "_blank";
+              document.body.appendChild(anchor);
+              anchor.click();
+              document.body.removeChild(anchor);
+              URL.revokeObjectURL(url);
+              toast.success("Image opened - tap and hold to save");
+            })
+            .catch(() => {
+              toast.error("Failed to open image");
+            });
         } else {
           const link = document.createElement("a");
           link.download = fileName;
