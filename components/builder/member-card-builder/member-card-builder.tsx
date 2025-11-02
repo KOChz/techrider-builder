@@ -204,7 +204,7 @@ export function MemberCardBuilder({
             return (
               <details
                 key={equipmentIndex}
-                className="min-w-80 group relative rounded-lg border border-gray-200"
+                className="group relative min-w-[330px] overflow-hidden rounded-lg border border-gray-200"
                 open={!item.name}
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-gray-50">
