@@ -1,12 +1,14 @@
 "use client";
 
+import { useDevice } from "@/hooks/use-device";
 import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export function BandInfoContent() {
   const { name, notes, setName, setNotes } = useProjectStore();
+  const { isMobile } = useDevice();
 
   return (
-    <div className="min-h-[356px] space-y-2">
+    <div className="min-h-[360px] space-y-2">
       <h3 className="text-2xl font-semibold text-slate-900">
         Band Information
       </h3>
@@ -42,7 +44,7 @@ export function BandInfoContent() {
             onChange={(e) => setNotes(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="This is section for any technical stuff notes"
-            rows={5}
+            rows={isMobile ? 6 : 5}
           />
         </div>
       </div>

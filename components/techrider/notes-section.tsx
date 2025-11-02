@@ -80,7 +80,7 @@ export function NotesSection({ notes, className }: NotesSectionProps) {
         </header>
 
         {/* Body */}
-        <div className="relative px-4 py-4 md:px-6 md:py-6">
+        <div className="relative px-4 py-4 pb-0 md:px-6 md:py-6">
           {hasNotes ? (
             <article
               className={cn(
