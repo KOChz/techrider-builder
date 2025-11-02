@@ -64,8 +64,8 @@ export function DownloadPageButton({
 
       // Prefer OffscreenCanvas if available (better perf on Safari/iOS)
       const composite =
-        typeof (window as any).OffscreenCanvas === "function"
-          ? new (window as any).OffscreenCanvas(compositeWidth, compositeHeight)
+        typeof window.OffscreenCanvas === "function"
+          ? new window.OffscreenCanvas(compositeWidth, compositeHeight)
           : Object.assign(document.createElement("canvas"), {
               width: compositeWidth,
               height: compositeHeight,

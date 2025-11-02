@@ -113,34 +113,36 @@ export function TechRiderClientPage({
       </section>
 
       <>
-        <section id="tech-rider" className="py-0! container">
-          <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold text-transparent">
-            Technical Requirements
-          </h2>
+        <div className="container">
+          <section id="tech-rider">
+            <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold text-transparent">
+              Technical Requirements
+            </h2>
 
-          <div className="tech-grid">
-            {project.members.map((member) => (
-              <MemberCard
-                key={member.id}
-                member={member}
-                isOpened={isDonwload}
-              />
-            ))}
-          </div>
-          {project.notes && <NotesSection notes={project.notes} />}
-        </section>
+            <div className="tech-grid">
+              {project.members.map((member) => (
+                <MemberCard
+                  key={member.id}
+                  member={member}
+                  isOpened={isDonwload}
+                />
+              ))}
+            </div>
+            {project.notes && <NotesSection notes={project.notes} />}
+          </section>
 
-        <section id="stage-plan" className="container">
-          <h1 className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
-            Stage Plan
-          </h1>
+          <section id="stage-plan">
+            <h1 className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text pb-6 text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+              Stage Plan
+            </h1>
 
-          <div>
-            {project.stagePlanConfig && (
-              <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
-            )}
-          </div>
-        </section>
+            <div>
+              {project.stagePlanConfig && (
+                <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
+              )}
+            </div>
+          </section>
+        </div>
 
         <footer className="w-full" id="contact">
           <h3>Get in Touch</h3>
