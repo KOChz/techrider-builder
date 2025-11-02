@@ -201,16 +201,16 @@ export function StagePlanViewer({
         onDragOver={onDragOver}
         className={cn(
           "touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1",
-          "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600]"
+          "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600px]"
         )}
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
+          // onNodesChange={onNodesChange}
+          // onEdgesChange={onEdgesChange}
+          // onConnect={onConnect}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           fitView

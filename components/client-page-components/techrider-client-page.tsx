@@ -68,7 +68,7 @@ export function TechRiderClientPage({
                   onAfterFinish={() => {
                     setTimeout(() => {
                       setIsDownload(false);
-                    }, 2000);
+                    }, 3000);
                   }}
                   fileName={`tech-rider-${slugify(project.name)}`}
                 />
@@ -80,12 +80,12 @@ export function TechRiderClientPage({
 
       <section id="home" className="hero">
         <div>
-          <h1 className="text-shadow-2xs bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text pb-10 text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+          <h1 className="text-shadow-2xs bg-linear-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text pb-10 text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
             {project.name}
           </h1>
           <a
             href="#tech-rider"
-            className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-emerald-700 to-green-700 px-8 py-4 text-2xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-500/50"
+            className="bg-linear-to-r group relative inline-flex items-center gap-3 rounded-full from-emerald-700 to-green-700 px-8 py-4 text-2xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-500/50"
             aria-label="Scroll to Tech Rider section"
           >
             <div className="relative z-10 text-white">View Tech Rider</div>
