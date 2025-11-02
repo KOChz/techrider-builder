@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
 import { TEquipmentType } from "../nodes/equipment-node";
 import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
@@ -5,7 +7,6 @@ import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitop-
 import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
-import { useCallback } from "react";
 
 export function PaletteItem({
   kind,
@@ -49,10 +50,11 @@ export function PaletteItem({
 
   return (
     <div
+      id="PaletteItem"
       draggable
       onDragStart={onDragStart}
       onClick={handleClick}
-      className="justify-items-end-safe items- min-h-16 flex cursor-grab items-center gap-4 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs"
+      className="min-h-16 flex cursor-grab items-center justify-items-end gap-4 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs transition-all duration-200 hover:border-slate-300 hover:shadow-md"
     >
       {icon()} <span className="font-bold"> {label}</span>
     </div>
