@@ -55,7 +55,7 @@ export function DownloadStagePlanButton() {
         onClick={onClick}
       >
         <ImagePlus strokeWidth={1.3} size={20} />
-        <span>Download as image</span>
+        <span>Download image</span>
       </button>
     </Panel>
   );

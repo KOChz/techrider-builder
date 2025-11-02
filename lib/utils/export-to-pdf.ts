@@ -1,3 +1,4 @@
+// lib/export-to-pdf.ts
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 
@@ -204,7 +205,7 @@ export async function exportStitchedPDF(
     orientation: pageOrientation,
     unit: "mm",
     format: "a4",
-    compress: true,
+    compress: false,
   });
 
   pdf.addImage(imgData, "JPEG", x, y, drawW, drawH, undefined, "FAST");
