@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
 import { ChevronDown, X } from "lucide-react";
+import { ExampleItemsList } from "./example-items-list";
 
 export type TEquipmentExample = {
   title: string;
@@ -289,39 +290,12 @@ export function MemberCardBuilder({
                       </div>
 
                       <div className="flex flex-col gap-1.5">
-                        {item.examples.items.map((example, exampleIndex) => (
-                          <div key={exampleIndex} className="flex gap-2">
-                            <div className="flex flex-1">
-                              <input
-                                type="text"
-                                value={example}
-                                onChange={(e) =>
-                                  updateExampleItem(
-                                    equipmentIndex,
-                                    exampleIndex,
-                                    e.target.value
-                                  )
-                                }
-                                className="flex-1 rounded-l border border-r-0 border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:z-10 focus:border-green-500 focus:outline-none"
-                                placeholder="Example item"
-                                onFocus={(e) => e.stopPropagation()}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  removeExampleItem(
-                                    equipmentIndex,
-                                    exampleIndex
-                                  )
-                                }
-                                className="cursor-pointer rounded-r border border-red-400 bg-red-500 px-2 text-sm text-white transition-colors hover:bg-red-600"
-                              >
-                                <X size={14} />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                        <ExampleItemsList
+                          examples={item.examples.items}
+                          equipmentIndex={equipmentIndex}
+                          onUpdateExample={updateExampleItem}
+                          onRemoveExample={removeExampleItem}
+                        />
                       </div>
 
                       <button

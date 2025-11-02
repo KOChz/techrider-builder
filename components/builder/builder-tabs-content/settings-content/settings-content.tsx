@@ -11,23 +11,6 @@ export function SettingsContent() {
         Project Settings
       </h3>
       <div className="space-y-3">
-        {/* <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="project-name"
-            className="text-sm font-medium text-slate-800"
-          >
-            Project name
-          </label>
-          <input
-            id="project-name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter project name"
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600"
-          />
-        </div> */}
-
         <div className="flex items-center justify-between">
           <label
             htmlFor="project-public"
