@@ -42,7 +42,7 @@ export function BandInfoContent() {
             onChange={(e) => setNotes(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="This is section for any technical stuff notes"
-            rows={4}
+            rows={5}
           />
         </div>
       </div>
