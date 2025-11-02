@@ -129,7 +129,7 @@ export function TechRiderClientPage({
           {project.notes && <NotesSection notes={project.notes} />}
         </section>
 
-        <section id="stage-plan" className="container">
+        {/* <section id="stage-plan" className="container">
           <h1 className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
             Stage Plan
           </h1>
@@ -139,7 +139,7 @@ export function TechRiderClientPage({
               <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
             )}
           </div>
-        </section>
+        </section> */}
 
         <footer className="w-full" id="contact">
           <h3>Get in Touch</h3>
