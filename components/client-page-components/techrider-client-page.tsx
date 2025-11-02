@@ -29,7 +29,7 @@ export function TechRiderClientPage({
   }
 
   return (
-    <div className="techrider-page">
+    <div className="techrider-page no-zoom-container">
       <nav className="bg-white! border-b border-gray-100">
         <div className="flex-end mx-auto flex px-3 py-4 md:px-6">
           <div className="flex-end flex w-full items-center justify-center md:justify-end">
@@ -143,7 +143,7 @@ export function TechRiderClientPage({
             </h1>
           </section>
 
-          <section id="stage-plan">
+          <section id="stage-plan" className="touch-none">
             <div>
               {project.stagePlanConfig && (
                 <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
