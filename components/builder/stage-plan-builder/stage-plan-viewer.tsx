@@ -135,42 +135,6 @@ export function StagePlanViewer({
     );
   }, [pxPerMeter]);
 
-  const onDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  }, []);
-
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    const kind = e.dataTransfer.getData(
-      "application/reactflow"
-    ) as TEquipmentType;
-    if (!kind || !rfRef.current) return;
-
-    const position = rfRef.current.screenToFlowPosition({
-      x: e.clientX,
-      y: e.clientY,
-    });
-
-    const node: Node<TEquipmentData> = {
-      id: nanoid(),
-      type: "equipment",
-      position,
-
-      data: {
-        kind,
-        label:
-          kind === "mic-stand"
-            ? "Mic Stand"
-            : kind === "power-extension"
-            ? "Power Strip"
-            : kind.replace("-", " ").replace(/\b\w/g, (m) => m.toUpperCase()),
-      },
-    };
-
-    setNodes((ns) => ns.concat(node));
-  }, []);
-
   const { isMobile } = useDevice();
 
   return (
@@ -183,8 +147,6 @@ export function StagePlanViewer({
       {/* Canvas */}
       <div
         ref={flowRef}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
         className={cn(
           "touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1",
           "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600px]"
