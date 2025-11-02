@@ -279,7 +279,7 @@ export default function StagePlanBuilder({
   const { isMobile } = useDevice();
 
   return (
-    <div className="flex flex-col gap-2 xl:h-[78dvh] xl:flex-row xl:items-stretch xl:justify-between">
+    <div className="flex flex-col gap-2 xl:h-[78vh] xl:flex-row xl:items-stretch xl:justify-between">
       {/* Sidebar */}
       {isBuilder && (
         <div className="grid min-h-0 content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0">
@@ -336,7 +336,7 @@ export default function StagePlanBuilder({
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="aspect-square h-[45dvh] min-h-0 touch-none select-none overflow-auto rounded-xl border border-slate-200 xl:aspect-auto xl:h-full xl:flex-1"
+        className="aspect-square h-[45vh] min-h-0 touch-none select-none overflow-auto rounded-xl border border-slate-200 xl:aspect-auto xl:h-full xl:flex-1"
         style={{ WebkitTouchCallout: "none" }}
       >
         <ReactFlow<Node<TEquipmentData>>

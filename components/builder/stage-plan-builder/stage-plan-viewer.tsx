@@ -187,13 +187,13 @@ export function StagePlanViewer({
   const { isMobile } = useDevice();
 
   return (
-    <div className="max-w-3/2 flex h-[50dvh] flex-col gap-2 md:h-[50dvh] md:max-h-none md:w-full md:flex-row md:justify-between xl:h-[70dvh]">
+    <div className="max-w-3/2 flex h-[50vh] flex-col gap-2 md:h-[50vh] md:max-h-none md:w-full md:flex-row md:justify-between xl:h-[70vh]">
       {/* Canvas */}
       <div
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="h-[50dvh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1 xl:h-[70dvh]"
+        className="h-[50vh] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1 xl:h-[70vh]"
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
