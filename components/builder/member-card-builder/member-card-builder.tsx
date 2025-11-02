@@ -206,7 +206,6 @@ export function MemberCardBuilder({
               <details
                 key={equipmentIndex}
                 className="group relative min-w-[330px] overflow-hidden rounded-lg border border-gray-200"
-                open={!item.name}
               >
                 <summary
                   style={{ listStyle: "none" }}
