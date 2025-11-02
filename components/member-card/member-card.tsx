@@ -121,7 +121,7 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
             </li>
           ) : (
             <li key={index} className="equipment-simple">
-              <span className="inline-flex items-baseline gap-1 whitespace-nowrap">
+              <span className="inline-flex w-full items-baseline gap-1 whitespace-nowrap">
                 <span>{item.name}</span>
                 {item.quantity && (
                   <span className="quantity">× {item.quantity}</span>
