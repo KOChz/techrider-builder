@@ -21,7 +21,7 @@ export default async function EditProjectPage({
 
   return (
     <div>
-      <div className="mb-6 flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between pb-6">
         <h2 className="text-shadow-2xs text-3xl font-bold text-slate-900">
           Edit {project.name}
         </h2>

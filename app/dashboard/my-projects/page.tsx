@@ -6,7 +6,7 @@ export default async function MyProjectsPage() {
 
   return (
     <div>
-      <h2 className="mb-6 text-2xl font-bold text-slate-900">My Projects</h2>
+      <h2 className="pb-6 text-2xl font-bold text-slate-900">My Projects</h2>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {myProjects.projects.map((project) => (

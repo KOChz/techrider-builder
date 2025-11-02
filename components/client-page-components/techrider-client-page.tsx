@@ -79,7 +79,7 @@ export function TechRiderClientPage({
 
       <section id="home" className="hero">
         <div>
-          <h1 className="text-shadow-2xs mb-20 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+          <h1 className="text-shadow-2xs bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text pb-10 text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
             {project.name}
           </h1>
           <a
@@ -112,8 +112,8 @@ export function TechRiderClientPage({
       </section>
 
       <>
-        <section id="tech-rider" className="pb-0! container">
-          <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 mb-6 from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-4xl font-bold text-transparent">
+        <section id="tech-rider" className="py-0! container">
+          <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold text-transparent">
             Technical Requirements
           </h2>
 

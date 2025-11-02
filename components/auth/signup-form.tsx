@@ -21,7 +21,7 @@ export default function SignUpForm() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="mb-1">
+      <div className="pb-1">
         <h1 className="text-3xl font-bold text-green-600/90">Create account</h1>
         <p className="pb-1 text-sm text-slate-600 opacity-90">
           Spin up access to your tech rider dashboard

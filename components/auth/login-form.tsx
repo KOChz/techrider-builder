@@ -18,7 +18,7 @@ export default function LoginForm() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="mb-1">
+      <div className="pb-1">
         <h1 className="text-3xl font-bold text-green-600/90">Welcome</h1>
         <p className="pb-2 text-sm text-slate-600 opacity-90">
           Sign in to access your tech rider dashboard

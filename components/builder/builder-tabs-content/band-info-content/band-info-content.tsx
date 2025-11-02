@@ -15,7 +15,7 @@ export function BandInfoContent() {
         <div>
           <label
             htmlFor="band-name"
-            className="mb-1 block text-sm font-medium text-slate-900"
+            className="block pb-1 text-sm font-medium text-slate-900"
           >
             Band Name
           </label>
@@ -32,7 +32,7 @@ export function BandInfoContent() {
         <div>
           <label
             htmlFor="band-notes"
-            className="mb-1 block text-sm font-medium text-slate-900"
+            className="block pb-1 text-sm font-medium text-slate-900"
           >
             Notes
           </label>
