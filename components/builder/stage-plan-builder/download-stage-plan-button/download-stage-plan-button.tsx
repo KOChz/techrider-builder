@@ -1,65 +1,56 @@
-import React from "react";
-import {
-  Panel,
-  useReactFlow,
-  getNodesBounds,
-  getViewportForBounds,
-} from "@xyflow/react";
-import { toPng } from "html-to-image";
+// components/download-stage-plan-pdf-button.tsx
+import { useState } from "react";
+import { Panel, useReactFlow } from "@xyflow/react";
 import toast from "react-hot-toast";
-import { ImagePlus } from "lucide-react";
+import { FileDown, Loader2 } from "lucide-react";
+import { exportStagePlanToPdf } from "@/lib/utils/export-stage-plan-to-pdf";
 
-function downloadImage(dataUrl: string) {
-  const a = document.createElement("a");
-
-  a.setAttribute("download", "stage-plan.png");
-  a.setAttribute("href", dataUrl);
-  a.click();
-  toast.success("Image donwloaded!");
+interface IDownloadStagePlanPdfButtonProps {
+  fileName?: string;
 }
 
-const imageWidth = 10000;
-const imageHeight = 5000;
+export function DownloadStagePlanPdfButton({
+  fileName = "stage-plan.pdf",
+}: IDownloadStagePlanPdfButtonProps) {
+  const reactFlowInstance = useReactFlow();
+  const [isExporting, setIsExporting] = useState(false);
 
-export function DownloadStagePlanButton() {
-  const { getNodes } = useReactFlow();
+  const handleExportPdf = async () => {
+    try {
+      setIsExporting(true);
+      toast.loading("Generating PDF...", { id: "pdf-export" });
 
-  const onClick = () => {
-    const nodesBounds = getNodesBounds(getNodes());
-    const viewport = getViewportForBounds(
-      nodesBounds,
-      imageWidth,
-      imageHeight,
-      0.5,
-      2,
-      1
-    );
+      await exportStagePlanToPdf({
+        reactFlowInstance,
+        fileName,
+      });
 
-    toPng(document.querySelector(".react-flow__viewport")! as HTMLElement, {
-      backgroundColor: "white",
-      type: "png",
-      width: imageWidth,
-      height: imageHeight,
-      skipAutoScale: true,
-      quality: 1,
-      style: {
-        width: `${imageWidth}`,
-        height: `${imageHeight}`,
-        transform: `translate(${viewport.x}px, ${viewport.y / 1.25}px) scale(${
-          viewport.zoom * 3
-        })`,
-      },
-    }).then(downloadImage);
+      toast.success("PDF downloaded successfully!", { id: "pdf-export" });
+    } catch (error) {
+      console.error("PDF export failed:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to export PDF",
+        { id: "pdf-export" }
+      );
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
     <Panel position="top-right">
       <button
-        className="flex cursor-pointer flex-row items-center justify-between gap-2 rounded-lg bg-green-600/80 p-2 text-xs text-white transition-colors duration-200 hover:bg-green-700/90"
-        onClick={onClick}
+        className="flex cursor-pointer flex-row items-center justify-between gap-2 rounded-lg bg-green-600/80 p-2 text-xs text-white transition-colors duration-200 hover:bg-green-700/90 disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={handleExportPdf}
+        disabled={isExporting}
+        aria-label="Download stage plan as PDF"
       >
-        <ImagePlus strokeWidth={1.3} size={20} />
-        <span>Download image</span>
+        {isExporting ? (
+          <Loader2 strokeWidth={1.3} size={20} className="animate-spin" />
+        ) : (
+          <FileDown strokeWidth={1.3} size={20} />
+        )}
+        <span>{isExporting ? "Generating..." : "Download PDF"}</span>
       </button>
     </Panel>
   );

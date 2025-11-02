@@ -31,7 +31,7 @@ import {
 import { MeasureEdge, TMeasurmentData } from "./edges/measure-edge";
 import { AnnotationNode } from "./nodes/annotation-node";
 import { Palette } from "./stage-builder-sidebar/palette";
-import { DownloadStagePlanButton } from "./download-stage-plan-button/download-stage-plan-button";
+import { DownloadStagePlanPdfButton } from "./download-stage-plan-button/download-stage-plan-button";
 
 export const DEFAULT_PX_PER_METER = 100;
 
@@ -363,7 +363,7 @@ export default function StagePlanBuilder({
           snapGrid={[10, 10]}
           style={{ width: "100%", height: "100%" }}
         >
-          <DownloadStagePlanButton />
+          <DownloadStagePlanPdfButton />
 
           <Background
             id="1"

@@ -15,7 +15,7 @@ export function StagePlanBuilderContent() {
         Create your stage setup and positioning
       </p>
 
-      <div className="select-none overscroll-none">
+      <div id="stage-plan-container" className="select-none overscroll-none">
         <ReactFlowProvider>
           <StagePlanBuilder
             stagePlanConfig={stagePlanConfig}
