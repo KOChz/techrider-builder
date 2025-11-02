@@ -84,7 +84,7 @@ function ExampleItem({
         onClick={() => onRemoveExample(equipmentIndex, exampleIndex)}
         className="absolute -right-1 -top-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-red-400 bg-red-500 text-white transition-colors hover:bg-red-600"
       >
-        <X size={14} />
+        <X size={12} />
       </button>
     </div>
   );

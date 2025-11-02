@@ -155,7 +155,7 @@ export function MemberCardBuilder({
           className="absolute -right-3 -top-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-lg text-white transition-colors hover:bg-red-600"
           aria-label="Remove member"
         >
-          <X size={14} />
+          <X size={16} />
         </button>
       )}
 
@@ -226,7 +226,7 @@ export function MemberCardBuilder({
                   <button
                     type="button"
                     onClick={() => removeEquipmentItem(equipmentIndex)}
-                    className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
+                    className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
                     aria-label="Delete equipment"
                     onMouseDown={(e) => e.preventDefault()}
                   >
