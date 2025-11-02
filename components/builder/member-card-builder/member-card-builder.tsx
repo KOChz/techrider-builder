@@ -211,9 +211,9 @@ export function MemberCardBuilder({
                   <div className="flex min-w-0 items-center gap-2">
                     <ChevronDown
                       size={16}
-                      className="shrink-0 transition-transform group-open:rotate-180"
+                      className="shrink-0 text-gray-700/90 opacity-80 transition-transform group-open:rotate-180"
                     />
-                    <span className="truncate font-medium text-gray-800">
+                    <span className="truncate font-medium text-gray-700/90">
                       {title}
                     </span>
                   </div>
