@@ -6,6 +6,7 @@ import {
   getViewportForBounds,
 } from "@xyflow/react";
 import { toPng } from "html-to-image";
+import toast from "react-hot-toast";
 
 function downloadImage(dataUrl: string) {
   const a = document.createElement("a");
@@ -13,6 +14,7 @@ function downloadImage(dataUrl: string) {
   a.setAttribute("download", "reactflow.png");
   a.setAttribute("href", dataUrl);
   a.click();
+  toast.success("Image donwloaded!");
 }
 
 const imageWidth = 1024;
@@ -38,6 +40,7 @@ export function DownloadStagePlanButton() {
       backgroundColor: "white",
       width: imageWidth,
       height: imageHeight,
+      quality: 1,
       style: {
         width: `${imageWidth}`,
         height: `${imageHeight}`,

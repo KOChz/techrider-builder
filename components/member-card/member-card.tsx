@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { TProjectMember } from "@/db/schema";
 
 export type TEquipmentExample = {
@@ -21,9 +24,23 @@ export type TBandMember = {
 
 interface IMemberCardProps {
   member: TProjectMember;
+  isOpened?: boolean;
 }
 
-export function MemberCard({ member }: IMemberCardProps) {
+export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
+  const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>(
+    {}
+  );
+
+  const handleToggle = (index: number) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const isItemExpanded = (index: number) => expandedItems[index] ?? isOpened;
+
   return (
     <div className="member-card cursor-pointer" id={member.name}>
       <div className="member-header">
@@ -34,26 +51,62 @@ export function MemberCard({ member }: IMemberCardProps) {
         </div>
       </div>
       <ul className="equipment-list">
-        {member.equipment.map((item, index) =>
+        {member.equipment.map((item: TEquipmentItem, index: number) =>
           item.examples ? (
-            <details key={index} className="equipment-item">
-              <summary>
+            <li
+              key={index}
+              className="equipment-item rounded-xl hover:opacity-60"
+            >
+              <div
+                className="flex cursor-pointer items-center gap-2"
+                onClick={() => handleToggle(index)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleToggle(index);
+                  }
+                }}
+                aria-expanded={isItemExpanded(index)}
+              >
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 flex-shrink-0 ${
+                    isItemExpanded(index) ? "rotate-90" : "rotate-0"
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  opacity={0.8}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
                 <span>
                   {item.name}
                   {item.quantity && (
                     <span className="quantity"> {item.quantity}</span>
                   )}
                 </span>
-              </summary>
-              <div className="examples">
-                <p className="examples-title">{item.examples.title}</p>
-                <ul className="examples-list">
-                  {item.examples.items.map((example, exIndex) => (
-                    <li key={exIndex}>{example}</li>
-                  ))}
-                </ul>
               </div>
-            </details>
+              {isItemExpanded(index) && (
+                <div className="examples">
+                  <p className="examples-title">{item.examples.title}</p>
+                  <ul className="examples-list">
+                    {item.examples.items.map(
+                      (example: string, exIndex: number) => (
+                        <li key={exIndex}>{example}</li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
+            </li>
           ) : (
             <li key={index} className="equipment-simple">
               <span>

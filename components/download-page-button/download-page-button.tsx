@@ -22,6 +22,8 @@ interface IDownloadPageButtonProps {
    * Optional CSS classes for styling
    */
   className?: string;
+
+  onClick?: () => void;
 }
 
 /**
@@ -33,37 +35,43 @@ export function DownloadPageButton({
   fileName = "tech-rider-page.png",
   backgroundColor = "white",
   className,
+  onClick,
 }: IDownloadPageButtonProps) {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {
-    const element = document.getElementById(targetElementId);
+    onClick?.();
 
-    if (!element) {
-      console.error(`Element with ID "${targetElementId}" not found`);
-      return;
-    }
+    setTimeout(async () => {
+      const element = document.getElementById(targetElementId);
 
-    setIsDownloading(true);
+      if (!element) {
+        console.error(`Element with ID "${targetElementId}" not found`);
+        return;
+      }
 
-    try {
-      const dataUrl = await toPng(element, {
-        backgroundColor,
-        pixelRatio: 2,
-        cacheBust: true,
-      });
+      setIsDownloading(true);
 
-      const link = document.createElement("a");
-      link.download = fileName;
-      link.href = dataUrl;
-      link.click();
+      try {
+        const dataUrl = await toPng(element, {
+          backgroundColor,
+          pixelRatio: 2,
+          cacheBust: true,
+          quality: 1,
+        });
 
-      toast.success("Image generated!");
-    } catch (error) {
-      console.error("Failed to download page:", error);
-    } finally {
-      setIsDownloading(false);
-    }
+        const link = document.createElement("a");
+        link.download = fileName;
+        link.href = dataUrl;
+        link.click();
+
+        toast.success("Image generated!");
+      } catch (error) {
+        console.error("Failed to download page:", error);
+      } finally {
+        setIsDownloading(false);
+      }
+    }, 500);
   };
 
   return (
@@ -72,7 +80,7 @@ export function DownloadPageButton({
       disabled={isDownloading}
       className={
         className ||
-        "relative md:text-sm text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+        "relative cursor-pointer md:text-sm text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
       }
       aria-label="Download page as image"
       aria-busy={isDownloading}
