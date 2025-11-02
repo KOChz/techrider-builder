@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
-  Controls,
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
@@ -34,7 +33,6 @@ import {
   DEFAULT_PX_PER_METER,
   edgeTypes,
   egdeMeasure,
-  nodeTypes,
 } from "./stage-plan-builder";
 import { cn } from "@/lib/utils/cn";
 import { AnnotationNode } from "./nodes/annotation-node";
@@ -137,24 +135,6 @@ export function StagePlanViewer({
     );
   }, [pxPerMeter]);
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange<Node<TEquipmentData>>[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  );
-
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  );
-
-  const onConnect = useCallback(
-    (c: Connection) =>
-      setEdges((eds) => addEdge({ ...c, type: egdeMeasure }, eds)),
-    []
-  );
-
   const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
@@ -167,7 +147,6 @@ export function StagePlanViewer({
     ) as TEquipmentType;
     if (!kind || !rfRef.current) return;
 
-    // v12: use screenToFlowPosition with raw client coords
     const position = rfRef.current.screenToFlowPosition({
       x: e.clientX,
       y: e.clientY,
