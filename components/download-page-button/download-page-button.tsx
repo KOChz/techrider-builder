@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { toPng } from "html-to-image";
 import toast from "react-hot-toast";
-import { useIsIOS } from "@/hooks/use-is-ios";
 
 interface IDownloadPageButtonProps {
   /**
@@ -39,8 +38,6 @@ export function DownloadPageButton({
 }: IDownloadPageButtonProps) {
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const isIOSDevice = useIsIOS();
-
   const handleDownload = async () => {
     onClick?.();
 
@@ -62,32 +59,14 @@ export function DownloadPageButton({
           quality: 1,
         });
 
-        if (isIOSDevice) {
-          fetch(dataUrl)
-            .then((res) => res.blob())
-            .then((blob) => {
-              const url = URL.createObjectURL(blob);
-              const anchor = document.createElement("a");
-              anchor.href = url;
-              anchor.target = "_blank";
-              anchor.rel = "noopener noreferrer";
-              document.body.appendChild(anchor);
-              anchor.click();
-              document.body.removeChild(anchor);
-              setTimeout(() => URL.revokeObjectURL(url), 100);
-              toast.success("Tap and hold image to save");
-            })
-            .catch(() => {
-              toast.error("Failed to open image");
-            });
-        } else {
-          const link = document.createElement("a");
-          link.download = fileName;
-          link.href = dataUrl;
-          link.click();
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
 
-          toast.success("Image generated!");
-        }
+        window.open(dataUrl, "_blank", "noopener,noreferrer");
+
+        toast.success("Image generated!");
       } catch (error) {
         console.error("Failed to download page:", error);
       } finally {
