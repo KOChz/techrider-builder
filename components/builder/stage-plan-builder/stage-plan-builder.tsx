@@ -357,7 +357,7 @@ export default function StagePlanBuilder({
           zoomOnPinch
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={isMobile ? 0.4 : 0.5}
+          minZoom={isMobile ? 0.4 : 1}
           maxZoom={2.5}
           snapToGrid
           snapGrid={[10, 10]}

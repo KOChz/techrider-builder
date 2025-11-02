@@ -18,8 +18,8 @@ function downloadImage(dataUrl: string) {
   toast.success("Image donwloaded!");
 }
 
-const imageWidth = 1024;
-const imageHeight = 768;
+const imageWidth = 10000;
+const imageHeight = 5000;
 
 export function DownloadStagePlanButton() {
   const { getNodes } = useReactFlow();
@@ -37,13 +37,17 @@ export function DownloadStagePlanButton() {
 
     toPng(document.querySelector(".react-flow__viewport")! as HTMLElement, {
       backgroundColor: "white",
+      type: "png",
       width: imageWidth,
       height: imageHeight,
+      skipAutoScale: true,
       quality: 1,
       style: {
         width: `${imageWidth}`,
         height: `${imageHeight}`,
-        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
+        transform: `translate(${viewport.x}px, ${viewport.y / 1.25}px) scale(${
+          viewport.zoom * 3
+        })`,
       },
     }).then(downloadImage);
   };

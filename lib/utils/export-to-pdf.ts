@@ -1,4 +1,3 @@
-// lib/export-to-pdf.ts
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 
@@ -37,14 +36,14 @@ export async function exportStitchedPDF(
       "[data-export-strip-bg]",
     ],
     bottomPaddingPx = 96,
-    pagePaddingMm = 1.2, // ≈ 4–5px visual gutter
+    pagePaddingMm = 1.2,
     autoRotateForWidth = true,
   } = options;
 
   const topEl = document.getElementById(firstElementId);
   const bottomEl = document.getElementById(secondElementId);
   if (!topEl || !bottomEl) throw new Error("Elements not found");
-  if ("fonts" in document) await (document as any).fonts.ready;
+  if ("fonts" in document) await document.fonts.ready;
 
   const scale = 2;
 
