@@ -5,12 +5,12 @@ import { toCanvas } from "html-to-image";
 import toast from "react-hot-toast";
 
 type Props = {
-  firstElementId?: string; // "tech-rider-section"
-  secondElementId?: string; // "stage-plan-section"
-  fileName?: string;
+  firstElementId?: string;
+  secondElementId?: string;
+  fileName?: string; // e.g. "tech-rider-full.png" or ".webp"
   backgroundColor?: string;
-  spacingPx?: number;
-  pixelRatio?: number;
+  spacingPx?: number; // visual gap in CSS px (not device px)
+  pixelRatio?: number; // override; defaults to clamped DPR
   className?: string;
   onBeforeStart?: () => void;
   onAfterFinish?: () => void;
@@ -22,7 +22,7 @@ export function DownloadPageButton({
   fileName = "tech-rider-full.png",
   backgroundColor = "#ffffff",
   spacingPx = 32,
-  pixelRatio = 2,
+  pixelRatio,
   className,
   onBeforeStart,
   onAfterFinish,
@@ -30,80 +30,99 @@ export function DownloadPageButton({
   const [busy, setBusy] = useState(false);
 
   async function handleDownload() {
-    const firstEl = document.getElementById(firstElementId);
-    console.log("🚀 ~ handleDownload ~ firstEl:", firstEl);
+    const topEl = document.getElementById(firstElementId);
     const bottomEl = document.getElementById(secondElementId);
-    console.log("🚀 ~ handleDownload ~ bottomEl:", bottomEl);
-    if (!firstEl || !bottomEl) return;
+    if (!topEl || !bottomEl) return;
 
     setBusy(true);
     onBeforeStart?.();
 
     try {
-      // Ensure fonts/images are ready to avoid a tainted canvas
+      // Ensure webfonts are fully laid out to avoid blurry text
       if ("fonts" in document) await (document as any).fonts.ready;
 
-      // Render both regions
+      // Use device DPR for maximum fidelity, but clamp to avoid OOM on iOS
+      const DPR = Math.min(Math.max(window.devicePixelRatio || 1, 1), 3);
+      const pxr = pixelRatio ?? DPR;
+
+      // Render both elements at the same pixelRatio, no width overrides
       const [topCanvas, bottomCanvas] = await Promise.all([
-        toCanvas(firstEl, { backgroundColor, pixelRatio, cacheBust: true }),
-        toCanvas(bottomEl, { backgroundColor, pixelRatio, cacheBust: true }),
+        toCanvas(topEl, { backgroundColor, pixelRatio: pxr, cacheBust: true }),
+        toCanvas(bottomEl, {
+          backgroundColor,
+          pixelRatio: pxr,
+          cacheBust: true,
+        }),
       ]);
 
-      // Normalize width, keep aspect ratios
-      const targetWidth = Math.max(topCanvas.width, bottomCanvas.width);
-      const sTop = targetWidth / topCanvas.width;
-      const sBottom = targetWidth / bottomCanvas.width;
+      // ----- NO normalization scaling here -----
+      // Keep native render sizes to avoid interpolation blur.
+      const gap = Math.round(spacingPx * pxr);
 
-      const topH = Math.round(topCanvas.height * sTop);
-      const bottomH = Math.round(bottomCanvas.height * sBottom);
-      const gap = Math.round(spacingPx * pixelRatio);
-      const totalH = topH + gap + bottomH;
+      const compositeWidth = Math.max(topCanvas.width, bottomCanvas.width);
+      const compositeHeight = topCanvas.height + gap + bottomCanvas.height;
 
-      const composite = document.createElement("canvas");
-      composite.width = targetWidth;
-      composite.height = totalH;
+      // Prefer OffscreenCanvas if available (better perf on Safari/iOS)
+      const composite =
+        typeof (window as any).OffscreenCanvas === "function"
+          ? new (window as any).OffscreenCanvas(compositeWidth, compositeHeight)
+          : Object.assign(document.createElement("canvas"), {
+              width: compositeWidth,
+              height: compositeHeight,
+            });
 
-      const ctx = composite.getContext("2d")!;
+      const ctx =
+        "getContext" in composite
+          ? (composite as HTMLCanvasElement).getContext("2d")!
+          : (composite as OffscreenCanvas).getContext("2d")!;
+
+      // Fill background once to avoid seams
       ctx.fillStyle = backgroundColor;
-      ctx.fillRect(0, 0, targetWidth, totalH);
+      ctx.fillRect(0, 0, compositeWidth, compositeHeight);
 
-      // Draw top
-      ctx.drawImage(
-        topCanvas,
-        0,
-        0,
-        topCanvas.width,
-        topCanvas.height,
-        0,
-        0,
-        targetWidth,
-        topH
-      );
+      // High-quality resampling if Safari decides to scale anything
+      // (we’re drawing 1:1, but this is cheap insurance)
+      (ctx as any).imageSmoothingEnabled = true;
+      (ctx as any).imageSmoothingQuality = "high";
 
-      // Draw bottom
-      ctx.drawImage(
-        bottomCanvas,
-        0,
-        0,
-        bottomCanvas.width,
-        bottomCanvas.height,
-        0,
-        topH + gap,
-        targetWidth,
-        bottomH
-      );
+      // Draw top left-aligned at native size
+      ctx.drawImage(topCanvas, 0, 0);
 
-      // Export and download (single gesture; iOS-safe)
-      composite.toBlob((blob) => {
-        if (!blob) return;
+      // Draw bottom immediately after the gap
+      ctx.drawImage(bottomCanvas, 0, topCanvas.height + gap);
+
+      // Export – PNG is lossless (quality param is ignored for PNG).
+      const mime = fileName.toLowerCase().endsWith(".webp")
+        ? "image/webp"
+        : "image/png";
+
+      const finalize = async (blob: Blob | null) => {
+        if (!blob) throw new Error("Blob generation failed");
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.download = fileName;
         a.href = url;
+        a.download = fileName;
+        // Note: iOS Safari ignores `download`; it opens a viewer. That’s expected.
         a.click();
         URL.revokeObjectURL(url);
         toast.success("Image generated!");
-      }, "image/png");
+      };
+
+      if ("convertToBlob" in composite) {
+        // OffscreenCanvas path
+        const blob = await (composite as OffscreenCanvas).convertToBlob({
+          type: mime,
+          quality: mime === "image/webp" ? 1 : undefined,
+        });
+        await finalize(blob);
+      } else {
+        // HTMLCanvasElement path
+        (composite as HTMLCanvasElement).toBlob(
+          finalize,
+          mime,
+          mime === "image/webp" ? 1 : undefined
+        );
+      }
     } catch (e) {
       console.error(e);
       toast.error("Failed to generate image");
@@ -121,7 +140,7 @@ export function DownloadPageButton({
         className ||
         "relative cursor-pointer md:text-sm text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
       }
-      aria-label="Download stitched PNG"
+      aria-label="Download stitched image"
       aria-busy={busy}
     >
       Download

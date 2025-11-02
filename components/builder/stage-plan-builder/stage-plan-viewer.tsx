@@ -31,6 +31,7 @@ import {
   egdeMeasure,
   nodeTypes,
 } from "./stage-plan-builder";
+import { cn } from "@/lib/utils/cn";
 
 export function StagePlanViewer({
   stagePlanConfig,
@@ -187,13 +188,21 @@ export function StagePlanViewer({
   const { isMobile } = useDevice();
 
   return (
-    <div className="max-w-3/2 flex h-[500px] flex-col gap-2 md:h-[500px] md:max-h-none md:w-full md:flex-row md:justify-between xl:h-[70vh]">
+    <div
+      className={cn(
+        "max-w-3/2 flex flex-col gap-2 md:max-h-none md:w-full md:flex-row md:justify-between",
+        "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600]"
+      )}
+    >
       {/* Canvas */}
       <div
         ref={flowRef}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        className="h-[500px] touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1 xl:h-[70vh]"
+        className={cn(
+          "touch-none overflow-auto rounded-xl border border-gray-200 md:flex-1",
+          "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600]"
+        )}
       >
         <ReactFlow<Node<TEquipmentData>>
           onInit={(inst) => (rfRef.current = inst)}
