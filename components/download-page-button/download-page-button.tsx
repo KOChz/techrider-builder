@@ -7,10 +7,10 @@ import toast from "react-hot-toast";
 type Props = {
   firstElementId?: string;
   secondElementId?: string;
-  fileName?: string; // e.g. "tech-rider-full.png" or ".webp"
+  fileName?: string;
   backgroundColor?: string;
-  spacingPx?: number; // visual gap in CSS px (not device px)
-  pixelRatio?: number; // override; defaults to clamped DPR
+  spacingPx?: number;
+  pixelRatio?: number;
   className?: string;
   onBeforeStart?: () => void;
   onAfterFinish?: () => void;
@@ -143,7 +143,7 @@ export function DownloadPageButton({
       aria-label="Download stitched image"
       aria-busy={busy}
     >
-      Download
+      Export
     </button>
   );
 }

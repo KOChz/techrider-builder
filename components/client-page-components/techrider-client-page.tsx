@@ -39,8 +39,6 @@ export function TechRiderClientPage({
                 isOwner && "text-xs! md:text-md"
               )}
             >
-              <TechRiderDropdown members={project.members} />
-
               <li>
                 <Link
                   href="#contact"
@@ -49,6 +47,8 @@ export function TechRiderClientPage({
                   Contact
                 </Link>
               </li>
+
+              <TechRiderDropdown members={project.members} />
 
               {isOwner && (
                 <li>
