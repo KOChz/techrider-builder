@@ -65,8 +65,8 @@ const PowerExtensionIcon = React.forwardRef<
         role="img"
         aria-labelledby={a11yId}
         focusable="false"
-        width={+(width || 0) / 1.5}
-        height={+(height || 0) / 1.5}
+        width={+(width || 0) / 1.8}
+        height={+(height || 0) / 1.8}
         {...props}
       >
         {title ? <title id={a11yId}>{title}</title> : null}
