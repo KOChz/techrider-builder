@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 
 export type TEquipmentExample = {
   title: string;
@@ -158,7 +158,7 @@ export function MemberCardBuilder({
         </button>
       )}
 
-      <div className="space-y-6">
+      <div className="space-y-6 transition-all duration-200">
         <div className="space-y-4">
           <div className="flex items-center gap-4">
             <MusicalInstrumentSelector
@@ -196,118 +196,152 @@ export function MemberCardBuilder({
             </button>
           </div>
 
-          {member.equipment.map((item, equipmentIndex) => (
-            <div
-              key={equipmentIndex}
-              className="relative space-y-3 rounded-lg border border-gray-200 p-2 md:p-3 lg:p-4"
-            >
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={item.name}
-                  onChange={(e) =>
-                    updateEquipmentItem(equipmentIndex, {
-                      name: e.target.value,
-                    })
-                  }
-                  className="w-min flex-1 rounded border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                  placeholder="Equipment name"
-                />
+          {member.equipment.map((item, equipmentIndex) => {
+            const title =
+              (item.name?.trim() || "New equipment") +
+              (item.quantity ? ` × ${item.quantity}` : "");
 
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={item.quantity || ""}
-                    onChange={(e) =>
-                      updateEquipmentItem(equipmentIndex, {
-                        quantity: e.target.value,
-                      })
-                    }
-                    className="w-12 rounded-md border border-gray-300 px-2 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
-                    placeholder="qty"
-                  />
+            return (
+              <details
+                key={equipmentIndex}
+                className="group relative min-w-[320px] rounded-lg border border-gray-200"
+                open={!item.name}
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-gray-50">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <ChevronDown
+                      size={16}
+                      className="shrink-0 transition-transform group-open:rotate-180"
+                    />
+                    <span className="truncate font-medium text-gray-800">
+                      {title}
+                    </span>
+                  </div>
+
+                  {/* Delete button remains accessible in collapsed state */}
                   <button
                     type="button"
                     onClick={() => removeEquipmentItem(equipmentIndex)}
-                    className="absolute -right-3 -top-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-lg text-white transition-colors hover:bg-red-600"
+                    className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
                     aria-label="Delete equipment"
+                    onMouseDown={(e) => e.preventDefault()} // prevent toggling details on click
                   >
-                    <X size={10} className="p-0" />
+                    <X size={10} />
                   </button>
-                </div>
-              </div>
+                </summary>
 
-              {item.examples ? (
-                <div className="space-y-2 border-l-4 border-green-200 pl-2">
-                  <div className="flex items-center gap-2">
+                {/* Expanded content */}
+                <div className="space-y-3 border-t border-gray-200 p-3 md:p-4">
+                  <div className="flex gap-2">
                     <input
                       type="text"
-                      value={item.examples.title}
+                      value={item.name}
                       onChange={(e) =>
-                        updateExamplesTitle(equipmentIndex, e.target.value)
+                        updateEquipmentItem(equipmentIndex, {
+                          name: e.target.value,
+                        })
                       }
-                      className="flex-1 rounded border border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                      placeholder="Examples title"
+                      className="w-min flex-1 rounded border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                      placeholder="Equipment name"
+                      onFocus={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                     />
+
+                    <input
+                      type="text"
+                      value={item.quantity || ""}
+                      onChange={(e) =>
+                        updateEquipmentItem(equipmentIndex, {
+                          quantity: e.target.value,
+                        })
+                      }
+                      className="w-16 rounded-md border border-gray-300 px-2 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
+                      placeholder="qty"
+                      onFocus={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+
+                  {item.examples ? (
+                    <div className="space-y-2 border-l-4 border-green-200 pl-2">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={item.examples.title}
+                          onChange={(e) =>
+                            updateExamplesTitle(equipmentIndex, e.target.value)
+                          }
+                          className="flex-1 rounded border border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                          placeholder="Examples title"
+                          onFocus={(e) => e.stopPropagation()}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeExamplesFromItem(equipmentIndex)}
+                          className="cursor-pointer rounded-sm border bg-gray-400 p-[0.40625rem] text-[13px] text-white transition-colors hover:bg-gray-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        {item.examples.items.map((example, exampleIndex) => (
+                          <div key={exampleIndex} className="flex gap-2">
+                            <div className="flex flex-1">
+                              <input
+                                type="text"
+                                value={example}
+                                onChange={(e) =>
+                                  updateExampleItem(
+                                    equipmentIndex,
+                                    exampleIndex,
+                                    e.target.value
+                                  )
+                                }
+                                className="flex-1 rounded-l border border-r-0 border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:z-10 focus:border-green-500 focus:outline-none"
+                                placeholder="Example item"
+                                onFocus={(e) => e.stopPropagation()}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  removeExampleItem(
+                                    equipmentIndex,
+                                    exampleIndex
+                                  )
+                                }
+                                className="cursor-pointer rounded-r border border-red-400 bg-red-500 px-2 text-sm text-white transition-colors hover:bg-red-600"
+                              >
+                                <X size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => addExampleItem(equipmentIndex)}
+                        className="cursor-pointer rounded bg-green-500 px-3 py-1 text-sm text-white transition-colors hover:bg-green-600"
+                      >
+                        + Add Example
+                      </button>
+                    </div>
+                  ) : (
                     <button
                       type="button"
-                      onClick={() => removeExamplesFromItem(equipmentIndex)}
-                      className="cursor-pointer rounded-sm border bg-gray-400 p-[0.40625rem] text-[13px] text-white transition-colors hover:bg-gray-500"
+                      onClick={() => addExamplesToItem(equipmentIndex)}
+                      className="cursor-pointer rounded bg-green-600 px-3 py-1 text-sm text-white transition-colors hover:bg-green-700"
                     >
-                      Remove
+                      + Add Examples Section
                     </button>
-                  </div>
-
-                  <div className="display flex flex-col gap-1.5">
-                    {item.examples.items.map((example, exampleIndex) => (
-                      <div key={exampleIndex} className="flex gap-2">
-                        <div className="flex flex-1">
-                          <input
-                            type="text"
-                            value={example}
-                            onChange={(e) =>
-                              updateExampleItem(
-                                equipmentIndex,
-                                exampleIndex,
-                                e.target.value
-                              )
-                            }
-                            className="flex-1 rounded-l border border-r-0 border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:z-10 focus:border-green-500 focus:outline-none"
-                            placeholder="Example item"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              removeExampleItem(equipmentIndex, exampleIndex)
-                            }
-                            className="rounded-r border border-red-400 bg-red-400 px-3 py-1 text-sm text-white transition-colors hover:border-red-500 hover:bg-red-500"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => addExampleItem(equipmentIndex)}
-                    className="cursor-pointer rounded bg-green-500 px-3 py-1 text-sm text-white transition-colors hover:bg-green-600"
-                  >
-                    + Add Example
-                  </button>
+                  )}
                 </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => addExamplesToItem(equipmentIndex)}
-                  className="cursor-pointer rounded bg-green-600 px-3 py-1 text-sm text-white transition-colors hover:bg-green-700"
-                >
-                  + Add Examples Section
-                </button>
-              )}
-            </div>
-          ))}
+              </details>
+            );
+          })}
         </div>
       </div>
     </div>
