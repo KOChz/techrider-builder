@@ -6,7 +6,7 @@ export function BandInfoContent() {
   const { name, notes, setName, setNotes } = useProjectStore();
 
   return (
-    <div className="min-h-72 space-y-2">
+    <div className="min-h-[356px] space-y-2">
       <h3 className="text-2xl font-semibold text-slate-900">
         Band Information
       </h3>
@@ -29,7 +29,7 @@ export function BandInfoContent() {
           />
         </div>
 
-        {/* <div>
+        <div>
           <label
             htmlFor="band-notes"
             className="mb-1 block text-sm font-medium text-slate-900"
@@ -44,7 +44,7 @@ export function BandInfoContent() {
             placeholder="This is section for any technical stuff notes"
             rows={4}
           />
-        </div> */}
+        </div>
       </div>
     </div>
   );

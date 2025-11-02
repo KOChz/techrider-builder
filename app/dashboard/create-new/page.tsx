@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { ReactFlowProvider } from "@xyflow/react";
 
 import ProjectCreationTabs from "@/components/builder/project-creation-tabs/project-creation-tabs";
 

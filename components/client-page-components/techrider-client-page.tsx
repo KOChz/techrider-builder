@@ -11,6 +11,7 @@ import { MemberCard } from "../member-card/member-card";
 import { StagePlanViewer } from "../builder/stage-plan-builder/stage-plan-viewer";
 import { User } from "@supabase/supabase-js";
 import { slugify } from "@/lib/utils/slugify";
+import { NotesSection } from "../techrider/notes-section";
 
 export function TechRiderClientPage({
   isOwner,
@@ -126,6 +127,8 @@ export function TechRiderClientPage({
             ))}
           </div>
         </section>
+
+        {project.notes && <NotesSection notes={project.notes} />}
 
         <h1
           id="stage-plan"
