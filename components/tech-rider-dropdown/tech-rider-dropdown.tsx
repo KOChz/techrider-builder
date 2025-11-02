@@ -53,7 +53,7 @@ export function TechRiderDropdown({ members }: ITechRiderDropdownProps) {
       <div ref={hoverRef} className="relative flex flex-row items-center">
         <button
           type="button"
-          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent text-xs font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none md:pt-[3px] md:text-[14px]"
+          className="flex cursor-pointer items-center gap-0.5 border-none bg-transparent text-xs font-medium uppercase tracking-wider text-gray-600 transition-colors duration-200 hover:text-gray-900 focus:text-gray-900 focus:outline-none md:text-[14px]"
           aria-haspopup="true"
           aria-expanded={isOpen}
           onClick={handleButtonClick}
