@@ -63,11 +63,6 @@ export async function exportStagePlanToPdf({
   const originalViewport = reactFlowInstance.getViewport();
 
   try {
-    reactFlowInstance.fitView({
-      padding: 0.15,
-      duration: 0,
-    });
-
     await new Promise((resolve) => setTimeout(resolve, 150));
 
     const containerRect = reactFlowWrapper.getBoundingClientRect();

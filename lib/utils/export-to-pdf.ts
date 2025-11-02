@@ -42,7 +42,7 @@ export async function exportStitchedPDF({
   const topEl = document.getElementById(firstElementId);
   const bottomEl = document.getElementById(secondElementId);
   if (!topEl || !bottomEl) throw new Error("Elements not found");
-  if ("fonts" in document) await (document as any).fonts.ready;
+  if ("fonts" in document) await document.fonts.ready;
 
   const dpr = Math.max(2, Math.floor(window.devicePixelRatio || 1));
 
