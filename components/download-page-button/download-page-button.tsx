@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toPng } from "html-to-image";
 import toast from "react-hot-toast";
 
@@ -60,10 +60,8 @@ export function DownloadPageButton({
         });
 
         const link = document.createElement("a");
+        link.download = fileName;
         link.href = dataUrl;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-
         link.click();
 
         toast.success("Image generated!");
