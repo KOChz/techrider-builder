@@ -22,7 +22,7 @@ export function TechRiderClientPage({
   project: TProjectWithRelations;
   user: User | null;
 }) {
-  const [isDonwload, setIsDownload] = useState(false);
+  const [isDownload, setIsDownload] = useState(false);
 
   function handleDownload() {
     setIsDownload(true);
@@ -115,8 +115,16 @@ export function TechRiderClientPage({
       <>
         <div className="container">
           <section id="tech-rider">
-            <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold text-transparent">
-              Technical Requirements
+            <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold capitalize text-transparent">
+              {isDownload ? (
+                <>
+                  {project.name}
+                  <br />
+                  Tech Rider
+                </>
+              ) : (
+                "Technical Requirements"
+              )}
             </h2>
 
             <div className="tech-grid">
@@ -124,7 +132,7 @@ export function TechRiderClientPage({
                 <MemberCard
                   key={member.id}
                   member={member}
-                  isOpened={isDonwload}
+                  isOpened={isDownload}
                 />
               ))}
             </div>
