@@ -19,7 +19,7 @@ type Props = {
 export function DownloadPageButton({
   firstElementId = "tech-rider",
   secondElementId = "stage-plan",
-  fileName = "tech-rider-full.png",
+  fileName = "tech-rider.png",
   backgroundColor = "#ffffff",
   spacingPx = 32,
   pixelRatio,

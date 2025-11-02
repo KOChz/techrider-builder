@@ -26,10 +26,6 @@ export function TechRiderClientPage({
 
   function handleDownload() {
     setIsDownload(true);
-
-    setTimeout(() => {
-      setIsDownload(false);
-    }, 2000);
   }
 
   return (
@@ -69,6 +65,11 @@ export function TechRiderClientPage({
               {isOwner && (
                 <DownloadPageButton
                   onBeforeStart={handleDownload}
+                  onAfterFinish={() => {
+                    setTimeout(() => {
+                      setIsDownload(false);
+                    }, 2000);
+                  }}
                   fileName={`tech-rider-${slugify(project.name)}`}
                 />
               )}
