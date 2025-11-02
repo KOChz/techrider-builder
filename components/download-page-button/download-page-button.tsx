@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toPng } from "html-to-image";
 import toast from "react-hot-toast";
 

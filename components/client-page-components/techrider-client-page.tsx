@@ -27,7 +27,7 @@ export function TechRiderClientPage({
 
     setTimeout(() => {
       setIsDownload(false);
-    }, 500);
+    }, 2000);
   }
 
   return (
