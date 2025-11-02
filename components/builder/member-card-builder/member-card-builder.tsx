@@ -145,7 +145,7 @@ export function MemberCardBuilder({
   return (
     <div
       id="MemberCardBuilder"
-      className="relative min-w-min max-w-4xl rounded-lg border-2 border-gray-300/80 bg-white p-2 text-sm lg:max-w-none lg:p-4 xl:p-6"
+      className="relative h-fit min-w-min max-w-4xl rounded-lg border-2 border-gray-300/80 bg-white p-2 text-sm lg:max-w-none lg:p-4 xl:p-6"
     >
       {onRemove && (
         <button
