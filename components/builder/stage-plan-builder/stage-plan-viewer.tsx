@@ -1,27 +1,20 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
   type Node,
   type Edge,
-  type Connection,
-  type EdgeChange,
-  type NodeChange,
   type ReactFlowInstance,
   BackgroundVariant,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { nanoid } from "nanoid";
 
 import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { useDebouncedCallback } from "use-debounce";
 import { useDevice } from "@/hooks/use-device";
-import { TEquipmentData, TEquipmentType } from "./nodes/equipment-node";
+import { TEquipmentData } from "./nodes/equipment-node";
 import { TMeasurmentData } from "./edges/measure-edge";
 
 export const nodeViewerTypes = {
@@ -29,14 +22,13 @@ export const nodeViewerTypes = {
   annotation: AnnotationNode,
 };
 
-import {
-  DEFAULT_PX_PER_METER,
-  edgeTypes,
-  egdeMeasure,
-} from "./stage-plan-builder";
+export const edgeViewerTypes = { measure: ViewMeasureEdge };
+
+import { DEFAULT_PX_PER_METER, edgeTypes } from "./stage-plan-builder";
 import { cn } from "@/lib/utils/cn";
 import { AnnotationNode } from "./nodes/annotation-node";
 import { EquipmentViewNode } from "./nodes/equipment-node-view";
+import { ViewMeasureEdge } from "./edges/view-measure-edge";
 
 export function StagePlanViewer({
   stagePlanConfig,
@@ -160,7 +152,7 @@ export function StagePlanViewer({
           // onEdgesChange={onEdgesChange}
           // onConnect={onConnect}
           nodeTypes={nodeViewerTypes}
-          edgeTypes={edgeTypes}
+          edgeTypes={edgeViewerTypes}
           fitView
           fitViewOptions={{ padding: 10 }}
           proOptions={{ hideAttribution: true }}
