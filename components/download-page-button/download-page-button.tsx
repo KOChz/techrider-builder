@@ -63,7 +63,6 @@ export function DownloadPageButton({
         link.download = fileName;
         link.href = dataUrl;
         link.click();
-        toast.success("Image generating...");
       } catch (error) {
         console.error("Failed to download page:", error);
       } finally {
