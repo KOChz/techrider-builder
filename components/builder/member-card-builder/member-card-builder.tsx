@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Trash2, X } from "lucide-react";
 import { ExampleItemsList } from "./example-items-list";
+import { ExampleInput } from "./example-input";
 
 export type TEquipmentExample = {
   title: string;
@@ -215,7 +216,7 @@ export function MemberCardBuilder({
                   </div>
 
                   {/* Delete button remains accessible in collapsed state */}
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => removeEquipmentItem(equipmentIndex)}
                     className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
@@ -223,6 +224,15 @@ export function MemberCardBuilder({
                     onMouseDown={(e) => e.preventDefault()}
                   >
                     <X size={14} />
+                  </button> */}
+
+                  <button
+                    type="button"
+                    onClick={onRemove}
+                    className="group cursor-pointer text-gray-400 transition-all duration-200 hover:bg-red-50 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
+                    aria-label="Remove this example"
+                  >
+                    <X className="h-4 w-4 transition-transform group-hover:scale-110" />
                   </button>
                 </summary>
 
@@ -237,7 +247,7 @@ export function MemberCardBuilder({
                           name: e.target.value,
                         })
                       }
-                      className="w-min flex-1 rounded border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                      className="w-min flex-1 rounded-lg border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
                       placeholder="Equipment name"
                       onFocus={(e) => e.stopPropagation()}
                       onClick={(e) => e.stopPropagation()}
@@ -251,7 +261,7 @@ export function MemberCardBuilder({
                           quantity: e.target.value,
                         })
                       }
-                      className="w-12 rounded-md border border-gray-300 px-2 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
+                      className="w-12 rounded-lg border border-gray-300 px-2 py-2 text-[16px] placeholder-slate-500 focus:relative focus:z-10 focus:border-green-500 focus:outline-none"
                       placeholder="qty"
                       onFocus={(e) => e.stopPropagation()}
                       onClick={(e) => e.stopPropagation()}
@@ -260,26 +270,14 @@ export function MemberCardBuilder({
 
                   {item.examples ? (
                     <div className="space-y-2 border-l-4 border-green-200 pl-2">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          value={item.examples.title}
-                          onChange={(e) =>
-                            updateExamplesTitle(equipmentIndex, e.target.value)
-                          }
-                          className="flex-1 rounded border border-gray-300 px-3 py-1 text-[16px] text-sm placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                          placeholder="Examples title"
-                          onFocus={(e) => e.stopPropagation()}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeExamplesFromItem(equipmentIndex)}
-                          className="cursor-pointer rounded-sm border bg-gray-400 p-[0.40625rem] text-[13px] text-white transition-colors hover:bg-gray-500"
-                        >
-                          Remove
-                        </button>
-                      </div>
+                      <ExampleInput
+                        value={item.examples.title}
+                        onChange={(newValue) =>
+                          updateExamplesTitle(equipmentIndex, newValue)
+                        }
+                        onRemove={() => removeExamplesFromItem(equipmentIndex)}
+                        placeholder="Roland jazz chorus, Fender twin reverb"
+                      />
 
                       <div className="flex flex-col gap-1.5">
                         <ExampleItemsList
@@ -293,7 +291,7 @@ export function MemberCardBuilder({
                       <button
                         type="button"
                         onClick={() => addExampleItem(equipmentIndex)}
-                        className="cursor-pointer rounded bg-green-500 px-3 py-1 text-sm text-white transition-colors hover:bg-green-600"
+                        className="cursor-pointer rounded-md bg-green-600 p-2 text-xs text-white transition-colors hover:bg-green-700"
                       >
                         + Add Example
                       </button>

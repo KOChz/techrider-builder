@@ -71,7 +71,7 @@ function ExampleItem({
           onUpdateExample(equipmentIndex, exampleIndex, e.target.value)
         }
         // Important: no min-h-full; let JS set height.
-        className="no-scrollbar w-full resize-none rounded border border-gray-300 px-3 py-2 text-[16px] leading-6 placeholder-slate-500 focus:border-green-500 focus:outline-none"
+        className="no-scrollbar w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-[16px] leading-6 placeholder-slate-500 focus:border-green-500 focus:outline-none"
         placeholder="Example item"
         onFocus={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
@@ -87,7 +87,7 @@ function ExampleItem({
       <button
         type="button"
         onClick={() => onRemoveExample(equipmentIndex, exampleIndex)}
-        className="absolute -right-1 -top-1 flex h-[18px] w-[18px] items-center justify-center rounded-full border border-red-400 bg-red-500 text-white transition-colors hover:bg-red-600"
+        className="absolute -right-1 -top-1 flex h-[18px] w-[18px] cursor-pointer items-center justify-center rounded-full border border-red-400 bg-red-500 text-white transition-colors hover:bg-red-600"
       >
         <X size={12} />
       </button>
