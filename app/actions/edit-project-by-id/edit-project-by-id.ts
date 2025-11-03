@@ -39,6 +39,7 @@ const inputSchema = z.object({
   projectId: z.string().uuid(),
   name: z.string().min(1).optional(),
   notes: z.string().optional(),
+  contactInfo: z.string().optional(),
   isPublic: z.boolean().optional(),
   stagePlanConfig: stagePlanConfigSchema.optional(),
   members: z.array(memberInputSchema).optional(),
@@ -109,6 +110,8 @@ export async function editProjectById(
       updateData.slug = await slugify(input.name);
     }
     if (input.notes !== undefined) updateData.notes = input.notes;
+    if (input.contactInfo !== undefined)
+      updateData.contactInfo = input.contactInfo;
     if (input.isPublic !== undefined) updateData.isPublic = input.isPublic;
     if (input.stagePlanConfig !== undefined)
       updateData.stagePlanConfig = input.stagePlanConfig as any;

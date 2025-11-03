@@ -39,6 +39,7 @@ const memberInputSchema = z.object({
 const inputEditSchema = z.object({
   name: z.string().min(1),
   notes: z.string().optional(),
+  contactInfo: z.string().optional(),
   isPublic: z.boolean().optional(),
   stagePlanConfig: stagePlanConfigSchema.optional(),
   members: z.array(memberInputSchema).optional(),
@@ -53,10 +54,6 @@ export type TCreateNewProjectResult = {
 };
 
 export async function createNewProject(raw: TCreateNewProjectInput) {
-  console.log(
-    "🚀 ~ createNewProject ~ raw.stagePlanConfig?.edges:",
-    raw.stagePlanConfig?.edges
-  );
   const input = inputEditSchema.parse(raw);
 
   const cookieStore = await cookies();
@@ -115,7 +112,8 @@ export async function createNewProject(raw: TCreateNewProjectInput) {
     isPublic: !!input.isPublic,
     slug: slugify(input.name),
     stagePlanConfig: input.stagePlanConfig as any,
-    notes: "",
+    notes: input.notes || "",
+    contactInfo: input.contactInfo || "",
     id: uuidv4(),
     createdAt: creationDate,
     updatedAt: creationDate,

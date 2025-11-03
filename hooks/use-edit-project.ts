@@ -39,7 +39,8 @@ export function useEditProject({
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const { name, notes, isPublic, stagePlanConfig, members } = useProjectStore();
+  const { name, notes, contactInfo, isPublic, stagePlanConfig, members } =
+    useProjectStore();
 
   const editProject = async () => {
     setError(null);
@@ -61,6 +62,7 @@ export function useEditProject({
         projectId: project.id,
         name: name?.trim(),
         notes: notes?.trim() || undefined,
+        contactInfo,
         isPublic,
         stagePlanConfig,
         members: members

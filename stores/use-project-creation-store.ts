@@ -17,12 +17,14 @@ export interface IStagePlanFlowConfig {
 interface IProjectStore {
   name: string;
   notes: string;
+  contactInfo: string;
   isPublic: boolean;
   stagePlanConfig: IStagePlanFlowConfig;
   members: TBandMemberBuilder[];
 
   setName: (name: string) => void;
   setNotes: (notes: string) => void;
+  setContactInfo: (contactInfo: string) => void;
 
   setIsPublic: (isPublic: boolean) => void;
   setStagePlanConfig: (config: IStagePlanFlowConfig) => void;
@@ -60,9 +62,11 @@ const getInitialStore = (): Omit<
   | "initializeWithProject"
   | "resetForm"
   | "setEdges"
+  | "setContactInfo"
 > => ({
   name: "",
   notes: "",
+  contactInfo: "",
   isPublic: false,
   stagePlanConfig: {
     nodes: [],
@@ -81,6 +85,8 @@ export const useProjectStore = create<IProjectStore>()(
       setName: (name) => set({ name }),
 
       setNotes: (notes) => set({ notes }),
+
+      setContactInfo: (contactInfo) => set({ contactInfo }),
 
       setIsPublic: (isPublic) => set({ isPublic }),
 

@@ -19,8 +19,15 @@ export function useCreateProject(): IUseCreateProjectReturn {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const { name, notes, isPublic, stagePlanConfig, members, resetForm } =
-    useProjectStore();
+  const {
+    name,
+    contactInfo,
+    notes,
+    isPublic,
+    stagePlanConfig,
+    members,
+    resetForm,
+  } = useProjectStore();
 
   const createProject = async () => {
     setError(null);
@@ -41,6 +48,7 @@ export function useCreateProject(): IUseCreateProjectReturn {
       const input: TCreateNewProjectInput = {
         name: name.trim(),
         notes: notes.trim() || undefined,
+        contactInfo,
         isPublic,
         stagePlanConfig,
         members: members.map((m, index) => ({

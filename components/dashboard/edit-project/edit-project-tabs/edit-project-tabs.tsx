@@ -53,6 +53,7 @@ export default function EditProjectTabs({
   useEffect(() => {
     initializeWithProject({
       name: project.name,
+      contactInfo: project.contactInfo || "",
       notes: project.notes ?? "",
       isPublic: project.isPublic,
       stagePlanConfig: project.stagePlanConfig as IStagePlanFlowConfig,

@@ -47,6 +47,7 @@ export const projects = pgTable(
       .notNull(),
     slug: text("slug").notNull().unique(),
     notes: text("notes"),
+    contactInfo: text("contact_info"),
   },
   (t) => ({
     ownerIdx: index("projects_owner_idx").on(t.ownerId),

@@ -18,6 +18,7 @@ export default async function EditProjectPage({
   const { "project-id": projectId } = await params;
 
   const { project } = await getProjectById({ projectId });
+  console.log("🚀 ~ EditProjectPage ~ project:", project);
 
   return (
     <div>

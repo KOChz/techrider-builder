@@ -4,7 +4,9 @@ import { useDevice } from "@/hooks/use-device";
 import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export function BandInfoContent() {
-  const { name, notes, setName, setNotes } = useProjectStore();
+  const { name, notes, setName, setNotes, contactInfo, setContactInfo } =
+    useProjectStore();
+
   const { isMobile } = useDevice();
 
   return (
@@ -28,6 +30,23 @@ export function BandInfoContent() {
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-[16px] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="Enter band name"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="contact-info"
+            className="block pb-1 text-sm font-medium text-slate-900"
+          >
+            Contact Information
+          </label>
+          <textarea
+            id="contact-info"
+            value={contactInfo}
+            onChange={(e) => setContactInfo(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Enter contact details (email, phone, address, etc.)"
+            rows={isMobile ? 4 : 3}
           />
         </div>
 
