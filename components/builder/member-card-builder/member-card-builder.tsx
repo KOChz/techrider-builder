@@ -188,13 +188,6 @@ export function MemberCardBuilder({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h4 className="text-lg font-semibold text-gray-800">Equipment</h4>
-            <button
-              type="button"
-              onClick={addEquipmentItem}
-              className="cursor-pointer rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
-            >
-              + Add Equipment
-            </button>
           </div>
 
           {member.equipment.map((item, equipmentIndex) => {
@@ -318,6 +311,16 @@ export function MemberCardBuilder({
               </details>
             );
           })}
+
+          <div className="justify-end-safe flex w-full">
+            <button
+              type="button"
+              onClick={addEquipmentItem}
+              className="cursor-pointer rounded-md bg-green-600 p-2 text-xs text-white transition-colors hover:bg-green-700"
+            >
+              + Add Equipment
+            </button>
+          </div>
         </div>
       </div>
     </div>
