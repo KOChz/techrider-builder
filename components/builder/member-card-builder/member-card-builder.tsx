@@ -219,7 +219,7 @@ export function MemberCardBuilder({
                   <button
                     type="button"
                     onClick={() => removeEquipmentItem(equipmentIndex)}
-                    className="group cursor-pointer text-gray-400 transition-all duration-200 hover:bg-red-50 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
+                    className="p group cursor-pointer rounded-lg text-gray-400 transition-all duration-200 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
                     aria-label="Remove this example"
                   >
                     <X className="h-4 w-4 transition-transform group-hover:scale-110" />
