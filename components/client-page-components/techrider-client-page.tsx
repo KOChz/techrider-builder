@@ -149,6 +149,22 @@ export function TechRiderClientPage({
                 <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
               )}
             </div>
+
+            {isDownload && (
+              <footer className="w-full" id="contact">
+                <h3>Get in Touch</h3>
+                <p>For bookings and technical questions:</p>
+                <p>
+                  <span>{project.contactInfo}</span>
+                </p>
+                <p>
+                  <a href={user?.email}>{user?.email}</a>
+                </p>
+                <p className="mt-(--spacing-md) text-[0.85rem]">
+                  © 2025 {project.name}. All rights reserved.
+                </p>
+              </footer>
+            )}
           </section>
         </div>
 
