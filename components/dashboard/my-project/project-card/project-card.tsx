@@ -36,7 +36,7 @@ export function ProjectCard({ project }: IProjectCardProps) {
   return (
     <Link
       href={`/techrider/${slugify(project.name)}`}
-      className="group relative rounded-2xl border border-slate-200 bg-white p-4 transition-all duration-200 hover:border-green-500 hover:bg-slate-50 hover:shadow-sm md:p-6"
+      className="group relative w-full rounded-2xl border border-slate-200 bg-white p-4 transition-all duration-200 hover:border-green-500 hover:bg-slate-50 hover:shadow-sm md:p-6"
     >
       <div className="flex items-start justify-between">
         <div className="flex flex-row gap-1">

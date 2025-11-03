@@ -8,6 +8,7 @@ import {
   type Edge,
   type ReactFlowInstance,
   BackgroundVariant,
+  Controls,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -133,7 +134,7 @@ export function StagePlanViewer({
     <div
       className={cn(
         "max-w-3/2 flex flex-col gap-2 md:max-h-none md:w-full md:flex-row md:justify-between",
-        "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600]"
+        "h-[400px] md:h-[600px] lg:h-[700px] xl:h-[600px]"
       )}
     >
       {/* Canvas */}
@@ -184,7 +185,7 @@ export function StagePlanViewer({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          {/* <Controls showInteractive={false} position="bottom-right" /> */}
+          <Controls showInteractive={false} position="bottom-right" />
         </ReactFlow>
       </div>
     </div>

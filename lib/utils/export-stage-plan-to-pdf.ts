@@ -41,6 +41,7 @@ export async function exportStagePlanToPdf({
   pixelRatio = 6,
 }: IExportStagePlanToPdfOptions): Promise<void> {
   const nodes = reactFlowInstance.getNodes();
+  reactFlowInstance.fitView({ nodes });
 
   if (nodes.length === 0) {
     throw new Error("No nodes to export");

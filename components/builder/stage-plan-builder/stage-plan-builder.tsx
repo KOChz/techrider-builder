@@ -37,6 +37,59 @@ export const DEFAULT_PX_PER_METER = 100;
 
 export const edgeTypes = { measure: MeasureEdge };
 
+export const ANNOTATION_NODES: Node<TEquipmentData>[] = [
+  {
+    id: "up-stage",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Upstage",
+    },
+    position: { x: -0, y: -200 },
+  },
+  {
+    id: "down-stage",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Downstage / Audience",
+    },
+    position: { x: -50, y: 400 },
+  },
+  {
+    id: "stage-left",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Stage Left",
+      rotation: -90,
+    },
+    position: { x: -400, y: 100 },
+  },
+  {
+    id: "stage-right",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Stage Right",
+      rotation: 90,
+    },
+    position: { x: 400, y: 100 },
+  },
+];
+
 export const nodeTypes = {
   equipment: EquipmentNode,
   annotation: AnnotationNode,
@@ -56,56 +109,7 @@ export default function StagePlanBuilder({
   const isBuilder = !isViewer;
   const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
     ...(stagePlanConfig?.nodes || [])!,
-    {
-      id: "up-stage",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Upstage",
-      },
-      position: { x: -0, y: -200 },
-    },
-    {
-      id: "down-stage",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Downstage / Audience",
-      },
-      position: { x: -50, y: 400 },
-    },
-    {
-      id: "stage-left",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Stage Left",
-        rotation: -90,
-      },
-      position: { x: -400, y: 100 },
-    },
-    {
-      id: "stage-right",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Stage Right",
-        rotation: 90,
-      },
-      position: { x: 400, y: 100 },
-    },
+    ...ANNOTATION_NODES,
   ]);
 
   const [edges, setEdges] = useState<Edge<TMeasurmentData>[]>(
@@ -279,11 +283,11 @@ export default function StagePlanBuilder({
   const { isMobile } = useDevice();
 
   return (
-    <div className="flex flex-col gap-2 xl:h-[78vh] xl:flex-row xl:items-stretch xl:justify-between">
+    <div className="flex flex-col gap-2 xl:h-[80vh] xl:flex-row xl:items-stretch xl:justify-between">
       {/* Sidebar */}
       {isBuilder && (
-        <div className="grid min-h-0 content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0">
-          <div className="grid min-h-0 gap-1.5">
+        <div className="min-h-10 grid content-start gap-3 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0">
+          <div className="grid gap-1.5">
             <span className="text-xs text-slate-600">
               Connect two nodes to show distance.
             </span>
@@ -308,7 +312,7 @@ export default function StagePlanBuilder({
 
           <div className="h-px bg-slate-200" />
 
-          <div className="grid min-h-0 gap-2">
+          <div className="grid gap-2 pb-6">
             <strong className="text-xs text-slate-900">Equipment</strong>
             <Palette onAddNode={handleAddNode} />
             <span className="text-xs text-slate-600 md:hidden">
@@ -357,7 +361,7 @@ export default function StagePlanBuilder({
           zoomOnPinch
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={isMobile ? 0.4 : 1}
+          minZoom={isMobile ? 0.4 : 0.8}
           maxZoom={2.5}
           snapToGrid
           snapGrid={[10, 10]}
@@ -377,11 +381,11 @@ export default function StagePlanBuilder({
             color="#ccc"
             variant={BackgroundVariant.Lines}
           />
-          {/* <Controls
+          <Controls
             showInteractive={false}
             position="bottom-right"
             className="md:scale-125"
-          /> */}
+          />
         </ReactFlow>
       </div>
     </div>
