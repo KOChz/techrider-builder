@@ -34,7 +34,7 @@ export default function AuthLayout({ children }: IAuthLayoutProps) {
       <footer className="border-t border-slate-200 bg-white px-4 py-8">
         <div className="mx-auto max-w-7xl text-center">
           <p className="text-sm text-slate-400">
-            © 2025 headachee. All rights reserved.
+            © 2025 TechRider Builder. All rights reserved.
           </p>
         </div>
       </footer>
