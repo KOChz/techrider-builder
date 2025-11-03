@@ -68,7 +68,7 @@ export function TechRiderClientPage({
                   onAfterFinish={() => {
                     setTimeout(() => {
                       setIsDownload(false);
-                    }, 3000);
+                    }, 4000);
                   }}
                   fileName={`tech-rider-${slugify(project.name)}`}
                 />
