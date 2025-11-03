@@ -128,7 +128,7 @@ export function ViewMeasureEdge(props: EdgeProps<IViewMeasureEdgeData>) {
               "pointer-events-auto flex items-center gap-1.5 rounded-lg border bg-white px-2 py-1 text-xs shadow-sm"
             )}
           >
-            <span className="cursor-pointer hover:underline">
+            <span className="cursor-pointer text-[16px] hover:underline">
               {displayValue}
             </span>
           </div>

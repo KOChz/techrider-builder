@@ -265,7 +265,7 @@ export function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
               <>
                 <span
                   onClick={handleLabelClick}
-                  className="cursor-pointer hover:underline"
+                  className="cursor-pointer text-[16px] hover:underline"
                 >
                   {displayValue}
                 </span>
