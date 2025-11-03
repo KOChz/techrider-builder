@@ -216,19 +216,9 @@ export function MemberCardBuilder({
                   </div>
 
                   {/* Delete button remains accessible in collapsed state */}
-                  {/* <button
-                    type="button"
-                    onClick={() => removeEquipmentItem(equipmentIndex)}
-                    className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
-                    aria-label="Delete equipment"
-                    onMouseDown={(e) => e.preventDefault()}
-                  >
-                    <X size={14} />
-                  </button> */}
-
                   <button
                     type="button"
-                    onClick={onRemove}
+                    onClick={() => removeEquipmentItem(equipmentIndex)}
                     className="group cursor-pointer text-gray-400 transition-all duration-200 hover:bg-red-50 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
                     aria-label="Remove this example"
                   >
