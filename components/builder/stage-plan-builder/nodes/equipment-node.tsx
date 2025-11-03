@@ -16,12 +16,7 @@ import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
 import { RotateCw, X } from "lucide-react";
-import { getStraightPath } from "@xyflow/react";
 
-import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
-import { cn } from "@/lib/utils/cn";
-import { useDevice } from "@/hooks/use-device";
 import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
 import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
 
@@ -62,9 +57,6 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
 
   const width = data.width ?? undefined;
   const height = data.height ?? undefined;
-
-  const ICON_W = width ?? 100; // pick sensible defaults per icon type
-  const ICON_H = height ?? 20;
 
   const icon = useMemo(() => {
     const iconProps = { width, height };
@@ -229,7 +221,7 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           <div>{icon}</div>
 
           {isLabelEditing ? (
-            <div className="relative flex w-min items-center gap-1">
+            <div className="relative flex w-min items-center gap-1 rounded-lg border border-green-700/80 bg-white pr-2">
               <input
                 ref={inputRef}
                 type="text"
@@ -237,7 +229,7 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
                 onChange={(e) => setTempLabel(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
-                className="min-w-20 rounded border border-green-700/80 bg-white py-0.5 text-center text-base text-slate-900 outline-none sm:text-sm"
+                className="min-w-16 rounded-lg bg-white py-0.5 text-center text-[16px] text-base text-slate-900 outline-none"
                 aria-label="Edit equipment label"
                 maxLength={50}
               />
@@ -253,7 +245,7 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           ) : (
             <span
               onClick={handleLabelClick}
-              className="cursor-pointer text-[10px] text-slate-900 hover:underline"
+              className="cursor-pointer text-[16px] text-slate-700/90 hover:underline"
             >
               {data.label}
             </span>
