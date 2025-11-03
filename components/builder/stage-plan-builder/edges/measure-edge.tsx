@@ -247,7 +247,7 @@ export function MeasureEdge(props: EdgeProps<IMeasureEdgeData>) {
                   onChange={(e) => setTempLabel(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onBlur={handleBlur}
-                  className="w-20 rounded border border-blue-500 bg-white px-1 text-center text-[16px] text-xs outline-none"
+                  className="w-20 rounded border border-green-600 bg-white px-1 text-center text-[16px] text-xs outline-none"
                   aria-label="Edit measurement value"
                   maxLength={20}
                 />
