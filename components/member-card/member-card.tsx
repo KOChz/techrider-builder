@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TProjectMember } from "@/db/schema";
+import { cn } from "@/lib/utils/cn";
 
 export type TEquipmentExample = {
   title: string;
@@ -82,23 +83,26 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
                 }}
                 aria-expanded={isItemExpanded(index)}
               >
-                <svg
-                  className={`w-4 h-4 transition-transform duration-200 flex-shrink-0 ${
-                    isItemExpanded(index) ? "rotate-90" : "rotate-0"
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  opacity={0.8}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
+                {!isOpened && (
+                  <svg
+                    className={cn(
+                      `w-4 h-4 transition-transform duration-200 flex-shrink-0`,
+                      isItemExpanded(index) ? "rotate-90" : "rotate-0"
+                    )}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    opacity={0.8}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                )}
                 <span>
                   {item.name}
                   {item.quantity && (
