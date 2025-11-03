@@ -286,7 +286,7 @@ export default function StagePlanBuilder({
     <div className="flex flex-col gap-2 xl:h-[80vh] xl:flex-row xl:items-stretch xl:justify-between">
       {/* Sidebar */}
       {isBuilder && (
-        <div className="min-h-10 grid content-start gap-3 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0">
+        <div className="min-h-10 grid content-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 md:w-full lg:max-w-none xl:h-full xl:w-72 xl:flex-shrink-0 xl:overflow-y-auto">
           <div className="grid gap-1.5">
             <span className="text-xs text-slate-600">
               Connect two nodes to show distance.

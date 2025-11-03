@@ -64,40 +64,42 @@ export function Palette({ onAddNode }: IPaletteProps) {
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-80 overflow-y-auto rounded-lg border border-slate-400/75 bg-white shadow-md">
-            <div className="grid auto-rows-min gap-2 p-2">
-              <PaletteItem
-                kind="drumkit"
-                label="Drumkit"
-                onAddNode={handleAddNode}
-              />
-              <PaletteItem
-                kind="synth-stand"
-                label="Synth Stand"
-                onAddNode={handleAddNode}
-              />
-              <PaletteItem
-                kind="monitor"
-                label="Monitor"
-                onAddNode={handleAddNode}
-              />
-              <PaletteItem kind="amp" label="Amp" onAddNode={handleAddNode} />
-              <PaletteItem
-                kind="mic-stand"
-                label="Mic Stand"
-                onAddNode={handleAddNode}
-              />
-              <PaletteItem
-                kind="power-extension"
-                label="Power Strip"
-                onAddNode={handleAddNode}
-              />
-              <PaletteItem
-                kind="di-box"
-                label="DI Box"
-                onAddNode={handleAddNode}
-              />
-              <PaletteItem kind="mic" label="Mic" onAddNode={handleAddNode} />
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-lg border border-slate-400/75 bg-white shadow-lg">
+            <div className="max-h-64 overflow-y-auto p-2">
+              <div className="grid gap-2">
+                <PaletteItem
+                  kind="drumkit"
+                  label="Drumkit"
+                  onAddNode={handleAddNode}
+                />
+                <PaletteItem
+                  kind="synth-stand"
+                  label="Synth Stand"
+                  onAddNode={handleAddNode}
+                />
+                <PaletteItem
+                  kind="monitor"
+                  label="Monitor"
+                  onAddNode={handleAddNode}
+                />
+                <PaletteItem kind="amp" label="Amp" onAddNode={handleAddNode} />
+                <PaletteItem
+                  kind="mic-stand"
+                  label="Mic Stand"
+                  onAddNode={handleAddNode}
+                />
+                <PaletteItem
+                  kind="power-extension"
+                  label="Power Strip"
+                  onAddNode={handleAddNode}
+                />
+                <PaletteItem
+                  kind="di-box"
+                  label="DI Box"
+                  onAddNode={handleAddNode}
+                />
+                <PaletteItem kind="mic" label="Mic" onAddNode={handleAddNode} />
+              </div>
             </div>
           </div>
         )}
@@ -110,10 +112,10 @@ export function Palette({ onAddNode }: IPaletteProps) {
         <PaletteItem
           kind="synth-stand"
           label="Synth Stand"
-          onAddNode={handleAddNode}
+          onAddNode={onAddNode}
         />
         <PaletteItem kind="amp" label="Amp" onAddNode={onAddNode} />
-        <PaletteItem kind="mic" label="Mic" onAddNode={handleAddNode} />
+        <PaletteItem kind="mic" label="Mic" onAddNode={onAddNode} />
         <PaletteItem kind="mic-stand" label="Mic Stand" onAddNode={onAddNode} />
         <PaletteItem
           kind="power-extension"
