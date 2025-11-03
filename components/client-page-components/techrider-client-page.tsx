@@ -156,6 +156,9 @@ export function TechRiderClientPage({
           <h3>Get in Touch</h3>
           <p>For bookings and technical questions:</p>
           <p>
+            <span>{project.contactInfo}</span>
+          </p>
+          <p>
             <a href={user?.email}>{user?.email}</a>
           </p>
           <p className="mt-(--spacing-md) text-[0.85rem]">
