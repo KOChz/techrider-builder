@@ -20,6 +20,7 @@ import { RotateCw, X } from "lucide-react";
 import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
 import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
 import { cn } from "@/lib/utils/cn";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export type TEquipmentType =
   | "drumkit"
@@ -51,6 +52,8 @@ export interface IEquipmentNodeProps extends NodeProps {
 }
 
 export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
+  const updateRotation = useProjectStore((state) => state.updateNodeRotation);
+
   const { deleteElements, setNodes } = useReactFlow();
   const [isLabelEditing, setIsLabelEditing] = useState(false);
   const [tempLabel, setTempLabel] = useState(data.label);
@@ -106,6 +109,7 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
       event.stopPropagation();
       const newRotation = (rotation + 90) % 360;
 
+      updateRotation(id, newRotation);
       setNodes((nodes) =>
         nodes.map((node) => {
           if (node.id === id) {

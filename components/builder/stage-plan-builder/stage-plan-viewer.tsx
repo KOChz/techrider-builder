@@ -25,7 +25,7 @@ export const nodeViewerTypes = {
 
 export const edgeViewerTypes = { measure: ViewMeasureEdge };
 
-import { DEFAULT_PX_PER_METER, edgeTypes } from "./stage-plan-builder";
+import { DEFAULT_PX_PER_METER } from "./stage-plan-builder";
 import { cn } from "@/lib/utils/cn";
 import { AnnotationNode } from "./nodes/annotation-node";
 import { EquipmentViewNode } from "./nodes/equipment-node-view";
@@ -122,9 +122,7 @@ export function StagePlanViewer({
 
   const onNodesChange = useCallback(
     (changes: NodeChange<Node<TEquipmentData>>[]) =>
-      setNodes((nds) =>
-        applyNodeChanges(changes, [...nds, ...annotationNodes])
-      ),
+      setNodes((nds) => applyNodeChanges(changes, [...nds])),
     []
   );
 

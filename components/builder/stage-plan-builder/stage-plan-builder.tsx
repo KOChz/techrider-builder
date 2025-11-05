@@ -194,9 +194,7 @@ export default function StagePlanBuilder({
 
   const onNodesChange = useCallback(
     (changes: NodeChange<Node<TEquipmentData>>[]) =>
-      setNodes((nds) =>
-        applyNodeChanges(changes, [...nds, ...ANNOTATION_NODES])
-      ),
+      setNodes((nds) => applyNodeChanges(changes, [...nds])),
     []
   );
 

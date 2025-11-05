@@ -116,6 +116,7 @@ export async function editProjectById(
     if (input.stagePlanConfig !== undefined)
       updateData.stagePlanConfig = input.stagePlanConfig as any;
 
+    console.log("input.stagePlanConfig", input.stagePlanConfig?.nodes);
     updateData.updatedAt = new Date();
 
     let proj: TProject;

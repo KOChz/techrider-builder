@@ -14,6 +14,7 @@ import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
 import { TEquipmentData } from "./equipment-node";
 
 import "@xyflow/react/dist/style.css";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export interface IEquipmentViewNodeProps extends NodeProps {
   data: TEquipmentData;

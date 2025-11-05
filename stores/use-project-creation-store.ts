@@ -31,6 +31,7 @@ interface IProjectStore {
 
   addNode: (node: Node<TEquipmentData>[]) => void;
   updateNodeLabel: (nodeId: string, newLabel: string) => void;
+  updateNodeRotation: (nodeId: string, rotation: number) => void;
   deleteNode: (nodeId: string) => void;
 
   updateMeasurementDistance: (measurementId: number, distance: string) => void;
@@ -62,6 +63,7 @@ const getInitialStore = (): Omit<
   | "initializeWithProject"
   | "resetForm"
   | "setEdges"
+  | "updateNodeRotation"
   | "setContactInfo"
 > => ({
   name: "",
@@ -98,6 +100,18 @@ export const useProjectStore = create<IProjectStore>()(
             ...state.stagePlanConfig,
             nodes: state.stagePlanConfig.nodes.map((node) =>
               node.id === nodeId ? { ...node, label: newLabel } : node
+            ),
+          },
+        })),
+
+      updateNodeRotation: (nodeId, rotation) =>
+        set((state) => ({
+          stagePlanConfig: {
+            ...state.stagePlanConfig,
+            nodes: state.stagePlanConfig.nodes.map((node) =>
+              node.id === nodeId
+                ? { ...node, data: { ...node.data, rotation } }
+                : node
             ),
           },
         })),
