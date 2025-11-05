@@ -48,7 +48,6 @@ export function DownloadPageButton({
         fileName: `${fileName}.${format}`,
         backgroundColor,
         spacingPx,
-        bottomPaddingPx: 160,
       };
 
       reactFlowInstance?.fitView();

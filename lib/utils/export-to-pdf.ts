@@ -36,7 +36,7 @@ export async function exportStitchedPDF({
     ".bg-gradient",
     "[data-export-strip-bg]",
   ],
-  bottomPaddingPx = 96,
+  bottomPaddingPx = 0,
   pagePaddingMm = 1.2,
   autoRotateForWidth = true,
   bottomPixelRatio = 3,
