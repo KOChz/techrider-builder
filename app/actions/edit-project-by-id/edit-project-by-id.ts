@@ -114,7 +114,10 @@ export async function editProjectById(
       updateData.contactInfo = input.contactInfo;
     if (input.isPublic !== undefined) updateData.isPublic = input.isPublic;
     if (input.stagePlanConfig !== undefined)
-      updateData.stagePlanConfig = input.stagePlanConfig as any;
+      updateData.stagePlanConfig = {
+        ...input.stagePlanConfig,
+        nodes: input.stagePlanConfig.nodes || [],
+      };
 
     console.log("input.stagePlanConfig", input.stagePlanConfig?.nodes);
     updateData.updatedAt = new Date();

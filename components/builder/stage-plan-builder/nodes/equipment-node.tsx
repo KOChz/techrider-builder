@@ -40,7 +40,7 @@ export type TEquipmentType =
 export type TEquipmentData = {
   label: string;
   kind: TEquipmentType;
-  rotation?: number;
+  rotation: number;
   width?: number;
   height?: number;
 };

@@ -10,7 +10,11 @@ const zBandMemberBuilder = z.object({
 
 const xyFlowNodeSchema = z.object({
   id: z.string(),
-  type: z.string().optional(),
+  type: z
+    .string()
+    .nullish()
+    .transform((val) => (val === null ? undefined : val))
+    .optional(),
   position: z.object({
     x: z.number(),
     y: z.number(),
@@ -36,7 +40,7 @@ const xyFlowNodeSchema = z.object({
           "mic",
         ])
       ),
-
+    rotation: z.number(),
     label: z.string(),
   }),
 
@@ -49,7 +53,11 @@ export const edgeSchema = z
     id: z.string(),
     source: z.string(),
     target: z.string(),
-    type: z.string().optional().nullish(),
+    type: z
+      .string()
+      .nullish()
+      .transform((val) => val ?? undefined)
+      .optional(),
     selected: z.boolean().optional(),
     data: z
       .object({
@@ -60,8 +68,8 @@ export const edgeSchema = z
   .strict();
 
 export const stagePlanConfigSchema = z.object({
-  nodes: z.array(xyFlowNodeSchema).optional(),
-  edges: z.array(edgeSchema).optional(),
+  nodes: z.array(xyFlowNodeSchema).default([]),
+  edges: z.array(edgeSchema).default([]),
   version: z.number().optional(),
   position: z.object({
     x: z.number(),

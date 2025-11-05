@@ -42,6 +42,7 @@ const annotationNodes: Node<TEquipmentData>[] = [
     data: {
       kind: "amp",
       label: "Upstage",
+      rotation: 0,
     },
     position: { x: -0, y: -200 },
   },
@@ -54,6 +55,7 @@ const annotationNodes: Node<TEquipmentData>[] = [
     data: {
       kind: "amp",
       label: "Downstage / Audience",
+      rotation: 0,
     },
     position: { x: -50, y: 400 },
   },

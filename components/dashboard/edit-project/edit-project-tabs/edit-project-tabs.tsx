@@ -14,7 +14,6 @@ import {
   useProjectStore,
 } from "@/stores/use-project-creation-store";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
-import { TStagePlanConfig } from "@/schemas/stage-plan-schema";
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 import { useEditProject } from "@/hooks/use-edit-project";
 import { CREATE_PROJECT_TABS } from "@/components/builder/project-creation-tabs/project-creation-tabs";
