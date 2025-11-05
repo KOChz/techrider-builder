@@ -68,10 +68,10 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
           item.examples ? (
             <li
               key={index}
-              className="equipment-item rounded-xl hover:opacity-60"
+              className="equipment-item rounded-xl hover:text-slate-800/60"
             >
               <div
-                className="flex cursor-pointer items-center gap-2"
+                className="flex cursor-pointer items-center gap-2 hover:text-slate-800/60"
                 onClick={() => handleToggle(index)}
                 role="button"
                 tabIndex={0}
@@ -103,10 +103,13 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
                     />
                   </svg>
                 )}
-                <span>
+                <span className="hover:text-slate-800/60!">
                   {item.name}
                   {item.quantity && (
-                    <span className="quantity"> x {item.quantity}</span>
+                    <span className="quantity hover:text-slate-800/60!">
+                      {" "}
+                      x {item.quantity}
+                    </span>
                   )}
                 </span>
               </div>
@@ -124,8 +127,11 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
               )}
             </li>
           ) : (
-            <li key={index} className="equipment-simple">
-              <span className="inline-flex w-full items-baseline gap-1 whitespace-nowrap">
+            <li
+              key={index}
+              className="equipment-simple hover:text-slate-800/60!"
+            >
+              <span className="inline-flex w-full items-baseline gap-1 whitespace-nowrap hover:text-slate-800/60">
                 <span>{item.name}</span>
                 {item.quantity && (
                   <span className="quantity">× {item.quantity}</span>
