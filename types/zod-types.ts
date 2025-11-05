@@ -1,4 +1,3 @@
-import { sourceMapsEnabled } from "process";
 import { z } from "zod";
 
 const zBandMemberBuilder = z.object({
@@ -43,7 +42,6 @@ const xyFlowNodeSchema = z.object({
     rotation: z.number(),
     label: z.string(),
   }),
-
   selected: z.boolean().optional(),
   dragging: z.boolean().optional(),
 });

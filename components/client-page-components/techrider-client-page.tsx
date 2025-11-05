@@ -105,7 +105,7 @@ export function TechRiderClientPage({
             </svg>
 
             {/* Shine effect on hover */}
-            <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-emerald-500/80 to-green-500/80 opacity-0 blur transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="bg-linear-to-r absolute inset-0 -z-10 rounded-full from-emerald-500/80 to-green-500/80 opacity-0 blur transition-opacity duration-300 group-hover:opacity-100" />
           </a>
         </div>
       </section>
