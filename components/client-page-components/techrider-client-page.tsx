@@ -65,9 +65,7 @@ export function TechRiderClientPage({
               <DownloadPageButton
                 onBeforeStart={handleDownload}
                 onAfterFinish={() => {
-                  setTimeout(() => {
-                    setIsDownload(false);
-                  }, 3000);
+                  setIsDownload(false);
                 }}
                 fileName={`tech-rider-${slugify(project.name)}`}
               />
