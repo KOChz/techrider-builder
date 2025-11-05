@@ -1,6 +1,8 @@
 "use client";
 
 import { exportStitchedPDF } from "@/lib/utils/export-to-pdf";
+import { useReactFlowStore } from "@/stores/use-react-flow-store";
+import { Panel, useReactFlow } from "@xyflow/react";
 import { useState } from "react";
 
 import toast from "react-hot-toast";
@@ -33,6 +35,7 @@ export function DownloadPageButton({
   onAfterFinish,
 }: TProps) {
   const [isBusy, setIsBusy] = useState(false);
+  const reactFlowInstance = useReactFlowStore((state) => state.instance);
 
   const handleDownload = async () => {
     setIsBusy(true);
@@ -47,6 +50,8 @@ export function DownloadPageButton({
         spacingPx,
         bottomPaddingPx: 160,
       };
+
+      reactFlowInstance?.fitView();
 
       await exportStitchedPDF(baseOptions);
 

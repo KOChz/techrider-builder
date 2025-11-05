@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -8,12 +8,12 @@ import {
   type Edge,
   type ReactFlowInstance,
   BackgroundVariant,
-  Controls,
+  NodeChange,
+  applyNodeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
-import { useDebouncedCallback } from "use-debounce";
 import { useDevice } from "@/hooks/use-device";
 import { TEquipmentData } from "./nodes/equipment-node";
 import { TMeasurmentData } from "./edges/measure-edge";
@@ -30,95 +30,87 @@ import { cn } from "@/lib/utils/cn";
 import { AnnotationNode } from "./nodes/annotation-node";
 import { EquipmentViewNode } from "./nodes/equipment-node-view";
 import { ViewMeasureEdge } from "./edges/view-measure-edge";
+import { DownloadStagePlanPdfButton } from "./download-stage-plan-button/download-stage-plan-button";
+import { useReactFlowStore } from "@/stores/use-react-flow-store";
 
+const annotationNodes: Node<TEquipmentData>[] = [
+  {
+    id: "up-stage",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Upstage",
+    },
+    position: { x: -0, y: -200 },
+  },
+  {
+    id: "down-stage",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Downstage / Audience",
+    },
+    position: { x: -50, y: 400 },
+  },
+  {
+    id: "stage-left",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Stage Left",
+      rotation: -90,
+    },
+    position: { x: -400, y: 100 },
+  },
+  {
+    id: "stage-right",
+    type: "annotation",
+    draggable: false,
+    selectable: false,
+
+    data: {
+      kind: "amp",
+      label: "Stage Right",
+      rotation: 90,
+    },
+    position: { x: 400, y: 100 },
+  },
+];
 export function StagePlanViewer({
   stagePlanConfig,
   setStagePlanConfig,
+  isDownload,
 }: {
   stagePlanConfig?: IStagePlanFlowConfig;
   setStagePlanConfig?: (config: IStagePlanFlowConfig) => void;
+  isDownload?: boolean;
 }) {
+  const setReactFlowInstance = useReactFlowStore((state) => state.setInstance);
+
+  const rfRef = useRef<ReactFlowInstance<Node<TEquipmentData>> | null>(null);
+  const flowRef = useRef<HTMLDivElement | null>(null);
+
+  const { isMobile } = useDevice();
+
   const [nodes, setNodes] = useState<Node<TEquipmentData>[]>([
     ...(stagePlanConfig?.nodes || [])!,
-    {
-      id: "up-stage",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Upstage",
-      },
-      position: { x: -0, y: -200 },
-    },
-    {
-      id: "down-stage",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Downstage / Audience",
-      },
-      position: { x: -50, y: 400 },
-    },
-    {
-      id: "stage-left",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Stage Left",
-        rotation: -90,
-      },
-      position: { x: -400, y: 100 },
-    },
-    {
-      id: "stage-right",
-      type: "annotation",
-      draggable: false,
-      selectable: false,
-
-      data: {
-        kind: "amp",
-        label: "Stage Right",
-        rotation: 90,
-      },
-      position: { x: 400, y: 100 },
-    },
+    ...annotationNodes,
   ]);
 
   const [edges, setEdges] = useState<Edge<TMeasurmentData>[]>(
     stagePlanConfig?.edges || []
   );
 
-  const saveStagePlan = useDebouncedCallback(
-    (n: Node<TEquipmentData>[], e: Edge<TMeasurmentData>[]) => {
-      if (!setStagePlanConfig) return;
-
-      const config: IStagePlanFlowConfig = {
-        ...stagePlanConfig!,
-        nodes: n,
-        edges: e,
-      };
-
-      setStagePlanConfig(config);
-    },
-    800
-  );
-
-  useEffect(() => {
-    saveStagePlan(nodes, edges);
-  }, [nodes, edges, saveStagePlan]);
-
-  const rfRef = useRef<ReactFlowInstance<Node<TEquipmentData>> | null>(null);
-
   const [pxPerMeter, setPxPerMeter] = useState<number>(DEFAULT_PX_PER_METER);
-  const flowRef = useRef<HTMLDivElement | null>(null);
 
   // reflect current scale into a CSS var for the MeasureEdge
   useEffect(() => {
@@ -128,7 +120,11 @@ export function StagePlanViewer({
     );
   }, [pxPerMeter]);
 
-  const { isMobile } = useDevice();
+  const onNodesChange = useCallback(
+    (changes: NodeChange<Node<TEquipmentData>>[]) =>
+      setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
 
   return (
     <div
@@ -146,31 +142,30 @@ export function StagePlanViewer({
         )}
       >
         <ReactFlow<Node<TEquipmentData>>
-          onInit={(inst) => (rfRef.current = inst)}
+          onInit={(inst) => {
+            rfRef.current = inst;
+            setReactFlowInstance(inst);
+          }}
           nodes={nodes}
           edges={edges}
-          // onNodesChange={onNodesChange}
-          // onEdgesChange={onEdgesChange}
-          // onConnect={onConnect}
           nodeTypes={nodeViewerTypes}
           edgeTypes={edgeViewerTypes}
+          onNodesChange={onNodesChange}
           fitView
-          fitViewOptions={{ padding: 10 }}
+          fitViewOptions={{ padding: 0.2 }}
           proOptions={{ hideAttribution: true }}
-          // sensible interaction defaults
           panOnScroll={false}
           preventScrolling={false}
-          // panOnDrag={false}
           zoomOnPinch={true}
           zoomOnScroll={false}
           selectionOnDrag
-          minZoom={isMobile ? 0.42 : 0.8}
-          maxZoom={3}
+          minZoom={isMobile ? 0.4 : 0.8}
+          maxZoom={2.5}
           snapToGrid
           snapGrid={[10, 10]}
-          style={{ overflow: "auto !important" }}
+          style={{ width: "100%", height: "100%" }}
         >
-          {/* <MiniMap pannable zoomable className="scale-65 md:scale-100" /> */}
+          <DownloadStagePlanPdfButton />
           <Background
             id="1"
             gap={10}

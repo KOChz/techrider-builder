@@ -62,17 +62,15 @@ export function TechRiderClientPage({
                 </li>
               )}
 
-              {isOwner && (
-                <DownloadPageButton
-                  onBeforeStart={handleDownload}
-                  onAfterFinish={() => {
-                    setTimeout(() => {
-                      setIsDownload(false);
-                    }, 4000);
-                  }}
-                  fileName={`tech-rider-${slugify(project.name)}`}
-                />
-              )}
+              <DownloadPageButton
+                onBeforeStart={handleDownload}
+                onAfterFinish={() => {
+                  setTimeout(() => {
+                    setIsDownload(false);
+                  }, 3000);
+                }}
+                fileName={`tech-rider-${slugify(project.name)}`}
+              />
             </ul>
           </div>
         </div>
@@ -146,7 +144,10 @@ export function TechRiderClientPage({
           <section id="stage-plan" className="touch-none">
             <div>
               {project.stagePlanConfig && (
-                <StagePlanViewer stagePlanConfig={project.stagePlanConfig} />
+                <StagePlanViewer
+                  stagePlanConfig={project.stagePlanConfig}
+                  isDownload={isDownload}
+                />
               )}
             </div>
 
