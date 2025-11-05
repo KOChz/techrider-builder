@@ -13,6 +13,7 @@ export function AnnotationNode({ data, id }: IAnnotationNodeProps) {
       className="opacity-45 flex origin-center select-none items-center justify-center whitespace-nowrap rounded bg-transparent text-xl font-bold"
       style={{
         transform: `rotate(${rotation}deg)`,
+        transformOrigin: "center center",
       }}
     >
       <span className="font-semibold tracking-widest text-slate-700/90">

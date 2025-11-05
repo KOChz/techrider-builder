@@ -215,7 +215,10 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
         </>
 
         <div
-          style={{ transform: `rotate(${rotation}deg)` }}
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            transformOrigin: "center center",
+          }}
           className="flex w-fit flex-col items-center justify-center text-center transition-transform duration-200 ease-in-out"
         >
           <div>{icon}</div>

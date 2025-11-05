@@ -30,7 +30,6 @@ import { cn } from "@/lib/utils/cn";
 import { AnnotationNode } from "./nodes/annotation-node";
 import { EquipmentViewNode } from "./nodes/equipment-node-view";
 import { ViewMeasureEdge } from "./edges/view-measure-edge";
-import { DownloadStagePlanPdfButton } from "./download-stage-plan-button/download-stage-plan-button";
 import { useReactFlowStore } from "@/stores/use-react-flow-store";
 
 const annotationNodes: Node<TEquipmentData>[] = [
@@ -85,6 +84,7 @@ const annotationNodes: Node<TEquipmentData>[] = [
     position: { x: 400, y: 100 },
   },
 ];
+
 export function StagePlanViewer({
   stagePlanConfig,
   setStagePlanConfig,
@@ -110,6 +110,11 @@ export function StagePlanViewer({
     stagePlanConfig?.edges || []
   );
 
+  const nodesRef = useRef<Node<TEquipmentData>[]>([
+    ...(stagePlanConfig?.nodes || []),
+    ...annotationNodes,
+  ]);
+
   const [pxPerMeter, setPxPerMeter] = useState<number>(DEFAULT_PX_PER_METER);
 
   // reflect current scale into a CSS var for the MeasureEdge
@@ -120,9 +125,36 @@ export function StagePlanViewer({
     );
   }, [pxPerMeter]);
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange<Node<TEquipmentData>>[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds)),
+  useEffect(() => {
+    if (stagePlanConfig?.nodes) {
+      nodesRef.current = [...stagePlanConfig.nodes, ...annotationNodes];
+    }
+  }, [stagePlanConfig?.nodes]);
+
+  const handleNodesChange = useCallback(
+    (changes: NodeChange<Node<TEquipmentData>>[]) => {
+      nodesRef.current = applyNodeChanges(changes, nodesRef.current).map(
+        (node) => {
+          const original = nodesRef.current.find((n) => n.id === node.id);
+
+          if (!original?.data) return node;
+
+          // Preserve all original data
+          return {
+            ...node,
+            data: {
+              ...original.data,
+              ...(node.data || {}),
+            },
+          };
+        }
+      );
+
+      // Force re-render with preserved data
+      if (rfRef.current) {
+        rfRef.current.setNodes(nodesRef.current);
+      }
+    },
     []
   );
 
@@ -150,7 +182,7 @@ export function StagePlanViewer({
           edges={edges}
           nodeTypes={nodeViewerTypes}
           edgeTypes={edgeViewerTypes}
-          onNodesChange={onNodesChange}
+          onNodesChange={handleNodesChange}
           fitView
           fitViewOptions={{ padding: 0.2 }}
           proOptions={{ hideAttribution: true }}
@@ -165,7 +197,6 @@ export function StagePlanViewer({
           snapGrid={[10, 10]}
           style={{ width: "100%", height: "100%" }}
         >
-          <DownloadStagePlanPdfButton />
           <Background
             id="1"
             gap={10}

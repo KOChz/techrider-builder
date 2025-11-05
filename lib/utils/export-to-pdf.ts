@@ -79,7 +79,12 @@ export async function exportStitchedPDF({
     pixelRatio: html2ImgPixelRatio,
     width: bottomEl.clientWidth,
     height: bottomEl.clientHeight,
-    style: { webkitTextFillColor: exportTextColor, color: exportTextColor },
+    style: {
+      width: "100%",
+      boxSizing: "border-box",
+      webkitTextFillColor: exportTextColor,
+      color: exportTextColor,
+    },
     filter: (node) => {
       if (!(node instanceof HTMLElement)) return true;
       for (const sel of stripBgSelectors) if (node.matches(sel)) return false;
