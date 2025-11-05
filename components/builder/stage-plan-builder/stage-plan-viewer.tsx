@@ -110,11 +110,6 @@ export function StagePlanViewer({
     stagePlanConfig?.edges || []
   );
 
-  const nodesRef = useRef<Node<TEquipmentData>[]>([
-    ...(stagePlanConfig?.nodes || []),
-    ...annotationNodes,
-  ]);
-
   const [pxPerMeter, setPxPerMeter] = useState<number>(DEFAULT_PX_PER_METER);
 
   // reflect current scale into a CSS var for the MeasureEdge
@@ -125,36 +120,9 @@ export function StagePlanViewer({
     );
   }, [pxPerMeter]);
 
-  useEffect(() => {
-    if (stagePlanConfig?.nodes) {
-      nodesRef.current = [...stagePlanConfig.nodes, ...annotationNodes];
-    }
-  }, [stagePlanConfig?.nodes]);
-
-  const handleNodesChange = useCallback(
-    (changes: NodeChange<Node<TEquipmentData>>[]) => {
-      nodesRef.current = applyNodeChanges(changes, nodesRef.current).map(
-        (node) => {
-          const original = nodesRef.current.find((n) => n.id === node.id);
-
-          if (!original?.data) return node;
-
-          // Preserve all original data
-          return {
-            ...node,
-            data: {
-              ...original.data,
-              ...(node.data || {}),
-            },
-          };
-        }
-      );
-
-      // Force re-render with preserved data
-      if (rfRef.current) {
-        rfRef.current.setNodes(nodesRef.current);
-      }
-    },
+  const onNodesChange = useCallback(
+    (changes: NodeChange<Node<TEquipmentData>>[]) =>
+      setNodes((nds) => applyNodeChanges(changes, nds)),
     []
   );
 
@@ -182,7 +150,7 @@ export function StagePlanViewer({
           edges={edges}
           nodeTypes={nodeViewerTypes}
           edgeTypes={edgeViewerTypes}
-          onNodesChange={handleNodesChange}
+          onNodesChange={onNodesChange}
           fitView
           fitViewOptions={{ padding: 0.2 }}
           proOptions={{ hideAttribution: true }}
