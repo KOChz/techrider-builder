@@ -27,12 +27,12 @@ export function MembersContent() {
         Add and manage your band members
       </p>
 
-      <button
+      {/* <button
         onClick={handleAddMember}
         className="cursor-pointer rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
       >
         + Add Member
-      </button>
+      </button> */}
 
       {members.length === 0 ? (
         <div className="py-12 text-center text-gray-500">
@@ -52,6 +52,15 @@ export function MembersContent() {
           ))}
         </div>
       )}
+
+      <div className="justify-end-safe flex w-full">
+        <button
+          onClick={handleAddMember}
+          className="cursor-pointer rounded-md bg-green-600 p-3 text-sm text-white transition-colors hover:bg-green-700"
+        >
+          + Add Member
+        </button>
+      </div>
     </div>
   );
 }

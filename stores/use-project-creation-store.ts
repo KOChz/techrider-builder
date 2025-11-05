@@ -126,7 +126,7 @@ export const useProjectStore = create<IProjectStore>()(
 
       addMember: (member) =>
         set((state) => ({
-          members: [member, ...state.members],
+          members: [...state.members, member],
         })),
 
       addNode: (node) =>
