@@ -122,7 +122,9 @@ export function StagePlanViewer({
 
   const onNodesChange = useCallback(
     (changes: NodeChange<Node<TEquipmentData>>[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds)),
+      setNodes((nds) =>
+        applyNodeChanges(changes, [...nds, ...annotationNodes])
+      ),
     []
   );
 

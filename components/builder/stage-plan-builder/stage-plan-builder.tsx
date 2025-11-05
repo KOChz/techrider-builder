@@ -93,6 +93,7 @@ export const ANNOTATION_NODES: Node<TEquipmentData>[] = [
 export const nodeTypes = {
   equipment: EquipmentNode,
   annotation: AnnotationNode,
+  rotatableNode: EquipmentNode,
 };
 
 export const egdeMeasure = "measure" as const;
@@ -193,7 +194,9 @@ export default function StagePlanBuilder({
 
   const onNodesChange = useCallback(
     (changes: NodeChange<Node<TEquipmentData>>[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds)),
+      setNodes((nds) =>
+        applyNodeChanges(changes, [...nds, ...ANNOTATION_NODES])
+      ),
     []
   );
 

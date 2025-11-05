@@ -14,6 +14,7 @@ export function AnnotationNode({ data, id }: IAnnotationNodeProps) {
       style={{
         transform: `rotate(${rotation}deg)`,
         transformOrigin: "center center",
+        willChange: "transform",
       }}
     >
       <span className="font-semibold tracking-widest text-slate-700/90">

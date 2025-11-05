@@ -19,6 +19,7 @@ import { RotateCw, X } from "lucide-react";
 
 import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
 import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
+import { cn } from "@/lib/utils/cn";
 
 export type TEquipmentType =
   | "drumkit"
@@ -196,9 +197,10 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           <button
             onClick={handleRotate}
             aria-label={`Rotate ${data.label}`}
-            className={`absolute -right-3 -top-1 z-10 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-opacity hover:bg-blue-600 ${
+            className={cn(
+              `absolute -right-3 -top-1 z-10 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-blue-500 text-white shadow-md transition-opacity hover:bg-blue-600`,
               selected ? "opacity-100" : "opacity-0 md:group-hover:opacity-100"
-            }`}
+            )}
           >
             <RotateCw className="h-2 w-2" />
           </button>
@@ -206,9 +208,10 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           <button
             onClick={handleDelete}
             aria-label={`Delete ${data.label}`}
-            className={`absolute -left-3 -top-1 z-10 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-opacity hover:bg-red-600 ${
+            className={cn(
+              `absolute -left-3 -top-1 z-10 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-opacity hover:bg-red-600`,
               selected ? "opacity-100" : "opacity-0 md:group-hover:opacity-100"
-            }`}
+            )}
           >
             <X className="h-2 w-2" />
           </button>
@@ -218,6 +221,7 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           style={{
             transform: `rotate(${rotation}deg)`,
             transformOrigin: "center center",
+            willChange: "transform",
           }}
           className="flex w-fit flex-col items-center justify-center text-center transition-transform duration-200 ease-in-out"
         >
