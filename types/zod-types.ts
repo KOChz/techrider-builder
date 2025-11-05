@@ -69,10 +69,6 @@ export const stagePlanConfigSchema = z.object({
   nodes: z.array(xyFlowNodeSchema).default([]),
   edges: z.array(edgeSchema).default([]),
   version: z.number().optional(),
-  position: z.object({
-    x: z.number(),
-    y: z.number(),
-  }),
 });
 
 export const projectFormFlowSchema = z.object({

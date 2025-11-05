@@ -33,7 +33,6 @@ export const projects = pgTable(
       .notNull()
       .references(() => profiles.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
-    // Updated to match your actual data structure
     stagePlanConfig: jsonb("stage_plan_config")
       .$type<IStagePlanFlowConfig>()
       .default(sql`'{"nodes":[],"version":1}'::jsonb`),

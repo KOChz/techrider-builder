@@ -11,7 +11,7 @@ export interface IStagePlanFlowConfig {
   nodes: Node<TEquipmentData>[];
   edges: Edge<TMeasurmentData>[];
   version?: number;
-  position: { x: number; y: number };
+  // position: { x: number; y: number };
 }
 
 interface IProjectStore {
@@ -74,7 +74,6 @@ const getInitialStore = (): Omit<
     nodes: [],
     edges: [],
     version: 1,
-    position: { x: 100, y: 100 },
   },
   members: [],
 });

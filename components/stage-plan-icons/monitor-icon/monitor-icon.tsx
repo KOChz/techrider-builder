@@ -33,6 +33,10 @@ export const MonitorIcon = React.memo(
         className={className}
         width={width || 55 + hitboxPadding * 2}
         height={height || 55 + hitboxPadding * 2}
+        style={{
+          transform: `rotate(180deg)`,
+          transformOrigin: "center",
+        }}
         {...props}
       >
         <title>{title}</title>

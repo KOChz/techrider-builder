@@ -232,7 +232,7 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
           <div>{icon}</div>
 
           {isLabelEditing ? (
-            <div className="relative flex w-min items-center gap-1 rounded-lg border border-green-700/80 bg-white pr-2">
+            <div className="max-w-40 relative flex w-min items-center gap-1 rounded-lg border border-green-700/80 bg-white pr-2">
               <input
                 ref={inputRef}
                 type="text"
@@ -240,9 +240,9 @@ export function EquipmentNode({ data, id, selected }: IEquipmentNodeProps) {
                 onChange={(e) => setTempLabel(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
-                className="min-w-16 rounded-lg bg-white py-0.5 text-center text-[16px] text-base text-slate-900 outline-none"
+                className="min-w-24 rounded-lg bg-white py-0.5 text-center text-[16px] text-base text-slate-900 outline-none"
                 aria-label="Edit equipment label"
-                maxLength={50}
+                maxLength={30}
               />
               <button
                 onClick={handleCloseEdit}

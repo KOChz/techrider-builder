@@ -2,19 +2,19 @@
 
 import React, { useMemo } from "react";
 import { Position, Handle, NodeProps } from "@xyflow/react";
+
 import { DrumkitIcon } from "@/components/stage-plan-icons/drumkit-icon/drumkit-icon";
 import { AmpIcon } from "@/components/stage-plan-icons/amp-icon/amp-icon";
 import { MonitorIcon } from "@/components/stage-plan-icons/monitor-icon/monitor-icon";
 import MicStandIcon from "@/components/stage-plan-icons/mic-stand-icon/mic-stand-icon";
 import PowerExtensionIcon from "@/components/stage-plan-icons/power-extension-icon/power-extension-icon";
 import DIBoxIcon from "@/components/stage-plan-icons/di-box-icon/di-box-icon";
-
-import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
 import { MicIcon } from "@/components/stage-plan-icons/mic-icon/mic-icon";
+import SynthStandIcon from "@/components/stage-plan-icons/synth-stand-icon/synth-stand-icon";
+
 import { TEquipmentData } from "./equipment-node";
 
 import "@xyflow/react/dist/style.css";
-import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export interface IEquipmentViewNodeProps extends NodeProps {
   data: TEquipmentData;
