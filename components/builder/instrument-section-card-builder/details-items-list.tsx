@@ -45,7 +45,7 @@ function useAutosizeTextArea(
   }, [ref, value, minRows, baseHeight]);
 }
 
-function ExampleItem({
+function DetailsItem({
   example,
   exampleIndex,
   equipmentIndex,
@@ -70,12 +70,10 @@ function ExampleItem({
         onChange={(e) =>
           onUpdateExample(equipmentIndex, exampleIndex, e.target.value)
         }
-        // Important: no min-h-full; let JS set height.
         className="no-scrollbar w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-[16px] leading-6 placeholder-slate-500 focus:border-green-500 focus:outline-none"
-        placeholder="Example item"
+        placeholder="Details item"
         onFocus={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
-        // iOS niceties
         inputMode="text"
         autoCorrect="on"
         autoCapitalize="sentences"
@@ -95,7 +93,7 @@ function ExampleItem({
   );
 }
 
-export function ExampleItemsList({
+export function DetailsItemsList({
   examples,
   equipmentIndex,
   onUpdateExample,
@@ -109,7 +107,7 @@ export function ExampleItemsList({
   return (
     <div className="flex flex-col gap-1.5">
       {examples.map((example, i) => (
-        <ExampleItem
+        <DetailsItem
           key={i}
           example={example}
           exampleIndex={i}

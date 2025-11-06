@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
 import { ChevronDown, X } from "lucide-react";
-import { ExampleItemsList } from "./example-items-list";
-import { ExampleInput } from "./example-input";
+import { DetailsItemsList } from "./details-items-list";
+import { DetailsInput } from "./details-input";
 
 export type TEquipmentExample = {
   title: string;
@@ -83,7 +83,7 @@ export function InstrumentSectionCardBuilder({
 
   const addExamplesToItem = (equipmentIndex: number) => {
     const newExamples: TEquipmentExample = {
-      title: "Examples:",
+      title: "Details:",
       items: [],
     };
     updateEquipmentItem(equipmentIndex, { examples: newExamples });
@@ -180,13 +180,6 @@ export function InstrumentSectionCardBuilder({
                 className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
                 placeholder="Section Name"
               />
-              {/* <input
-                type="text"
-                value={member.role}
-                onChange={(e) => updateMember({ role: e.target.value })}
-                className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                placeholder="Role (Optional)"
-              /> */}
             </div>
           </div>
         </div>
@@ -265,7 +258,7 @@ export function InstrumentSectionCardBuilder({
 
                   {item.examples ? (
                     <div className="space-y-2 border-l-4 border-green-200 pl-2">
-                      <ExampleInput
+                      <DetailsInput
                         value={item.examples.title}
                         onChange={(newValue) =>
                           updateExamplesTitle(equipmentIndex, newValue)
@@ -275,7 +268,7 @@ export function InstrumentSectionCardBuilder({
                       />
 
                       <div className="flex flex-col gap-1.5">
-                        <ExampleItemsList
+                        <DetailsItemsList
                           examples={item.examples.items}
                           equipmentIndex={equipmentIndex}
                           onUpdateExample={updateExampleItem}
@@ -288,16 +281,16 @@ export function InstrumentSectionCardBuilder({
                         onClick={() => addExampleItem(equipmentIndex)}
                         className="cursor-pointer rounded-md bg-green-600 p-2 text-xs text-white transition-colors hover:bg-green-700"
                       >
-                        + Add Example
+                        + Add Details
                       </button>
                     </div>
                   ) : (
                     <button
                       type="button"
                       onClick={() => addExamplesToItem(equipmentIndex)}
-                      className="cursor-pointer rounded bg-green-600 px-3 py-1 text-sm text-white transition-colors hover:bg-green-700"
+                      className="cursor-pointer rounded-md bg-green-600 px-3 py-1 text-sm text-white transition-colors hover:bg-green-700"
                     >
-                      + Add Examples Section
+                      + Add Details Section
                     </button>
                   )}
                 </div>

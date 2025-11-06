@@ -1,7 +1,7 @@
 import React from "react";
-import { Trash2, X } from "lucide-react";
+import { X } from "lucide-react";
 
-export interface IEquipmentExample {
+export interface IEquipmentDetails {
   title: string;
   description?: string;
 }
@@ -9,22 +9,22 @@ export interface IEquipmentExample {
 export interface IEquipmentItem {
   id: string;
   name: string;
-  examples: IEquipmentExample;
+  details: IEquipmentDetails;
 }
 
-export interface IExampleInputProps {
+export interface IDetailsInputProps {
   value: string;
   onChange: (value: string) => void;
   onRemove: () => void;
   placeholder?: string;
 }
 
-export function ExampleInput({
+export function DetailsInput({
   value,
   onChange,
   onRemove,
-  placeholder = "Add example equipment...",
-}: IExampleInputProps): React.JSX.Element {
+  placeholder = "Add details equipment...",
+}: IDetailsInputProps): React.JSX.Element {
   return (
     <div className="relative flex items-stretch gap-0 overflow-hidden rounded-lg border border-gray-200 transition-all duration-200 focus-within:border-green-500 focus-within:bg-white hover:border-gray-300">
       <input
@@ -35,7 +35,7 @@ export function ExampleInput({
         placeholder={placeholder}
         onClick={(e) => e.stopPropagation()}
         onFocus={(e) => e.stopPropagation()}
-        aria-label="Equipment example"
+        aria-label="Details example"
       />
 
       <button
