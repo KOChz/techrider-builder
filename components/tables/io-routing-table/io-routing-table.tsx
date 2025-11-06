@@ -21,7 +21,7 @@ export function IoRoutingTable({
       <div
         className={cn(
           "hidden w-fit overflow-x-auto rounded-lg border border-gray-200 md:block",
-          !onUpdate && "pointer-events-none"
+          !onUpdate && "pointer-events-none touch-none select-none"
         )}
       >
         <table className="w-full max-w-2xl border-collapse bg-white text-left text-sm">
@@ -46,28 +46,31 @@ export function IoRoutingTable({
               <tr key={route.id} className="hover:bg-gray-50">
                 <td className="border-b border-gray-200 px-4 py-3">
                   <input
+                    data-export-input="true"
                     type="text"
                     value={route.channelPair}
                     onChange={(e) =>
                       onUpdate?.(route.id, { channelPair: e.target.value })
                     }
-                    className="w-20 rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-20 rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="1/2"
                   />
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <input
+                    data-export-input="true"
                     type="text"
                     value={route.assignment}
                     onChange={(e) =>
                       onUpdate?.(route.id, { assignment: e.target.value })
                     }
-                    className="w-full min-w-[120px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-full min-w-[120px] rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="DR"
                   />
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <select
+                    data-export-input="true"
                     value={route.connectionType}
                     onChange={(e) =>
                       onUpdate?.(route.id, {
@@ -75,7 +78,7 @@ export function IoRoutingTable({
                           .value as IIoRoutingItem["connectionType"],
                       })
                     }
-                    className="w-full min-w-[120px] rounded border border-gray-300 bg-white px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="w-full min-w-[120px] rounded border border-gray-300 bg-white px-2 text-[16px] focus:border-green-500 focus:outline-none"
                   >
                     <option value="">Select</option>
                     {CONNECTION_OPTIONS.map((conn) => (
@@ -104,11 +107,11 @@ export function IoRoutingTable({
       </div>
 
       {/* Mobile Card View */}
-      <div className="space-y-3 md:hidden">
+      <div className="space-y-5 md:hidden">
         {routing.map((route) => (
           <div
             key={route.id}
-            className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+            className="min-h-56 relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
           >
             {onRemove && (
               <button
@@ -121,19 +124,20 @@ export function IoRoutingTable({
               </button>
             )}
 
-            <div className="space-y-3">
+            <div className="space-y-8">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-gray-700">
                     Channel Pair
                   </label>
                   <input
+                    data-export-input="true"
                     type="text"
                     value={route.channelPair}
                     onChange={(e) =>
                       onUpdate?.(route.id, { channelPair: e.target.value })
                     }
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="1/2"
                   />
                 </div>
@@ -142,12 +146,13 @@ export function IoRoutingTable({
                     Assignment
                   </label>
                   <input
+                    data-export-input="true"
                     type="text"
                     value={route.assignment}
                     onChange={(e) =>
                       onUpdate?.(route.id, { assignment: e.target.value })
                     }
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="DR"
                   />
                 </div>
@@ -158,6 +163,7 @@ export function IoRoutingTable({
                   Connection
                 </label>
                 <select
+                  data-export-input="true"
                   value={route.connectionType}
                   onChange={(e) =>
                     onUpdate?.(route.id, {
@@ -165,7 +171,7 @@ export function IoRoutingTable({
                         .value as IIoRoutingItem["connectionType"],
                     })
                   }
-                  className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                  className="w-full rounded border border-gray-300 bg-white px-2 text-[16px] focus:border-green-500 focus:outline-none"
                 >
                   <option value="">Select</option>
                   {CONNECTION_OPTIONS.map((conn) => (

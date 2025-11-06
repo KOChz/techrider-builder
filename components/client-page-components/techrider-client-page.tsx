@@ -147,14 +147,21 @@ export function TechRiderClientPage({
             </div>
 
             {project.ioSetupConfig && (
-              <section id="io-aux-section" className="space-y-8">
-                <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold capitalize text-transparent">
+              <section id="io-aux-section" className="space-y-3">
+                <h2 className="bg-linear-to-r text-shadow-2xs from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-5 text-center text-4xl font-bold capitalize text-transparent">
                   I/O & AUX Configuration
                 </h2>
 
+                <h4 className="bg-linear-to-r text-shadow-2xs from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-xl font-bold capitalize text-transparent">
+                  I/O Configuration
+                </h4>
                 <ChannelListTable
                   channels={project.ioSetupConfig.channelList}
                 />
+
+                <h4 className="bg-linear-to-r text-shadow-2xs from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-center text-xl font-bold capitalize text-transparent">
+                  AUX Configuration
+                </h4>
                 <IoRoutingTable routing={project.ioSetupConfig.ioRouting} />
               </section>
             )}

@@ -21,10 +21,10 @@ export function ChannelListTable({
       <div
         className={cn(
           "hidden overflow-x-auto rounded-lg border border-gray-200 md:block",
-          !onUpdate && "pointer-events-none"
+          !onUpdate && "pointer-events-none touch-none select-none"
         )}
       >
-        <table className="w-full border-collapse bg-white text-left text-sm">
+        <table className="w-full border-collapse bg-white text-left text-[16px]">
           <thead className="bg-gray-50">
             <tr>
               <th className="border-b border-gray-200 px-4 py-3 font-semibold text-gray-900">
@@ -52,45 +52,49 @@ export function ChannelListTable({
               <tr key={channel.id} className="hover:bg-gray-50">
                 <td className="border-b border-gray-200 px-4 py-3">
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.channelNumber}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { channelNumber: e.target.value })
                     }
-                    className="w-16 rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-16 rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="01"
                   />
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.source}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { source: e.target.value })
                     }
-                    className="w-full min-w-[120px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-full min-w-[120px] rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="Kick in"
                   />
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.micDi}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { micDi: e.target.value })
                     }
-                    className="min-w-40 w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="min-w-40 h-full w-full rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="Shure b91"
                   />
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.position}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { position: e.target.value })
                     }
-                    className="w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-[52px] w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none md:h-full"
                     placeholder="Stage Left"
                   />
                   {/* <select
@@ -112,13 +116,14 @@ export function ChannelListTable({
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <select
+                    data-export-input="true"
                     value={channel.stand}
                     onChange={(e) =>
                       onUpdate?.(channel.id, {
                         stand: e.target.value as IChannelItem["stand"],
                       })
                     }
-                    className="w-full min-w-[120px] rounded border border-gray-300 bg-white px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="w-full min-w-[120px] rounded border border-gray-300 bg-white px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                   >
                     <option value="">Select</option>
                     {STAND_OPTIONS.map((stand) => (
@@ -147,11 +152,11 @@ export function ChannelListTable({
       </div>
 
       {/* Mobile Card View */}
-      <div className="space-y-3 md:hidden">
+      <div className="space-y-8 md:hidden">
         {channels.map((channel) => (
           <div
             key={channel.id}
-            className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+            className="min-h-72 relative h-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
           >
             {onRemove && (
               <button
@@ -164,19 +169,20 @@ export function ChannelListTable({
               </button>
             )}
 
-            <div className="space-y-3">
+            <div className="space-y-8">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-gray-700">
                     № chann
                   </label>
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.channelNumber}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { channelNumber: e.target.value })
                     }
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="01"
                   />
                 </div>
@@ -185,12 +191,13 @@ export function ChannelListTable({
                     Source
                   </label>
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.source}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { source: e.target.value })
                     }
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="Kick in"
                   />
                 </div>
@@ -201,12 +208,13 @@ export function ChannelListTable({
                   Mic & DI
                 </label>
                 <input
+                  data-export-input="true"
                   type="text"
                   value={channel.micDi}
                   onChange={(e) =>
                     onUpdate?.(channel.id, { micDi: e.target.value })
                   }
-                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                  className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
                   placeholder="Shure b91; Beyer tg70"
                 />
               </div>
@@ -217,12 +225,13 @@ export function ChannelListTable({
                     Position
                   </label>
                   <input
+                    data-export-input="true"
                     type="text"
                     value={channel.position}
                     onChange={(e) =>
                       onUpdate?.(channel.id, { position: e.target.value })
                     }
-                    className="w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-[52px] w-full min-w-[100px] rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none md:h-full"
                     placeholder="Stage Left"
                   />
                   {/* <select
@@ -247,13 +256,14 @@ export function ChannelListTable({
                     Stand
                   </label>
                   <select
+                    data-export-input="true"
                     value={channel.stand}
                     onChange={(e) =>
                       onUpdate?.(channel.id, {
                         stand: e.target.value as IChannelItem["stand"],
                       })
                     }
-                    className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
+                    className="h-[52px] w-full rounded border border-gray-300 bg-white px-2 text-[16px] focus:border-green-500 focus:outline-none md:h-full"
                   >
                     <option value="">Select</option>
                     {STAND_OPTIONS.map((stand) => (
