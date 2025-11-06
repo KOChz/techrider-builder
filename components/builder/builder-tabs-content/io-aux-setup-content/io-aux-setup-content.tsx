@@ -3,9 +3,10 @@
 import { useEffect, useRef } from "react";
 import { Plus } from "lucide-react";
 import { IChannelItem, IIoRoutingItem } from "@/stores/io-aux-types";
+import { useProjectStore } from "@/stores/use-project-creation-store";
+
 import { ChannelListTable } from "@/components/tables/channel-list-table/channel-list-table";
 import { IoRoutingTable } from "@/components/tables/io-routing-table/io-routing-table";
-import { useProjectStore } from "@/stores/use-project-creation-store";
 
 function scrollIntoViewAfterLayout(el: HTMLElement | null) {
   if (!el) return;

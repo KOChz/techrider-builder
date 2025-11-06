@@ -1,12 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils/cn";
 import { IChannelItem, STAND_OPTIONS } from "@/stores/io-aux-types";
 import { X } from "lucide-react";
 
 interface IChannelListTableProps {
   channels: IChannelItem[];
-  onUpdate: (id: string, updates: Partial<IChannelItem>) => void;
-  onRemove: (id: string) => void;
+  onUpdate?: (id: string, updates: Partial<IChannelItem>) => void;
+  onRemove?: (id: string) => void;
 }
 
 export function ChannelListTable({
@@ -17,12 +18,17 @@ export function ChannelListTable({
   return (
     <>
       {/* Desktop/Tablet Table View */}
-      <div className="hidden overflow-x-auto rounded-lg border border-gray-200 md:block">
+      <div
+        className={cn(
+          "hidden overflow-x-auto rounded-lg border border-gray-200 md:block",
+          !onUpdate && "pointer-events-none"
+        )}
+      >
         <table className="w-full border-collapse bg-white text-left text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="border-b border-gray-200 px-4 py-3 font-semibold text-gray-900">
-                № chenn
+                № chann
               </th>
               <th className="border-b border-gray-200 px-4 py-3 font-semibold text-gray-900">
                 Source
@@ -49,7 +55,7 @@ export function ChannelListTable({
                     type="text"
                     value={channel.channelNumber}
                     onChange={(e) =>
-                      onUpdate(channel.id, { channelNumber: e.target.value })
+                      onUpdate?.(channel.id, { channelNumber: e.target.value })
                     }
                     className="w-16 rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="01"
@@ -60,7 +66,7 @@ export function ChannelListTable({
                     type="text"
                     value={channel.source}
                     onChange={(e) =>
-                      onUpdate(channel.id, { source: e.target.value })
+                      onUpdate?.(channel.id, { source: e.target.value })
                     }
                     className="w-full min-w-[120px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="Kick in"
@@ -71,7 +77,7 @@ export function ChannelListTable({
                     type="text"
                     value={channel.micDi}
                     onChange={(e) =>
-                      onUpdate(channel.id, { micDi: e.target.value })
+                      onUpdate?.(channel.id, { micDi: e.target.value })
                     }
                     className="min-w-40 w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="Shure b91"
@@ -82,7 +88,7 @@ export function ChannelListTable({
                     type="text"
                     value={channel.position}
                     onChange={(e) =>
-                      onUpdate(channel.id, { position: e.target.value })
+                      onUpdate?.(channel.id, { position: e.target.value })
                     }
                     className="w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="Stage Left"
@@ -108,7 +114,7 @@ export function ChannelListTable({
                   <select
                     value={channel.stand}
                     onChange={(e) =>
-                      onUpdate(channel.id, {
+                      onUpdate?.(channel.id, {
                         stand: e.target.value as IChannelItem["stand"],
                       })
                     }
@@ -122,16 +128,18 @@ export function ChannelListTable({
                     ))}
                   </select>
                 </td>
-                <td className="border-b border-gray-200 px-4 py-3">
-                  <button
-                    type="button"
-                    onClick={() => onRemove(channel.id)}
-                    className="cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
-                    aria-label="Remove channel"
-                  >
-                    <X size={18} />
-                  </button>
-                </td>
+                {onRemove && (
+                  <td className="border-b border-gray-200 px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={() => onRemove(channel.id)}
+                      className="cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                      aria-label="Remove channel"
+                    >
+                      <X size={18} />
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -145,26 +153,28 @@ export function ChannelListTable({
             key={channel.id}
             className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
           >
-            <button
-              type="button"
-              onClick={() => onRemove(channel.id)}
-              className="absolute right-2 top-2 cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
-              aria-label="Remove channel"
-            >
-              <X size={18} />
-            </button>
+            {onRemove && (
+              <button
+                type="button"
+                onClick={() => onRemove(channel.id)}
+                className="absolute right-2 top-2 cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                aria-label="Remove channel"
+              >
+                <X size={18} />
+              </button>
+            )}
 
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-gray-700">
-                    № chenn
+                    № chann
                   </label>
                   <input
                     type="text"
                     value={channel.channelNumber}
                     onChange={(e) =>
-                      onUpdate(channel.id, { channelNumber: e.target.value })
+                      onUpdate?.(channel.id, { channelNumber: e.target.value })
                     }
                     className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="01"
@@ -178,7 +188,7 @@ export function ChannelListTable({
                     type="text"
                     value={channel.source}
                     onChange={(e) =>
-                      onUpdate(channel.id, { source: e.target.value })
+                      onUpdate?.(channel.id, { source: e.target.value })
                     }
                     className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="Kick in"
@@ -194,7 +204,7 @@ export function ChannelListTable({
                   type="text"
                   value={channel.micDi}
                   onChange={(e) =>
-                    onUpdate(channel.id, { micDi: e.target.value })
+                    onUpdate?.(channel.id, { micDi: e.target.value })
                   }
                   className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
                   placeholder="Shure b91; Beyer tg70"
@@ -210,7 +220,7 @@ export function ChannelListTable({
                     type="text"
                     value={channel.position}
                     onChange={(e) =>
-                      onUpdate(channel.id, { position: e.target.value })
+                      onUpdate?.(channel.id, { position: e.target.value })
                     }
                     className="w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="Stage Left"
@@ -239,7 +249,7 @@ export function ChannelListTable({
                   <select
                     value={channel.stand}
                     onChange={(e) =>
-                      onUpdate(channel.id, {
+                      onUpdate?.(channel.id, {
                         stand: e.target.value as IChannelItem["stand"],
                       })
                     }

@@ -1,12 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils/cn";
 import { CONNECTION_OPTIONS, IIoRoutingItem } from "@/stores/io-aux-types";
 import { X } from "lucide-react";
 
 interface IIoRoutingTableProps {
   routing: IIoRoutingItem[];
-  onUpdate: (id: string, updates: Partial<IIoRoutingItem>) => void;
-  onRemove: (id: string) => void;
+  onUpdate?: (id: string, updates: Partial<IIoRoutingItem>) => void;
+  onRemove?: (id: string) => void;
 }
 
 export function IoRoutingTable({
@@ -17,7 +18,12 @@ export function IoRoutingTable({
   return (
     <>
       {/* Desktop/Tablet Table View */}
-      <div className="hidden w-fit overflow-x-auto rounded-lg border border-gray-200 md:block">
+      <div
+        className={cn(
+          "hidden w-fit overflow-x-auto rounded-lg border border-gray-200 md:block",
+          !onUpdate && "pointer-events-none"
+        )}
+      >
         <table className="w-full max-w-2xl border-collapse bg-white text-left text-sm">
           <thead className="bg-gray-50">
             <tr>
@@ -43,7 +49,7 @@ export function IoRoutingTable({
                     type="text"
                     value={route.channelPair}
                     onChange={(e) =>
-                      onUpdate(route.id, { channelPair: e.target.value })
+                      onUpdate?.(route.id, { channelPair: e.target.value })
                     }
                     className="w-20 rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="1/2"
@@ -54,7 +60,7 @@ export function IoRoutingTable({
                     type="text"
                     value={route.assignment}
                     onChange={(e) =>
-                      onUpdate(route.id, { assignment: e.target.value })
+                      onUpdate?.(route.id, { assignment: e.target.value })
                     }
                     className="w-full min-w-[120px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="DR"
@@ -64,7 +70,7 @@ export function IoRoutingTable({
                   <select
                     value={route.connectionType}
                     onChange={(e) =>
-                      onUpdate(route.id, {
+                      onUpdate?.(route.id, {
                         connectionType: e.target
                           .value as IIoRoutingItem["connectionType"],
                       })
@@ -79,16 +85,18 @@ export function IoRoutingTable({
                     ))}
                   </select>
                 </td>
-                <td className="border-b border-gray-200 px-4 py-3">
-                  <button
-                    type="button"
-                    onClick={() => onRemove(route.id)}
-                    className="cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
-                    aria-label="Remove routing"
-                  >
-                    <X size={18} />
-                  </button>
-                </td>
+                {onRemove && (
+                  <td className="border-b border-gray-200 px-4 py-3">
+                    <button
+                      type="button"
+                      onClick={() => onRemove(route.id)}
+                      className="cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                      aria-label="Remove routing"
+                    >
+                      <X size={18} />
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -102,14 +110,16 @@ export function IoRoutingTable({
             key={route.id}
             className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
           >
-            <button
-              type="button"
-              onClick={() => onRemove(route.id)}
-              className="absolute right-2 top-2 cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
-              aria-label="Remove routing"
-            >
-              <X size={18} />
-            </button>
+            {onRemove && (
+              <button
+                type="button"
+                onClick={() => onRemove(route.id)}
+                className="absolute right-2 top-2 cursor-pointer rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                aria-label="Remove routing"
+              >
+                <X size={18} />
+              </button>
+            )}
 
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
@@ -121,7 +131,7 @@ export function IoRoutingTable({
                     type="text"
                     value={route.channelPair}
                     onChange={(e) =>
-                      onUpdate(route.id, { channelPair: e.target.value })
+                      onUpdate?.(route.id, { channelPair: e.target.value })
                     }
                     className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="1/2"
@@ -135,7 +145,7 @@ export function IoRoutingTable({
                     type="text"
                     value={route.assignment}
                     onChange={(e) =>
-                      onUpdate(route.id, { assignment: e.target.value })
+                      onUpdate?.(route.id, { assignment: e.target.value })
                     }
                     className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="DR"
@@ -150,7 +160,7 @@ export function IoRoutingTable({
                 <select
                   value={route.connectionType}
                   onChange={(e) =>
-                    onUpdate(route.id, {
+                    onUpdate?.(route.id, {
                       connectionType: e.target
                         .value as IIoRoutingItem["connectionType"],
                     })

@@ -12,6 +12,8 @@ import { StagePlanViewer } from "../builder/stage-plan-builder/stage-plan-viewer
 import { User } from "@supabase/supabase-js";
 import { slugify } from "@/lib/utils/slugify";
 import { NotesSection } from "../techrider/notes-section";
+import { IoRoutingTable } from "../tables/io-routing-table/io-routing-table";
+import { ChannelListTable } from "../tables/channel-list-table/channel-list-table";
 
 export function TechRiderClientPage({
   isOwner,
@@ -143,6 +145,20 @@ export function TechRiderClientPage({
                 />
               ))}
             </div>
+
+            {project.ioSetupConfig && (
+              <section id="io-aux-section" className="space-y-8">
+                <h2 className="bg-linear-to-r text-shadow-2xs min-h-24 from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-10 text-center text-4xl font-bold capitalize text-transparent">
+                  I/O & AUX Configuration
+                </h2>
+
+                <ChannelListTable
+                  channels={project.ioSetupConfig.channelList}
+                />
+                <IoRoutingTable routing={project.ioSetupConfig.ioRouting} />
+              </section>
+            )}
+
             {project.notes && <NotesSection notes={project.notes} />}
 
             <h1 className="min-h-40 text-shadow-2xs bg-linear-to-r pt-18 h-full from-emerald-400 via-green-500 to-emerald-600 bg-clip-text pb-6 text-center text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
