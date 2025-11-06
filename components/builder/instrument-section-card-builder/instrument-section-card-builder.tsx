@@ -84,7 +84,7 @@ export function InstrumentSectionCardBuilder({
   const addExamplesToItem = (equipmentIndex: number) => {
     const newExamples: TEquipmentExample = {
       title: "Details:",
-      items: [],
+      items: [""],
     };
     updateEquipmentItem(equipmentIndex, { examples: newExamples });
   };
