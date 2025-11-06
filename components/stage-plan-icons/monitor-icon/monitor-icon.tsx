@@ -9,14 +9,7 @@ export type MonitorIconProps = React.SVGProps<SVGSVGElement> & {
 
 export const MonitorIcon = React.memo(
   React.forwardRef<SVGSVGElement, MonitorIconProps>(function MonitorIcon(
-    {
-      title = "Monitor",
-      className,
-      hitboxPadding = 5,
-      width,
-      height,
-      ...props
-    },
+    { title = "Wedge", className, hitboxPadding = 5, width, height, ...props },
     ref
   ) {
     const uid = React.useId();

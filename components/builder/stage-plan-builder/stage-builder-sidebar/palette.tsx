@@ -79,7 +79,7 @@ export function Palette({ onAddNode }: IPaletteProps) {
                 />
                 <PaletteItem
                   kind="monitor"
-                  label="Monitor"
+                  label="Wedge"
                   onAddNode={handleAddNode}
                 />
                 <PaletteItem kind="amp" label="Amp" onAddNode={handleAddNode} />
@@ -108,7 +108,7 @@ export function Palette({ onAddNode }: IPaletteProps) {
       {/* Desktop Grid */}
       <div className="hidden xl:grid xl:auto-rows-min xl:gap-2">
         <PaletteItem kind="drumkit" label="Drumkit" onAddNode={onAddNode} />
-        <PaletteItem kind="monitor" label="Monitor" onAddNode={onAddNode} />
+        <PaletteItem kind="monitor" label="Wedge" onAddNode={onAddNode} />
         <PaletteItem
           kind="synth-stand"
           label="Synth Stand"
