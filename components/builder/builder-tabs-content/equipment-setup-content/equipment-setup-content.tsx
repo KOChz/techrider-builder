@@ -5,9 +5,28 @@ import {
   InstrumentSectionCardBuilder,
   TInstrumentSectionBuilder,
 } from "../../instrument-section-card-builder/instrument-section-card-builder";
+import { Plus } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 export function EquipmentSetupContent() {
   const { members, addMember, updateMember, removeMember } = useProjectStore();
+
+  const previousLengthRef = useRef(members.length);
+  const lastCardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (members.length > previousLengthRef.current && lastCardRef.current) {
+      const timeoutId = setTimeout(() => {
+        lastCardRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 120);
+
+      return () => clearTimeout(timeoutId);
+    }
+    previousLengthRef.current = members.length;
+  }, [members.length]);
 
   const handleAddEquipmentSetup = () => {
     const newMember: TInstrumentSectionBuilder = {
@@ -35,25 +54,30 @@ export function EquipmentSetupContent() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-          {members.map((member) => (
-            <InstrumentSectionCardBuilder
+          {members.map((member, index) => (
+            <div
               key={member.id}
-              initialMember={member}
-              onChange={(updated) => updateMember(member.id, updated)}
-              onRemove={() => removeMember(member.id)}
-            />
+              ref={index === members.length - 1 ? lastCardRef : null}
+              className="scroll-mb-48"
+              style={{ scrollMarginBottom: "12rem" }}
+            >
+              <InstrumentSectionCardBuilder
+                initialMember={member}
+                onChange={(updated) => updateMember(member.id, updated)}
+                onRemove={() => removeMember(member.id)}
+              />
+            </div>
           ))}
         </div>
       )}
 
-      <div className="justify-end-safe flex w-full">
-        <button
-          onClick={handleAddEquipmentSetup}
-          className="cursor-pointer rounded-md bg-green-600 p-3 text-sm text-white transition-colors hover:bg-green-700"
-        >
-          + Add Section
-        </button>
-      </div>
+      <button
+        onClick={handleAddEquipmentSetup}
+        className="duration-350 hover:bg-green-600/85 active:bg-green-600/85 group flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold text-slate-600 transition-all hover:text-white hover:shadow-sm active:scale-[0.98] active:text-white active:shadow-sm"
+      >
+        <Plus size={18} />
+        Add Section
+      </button>
     </div>
   );
 }

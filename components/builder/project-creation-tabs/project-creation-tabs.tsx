@@ -21,7 +21,7 @@ interface ITab {
 }
 
 export const CREATE_PROJECT_TABS: ITab[] = [
-  { id: "band-info", label: "Band Info" },
+  { id: "band-info", label: "Main Info" },
   { id: "equipment-setup", label: "Equipment Setup" },
   { id: "stage-plan", label: "Stage Plan" },
   { id: "settings", label: "Project Settings" },

@@ -12,16 +12,16 @@ export function BandInfoContent() {
   return (
     <div className="min-h-[360px] space-y-2">
       <h3 className="text-2xl font-semibold text-slate-900">
-        Band Information
+        General Information
       </h3>
       <div className="space-y-3">
-        <p className="pb-1 text-sm text-gray-600">Add band information</p>
+        <p className="pb-1 text-sm text-gray-600">Add Artist information</p>
         <div>
           <label
             htmlFor="band-name"
             className="block pb-1 text-sm font-medium text-slate-900"
           >
-            Band Name
+            Artist Name
           </label>
           <input
             id="band-name"

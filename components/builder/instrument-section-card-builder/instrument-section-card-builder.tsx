@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Plus, X } from "lucide-react";
 import { DetailsItemsList } from "./details-items-list";
 import { DetailsInput } from "./details-input";
 
@@ -46,6 +46,42 @@ export function InstrumentSectionCardBuilder({
       equipment: [],
     }
   );
+
+  const lastEquipmentRef = useRef<HTMLDetailsElement>(null);
+  const lastDetailRef = useRef<HTMLDivElement>(null);
+  const previousEquipmentLengthRef = useRef(section.equipment.length);
+  const previousDetailLengthRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (section.equipment.length > previousEquipmentLengthRef.current) {
+      requestAnimationFrame(() => {
+        lastEquipmentRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      });
+    }
+    previousEquipmentLengthRef.current = section.equipment.length;
+  }, [section.equipment.length]);
+
+  useEffect(() => {
+    const lastEquipment = section.equipment[section.equipment.length - 1];
+    const currentDetailLength = lastEquipment?.examples?.items.length ?? 0;
+
+    if (
+      previousDetailLengthRef.current !== null &&
+      currentDetailLength > previousDetailLengthRef.current
+    ) {
+      requestAnimationFrame(() => {
+        lastDetailRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      });
+    }
+
+    previousDetailLengthRef.current = currentDetailLength;
+  }, [section.equipment]);
 
   const updateInstrumentSection = (
     updates: Partial<TInstrumentSectionBuilder>
@@ -194,8 +230,12 @@ export function InstrumentSectionCardBuilder({
               (item.name?.trim() || "New equipment") +
               (item.quantity ? ` × ${item.quantity}` : "");
 
+            const isLastEquipment =
+              equipmentIndex === section.equipment.length - 1;
+
             return (
               <details
+                ref={isLastEquipment ? lastEquipmentRef : null}
                 key={equipmentIndex}
                 className="group relative min-w-[330px] overflow-hidden rounded-lg border border-gray-200"
               >
@@ -273,6 +313,9 @@ export function InstrumentSectionCardBuilder({
                           equipmentIndex={equipmentIndex}
                           onUpdateExample={updateExampleItem}
                           onRemoveExample={removeExampleItem}
+                          lastItemRef={
+                            isLastEquipment ? lastDetailRef : undefined
+                          }
                         />
                       </div>
 
@@ -298,15 +341,14 @@ export function InstrumentSectionCardBuilder({
             );
           })}
 
-          <div className="justify-end-safe flex w-full">
-            <button
-              type="button"
-              onClick={addEquipmentItem}
-              className="cursor-pointer rounded-md bg-green-600 p-2 text-xs text-white transition-colors hover:bg-green-700"
-            >
-              + Add Equipment
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={addEquipmentItem}
+            className="duration-350 hover:bg-green-600/85 active:bg-green-600/85 group flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg p-2 text-xs font-medium text-slate-700 transition-all hover:text-white hover:shadow-sm active:scale-[0.98] active:text-white active:shadow-sm"
+          >
+            <Plus size={14} />
+            Add Equipment
+          </button>
         </div>
       </div>
     </div>
