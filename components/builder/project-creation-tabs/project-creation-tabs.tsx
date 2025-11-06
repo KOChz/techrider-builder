@@ -8,11 +8,13 @@ import { EquipmentSetupContent } from "../builder-tabs-content/equipment-setup-c
 import { BandInfoContent } from "../builder-tabs-content/band-info-content/band-info-content";
 import { useCreateProject } from "@/hooks/use-create-project";
 import Link from "next/link";
+import { IoAuxSetupContent } from "../builder-tabs-content/io-aux-setup-content/io-aux-setup-content";
 
 export type TTabId =
   | "band-info"
   | "equipment-setup"
   | "stage-plan"
+  | "io-aux-setup"
   | "settings";
 
 interface ITab {
@@ -23,6 +25,7 @@ interface ITab {
 export const CREATE_PROJECT_TABS: ITab[] = [
   { id: "band-info", label: "Main Info" },
   { id: "equipment-setup", label: "Equipment Setup" },
+  { id: "io-aux-setup", label: "I/O & AUX Setup" },
   { id: "stage-plan", label: "Stage Plan" },
   { id: "settings", label: "Project Settings" },
 ];
@@ -37,6 +40,8 @@ export default function ProjectCreationTabs() {
         return <BandInfoContent />;
       case "equipment-setup":
         return <EquipmentSetupContent />;
+      case "io-aux-setup":
+        return <IoAuxSetupContent />;
       case "stage-plan":
         return <StagePlanBuilderContent />;
       case "settings":

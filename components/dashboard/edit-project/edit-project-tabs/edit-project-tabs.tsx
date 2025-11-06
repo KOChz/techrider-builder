@@ -20,6 +20,7 @@ import {
   CREATE_PROJECT_TABS,
   TTabId,
 } from "@/components/builder/project-creation-tabs/project-creation-tabs";
+import { IoAuxSetupContent } from "@/components/builder/builder-tabs-content/io-aux-setup-content/io-aux-setup-content";
 
 export default function EditProjectTabs({
   project,
@@ -41,6 +42,8 @@ export default function EditProjectTabs({
         return <BandInfoContent />;
       case "equipment-setup":
         return <EquipmentSetupContent />;
+      case "io-aux-setup":
+        return <IoAuxSetupContent />;
       case "stage-plan":
         return <StagePlanBuilderContent />;
       case "settings":

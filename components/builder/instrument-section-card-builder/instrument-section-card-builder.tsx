@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Plus, X } from "lucide-react";
 
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
-import { ChevronDown, Plus, X } from "lucide-react";
 import { DetailsItemsList } from "./details-items-list";
 import { DetailsInput } from "./details-input";
 
@@ -47,41 +47,25 @@ export function InstrumentSectionCardBuilder({
     }
   );
 
-  const lastEquipmentRef = useRef<HTMLDetailsElement>(null);
-  const lastDetailRef = useRef<HTMLDivElement>(null);
   const previousEquipmentLengthRef = useRef(section.equipment.length);
-  const previousDetailLengthRef = useRef<number | null>(null);
+  const addEquipmentButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (section.equipment.length > previousEquipmentLengthRef.current) {
-      requestAnimationFrame(() => {
-        lastEquipmentRef.current?.scrollIntoView({
+    if (
+      section.equipment.length > previousEquipmentLengthRef.current &&
+      addEquipmentButtonRef.current
+    ) {
+      const timeoutId = setTimeout(() => {
+        addEquipmentButtonRef.current?.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
         });
-      });
+      }, 120);
+
+      return () => clearTimeout(timeoutId);
     }
     previousEquipmentLengthRef.current = section.equipment.length;
   }, [section.equipment.length]);
-
-  useEffect(() => {
-    const lastEquipment = section.equipment[section.equipment.length - 1];
-    const currentDetailLength = lastEquipment?.examples?.items.length ?? 0;
-
-    if (
-      previousDetailLengthRef.current !== null &&
-      currentDetailLength > previousDetailLengthRef.current
-    ) {
-      requestAnimationFrame(() => {
-        lastDetailRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
-      });
-    }
-
-    previousDetailLengthRef.current = currentDetailLength;
-  }, [section.equipment]);
 
   const updateInstrumentSection = (
     updates: Partial<TInstrumentSectionBuilder>
@@ -230,12 +214,8 @@ export function InstrumentSectionCardBuilder({
               (item.name?.trim() || "New equipment") +
               (item.quantity ? ` × ${item.quantity}` : "");
 
-            const isLastEquipment =
-              equipmentIndex === section.equipment.length - 1;
-
             return (
               <details
-                ref={isLastEquipment ? lastEquipmentRef : null}
                 key={equipmentIndex}
                 className="group relative min-w-[330px] overflow-hidden rounded-lg border border-gray-200"
               >
@@ -253,18 +233,19 @@ export function InstrumentSectionCardBuilder({
                     </span>
                   </div>
 
-                  {/* Delete button remains accessible in collapsed state */}
                   <button
                     type="button"
-                    onClick={() => removeEquipmentItem(equipmentIndex)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeEquipmentItem(equipmentIndex);
+                    }}
                     className="p group cursor-pointer rounded-lg text-gray-400 transition-all duration-200 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
-                    aria-label="Remove this example"
+                    aria-label="Remove this equipment"
                   >
                     <X className="h-4 w-4 transition-transform group-hover:scale-110" />
                   </button>
                 </summary>
 
-                {/* Expanded content */}
                 <div className="space-y-3 border-t border-gray-200 p-2 md:p-4">
                   <div className="flex gap-2">
                     <input
@@ -313,9 +294,6 @@ export function InstrumentSectionCardBuilder({
                           equipmentIndex={equipmentIndex}
                           onUpdateExample={updateExampleItem}
                           onRemoveExample={removeExampleItem}
-                          lastItemRef={
-                            isLastEquipment ? lastDetailRef : undefined
-                          }
                         />
                       </div>
 
@@ -342,9 +320,10 @@ export function InstrumentSectionCardBuilder({
           })}
 
           <button
+            ref={addEquipmentButtonRef}
             type="button"
             onClick={addEquipmentItem}
-            className="duration-350 hover:bg-green-600/85 active:bg-green-600/85 group flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg p-2 text-xs font-medium text-slate-700 transition-all hover:text-white hover:shadow-sm active:scale-[0.98] active:text-white active:shadow-sm"
+            className="duration-350 hover:bg-green-600/85 active:bg-green-600/85 group flex w-full cursor-pointer scroll-mb-8 items-center justify-center gap-2 rounded-lg p-2 text-xs font-medium text-slate-700 transition-all hover:text-white hover:shadow-sm active:scale-[0.98] active:text-white active:shadow-sm"
           >
             <Plus size={14} />
             Add Equipment

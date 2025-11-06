@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { useProjectStore } from "@/stores/use-project-creation-store";
 import {
   InstrumentSectionCardBuilder,
   TInstrumentSectionBuilder,
 } from "../../instrument-section-card-builder/instrument-section-card-builder";
 import { Plus } from "lucide-react";
-import { useEffect, useRef } from "react";
 
 export function EquipmentSetupContent() {
   const { members, addMember, updateMember, removeMember } = useProjectStore();
