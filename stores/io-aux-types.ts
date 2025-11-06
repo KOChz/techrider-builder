@@ -1,5 +1,3 @@
-export type TPosition = "DR" | "KEY" | "GT&BASS" | "Center st" | "foh" | "";
-
 export type TStandType =
   | "small"
   | "norm"
@@ -15,7 +13,7 @@ export interface IChannelItem {
   channelNumber: string;
   source: string;
   micDi: string;
-  position: TPosition;
+  position: string;
   stand: TStandType;
 }
 
@@ -26,14 +24,6 @@ export interface IIoRoutingItem {
   connectionType: TConnectionType;
 }
 
-export const POSITION_OPTIONS: TPosition[] = [
-  "DR",
-  "KEY",
-  "GT&BASS",
-  "Center st",
-  "foh",
-];
-
 export const STAND_OPTIONS: TStandType[] = [
   "small",
   "norm",
@@ -43,3 +33,22 @@ export const STAND_OPTIONS: TStandType[] = [
 ];
 
 export const CONNECTION_OPTIONS: TConnectionType[] = ["wired", "wireless (RF)"];
+
+export type TChannelListItem = {
+  channelNumber: string;
+  source: string;
+  micAndDI: string;
+  position: string;
+  stand: string;
+};
+
+export type TIORoutingItem = {
+  channelPair: string;
+  assignment: string;
+  connection: string;
+};
+
+export type TIOSetupConfig = {
+  channelList: TChannelListItem[];
+  ioRouting: TIORoutingItem[];
+};

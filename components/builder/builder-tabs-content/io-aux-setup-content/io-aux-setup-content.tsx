@@ -6,7 +6,6 @@ import { IChannelItem, IIoRoutingItem } from "@/stores/io-aux-types";
 import { ChannelListTable } from "@/components/tables/channel-list-table/channel-list-table";
 import { IoRoutingTable } from "@/components/tables/io-routing-table/io-routing-table";
 
-/** Utility: scrolls target into view after layout settles (double RAF to be iOS-safe) */
 function scrollIntoViewAfterLayout(el: HTMLElement | null) {
   if (!el) return;
   requestAnimationFrame(() => {
@@ -16,7 +15,6 @@ function scrollIntoViewAfterLayout(el: HTMLElement | null) {
   });
 }
 
-/** Hook: only scroll when count increases (i.e., on add), never on initial render */
 function useScrollOnAdd(
   count: number,
   targetRef: React.RefObject<HTMLElement>
@@ -72,7 +70,6 @@ export function IoAuxSetupContent() {
   const addButtonChannelRef = useRef<HTMLButtonElement>(null);
   const addButtonRoutingRef = useRef<HTMLButtonElement>(null);
 
-  // Autoscroll only on "add", not on first paint
   useScrollOnAdd(
     channels.length,
     addButtonChannelRef as React.RefObject<HTMLElement>

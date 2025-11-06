@@ -1,4 +1,5 @@
 import { TEquipmentItemBuilder } from "@/components/builder/instrument-section-card-builder/instrument-section-card-builder";
+import { TIOSetupConfig } from "@/stores/io-aux-types";
 import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { relations, sql } from "drizzle-orm";
 import {
@@ -36,7 +37,10 @@ export const projects = pgTable(
     stagePlanConfig: jsonb("stage_plan_config")
       .$type<IStagePlanFlowConfig>()
       .default(sql`'{"nodes":[],"version":1}'::jsonb`),
-
+    ioSetupConfig: jsonb("io_setup_config")
+      .$type<TIOSetupConfig>()
+      .default(sql`'{"channelList":[],"ioRouting":[]}'::jsonb`)
+      .notNull(),
     isPublic: boolean("is_public").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()

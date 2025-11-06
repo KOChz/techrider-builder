@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ADD COLUMN "io_setup_config" jsonb DEFAULT '{"channelList":[],"ioRouting":[]}'::jsonb NOT NULL;

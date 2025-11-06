@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  IChannelItem,
-  POSITION_OPTIONS,
-  STAND_OPTIONS,
-} from "@/stores/io-aux-types";
+import { IChannelItem, STAND_OPTIONS } from "@/stores/io-aux-types";
 import { X } from "lucide-react";
 
 interface IChannelListTableProps {
@@ -77,12 +73,21 @@ export function ChannelListTable({
                     onChange={(e) =>
                       onUpdate(channel.id, { micDi: e.target.value })
                     }
-                    className="w-full min-w-[160px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    className="min-w-40 w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
                     placeholder="Shure b91"
                   />
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
-                  <select
+                  <input
+                    type="text"
+                    value={channel.position}
+                    onChange={(e) =>
+                      onUpdate(channel.id, { position: e.target.value })
+                    }
+                    className="w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    placeholder="Stage Left"
+                  />
+                  {/* <select
                     value={channel.position}
                     onChange={(e) =>
                       onUpdate(channel.id, {
@@ -97,7 +102,7 @@ export function ChannelListTable({
                         {pos}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
                 </td>
                 <td className="border-b border-gray-200 px-4 py-3">
                   <select
@@ -201,7 +206,16 @@ export function ChannelListTable({
                   <label className="mb-1 block text-xs font-medium text-gray-700">
                     Position
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    value={channel.position}
+                    onChange={(e) =>
+                      onUpdate(channel.id, { position: e.target.value })
+                    }
+                    className="w-full min-w-[100px] rounded border border-gray-300 px-2 py-1 text-sm focus:border-green-500 focus:outline-none"
+                    placeholder="Stage Left"
+                  />
+                  {/* <select
                     value={channel.position}
                     onChange={(e) =>
                       onUpdate(channel.id, {
@@ -216,7 +230,7 @@ export function ChannelListTable({
                         {pos}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
                 </div>
                 <div>
                   <label className="mb-1 block text-xs font-medium text-gray-700">
