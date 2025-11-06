@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useCreateProject } from "@/hooks/use-create-project";
 
 import { BandInfoContent } from "@/components/builder/builder-tabs-content/band-info-content/band-info-content";
-import { MembersContent } from "@/components/builder/builder-tabs-content/members-content/members-content";
+import { EquipmentSetupContent } from "@/components/builder/builder-tabs-content/equipment-setup-content/equipment-setup-content";
 import { StagePlanBuilderContent } from "@/components/builder/builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "@/components/builder/builder-tabs-content/settings-content/settings-content";
 import {
@@ -16,9 +16,10 @@ import {
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
 import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
 import { useEditProject } from "@/hooks/use-edit-project";
-import { CREATE_PROJECT_TABS } from "@/components/builder/project-creation-tabs/project-creation-tabs";
-
-type TTabId = "band-info" | "members" | "stage-plan" | "settings";
+import {
+  CREATE_PROJECT_TABS,
+  TTabId,
+} from "@/components/builder/project-creation-tabs/project-creation-tabs";
 
 export default function EditProjectTabs({
   project,
@@ -38,8 +39,8 @@ export default function EditProjectTabs({
     switch (activeTab) {
       case "band-info":
         return <BandInfoContent />;
-      case "members":
-        return <MembersContent />;
+      case "equipment-setup":
+        return <EquipmentSetupContent />;
       case "stage-plan":
         return <StagePlanBuilderContent />;
       case "settings":

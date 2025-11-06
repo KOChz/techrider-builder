@@ -31,12 +31,12 @@ interface IMemberCardBuilderProps {
   onRemove?: () => void;
 }
 
-export function MemberCardBuilder({
+export function InstrumentSectionCardBuilder({
   initialMember,
   onChange,
   onRemove,
 }: IMemberCardBuilderProps) {
-  const [member, setMember] = useState<TBandMemberBuilder>(
+  const [section, setSection] = useState<TBandMemberBuilder>(
     initialMember || {
       id: crypto.randomUUID(),
       name: "",
@@ -46,9 +46,9 @@ export function MemberCardBuilder({
     }
   );
 
-  const updateMember = (updates: Partial<TBandMemberBuilder>) => {
-    const updatedMember = { ...member, ...updates };
-    setMember(updatedMember);
+  const updateInstrumentSection = (updates: Partial<TBandMemberBuilder>) => {
+    const updatedMember = { ...section, ...updates };
+    setSection(updatedMember);
     onChange?.(updatedMember);
   };
 
@@ -57,14 +57,14 @@ export function MemberCardBuilder({
       name: "",
       quantity: "",
     };
-    updateMember({
-      equipment: [...member.equipment, newEquipment],
+    updateInstrumentSection({
+      equipment: [...section.equipment, newEquipment],
     });
   };
 
   const removeEquipmentItem = (index: number) => {
-    updateMember({
-      equipment: member.equipment.filter((_, i) => i !== index),
+    updateInstrumentSection({
+      equipment: section.equipment.filter((_, i) => i !== index),
     });
   };
 
@@ -72,10 +72,10 @@ export function MemberCardBuilder({
     index: number,
     updates: Partial<TEquipmentItemBuilder>
   ) => {
-    const updatedEquipment = member.equipment.map((item, i) =>
+    const updatedEquipment = section.equipment.map((item, i) =>
       i === index ? { ...item, ...updates } : item
     );
-    updateMember({ equipment: updatedEquipment });
+    updateInstrumentSection({ equipment: updatedEquipment });
   };
 
   const addExamplesToItem = (equipmentIndex: number) => {
@@ -91,7 +91,7 @@ export function MemberCardBuilder({
   };
 
   const addExampleItem = (equipmentIndex: number) => {
-    const equipment = member.equipment[equipmentIndex];
+    const equipment = section.equipment[equipmentIndex];
     if (!equipment.examples) return;
 
     updateEquipmentItem(equipmentIndex, {
@@ -103,7 +103,7 @@ export function MemberCardBuilder({
   };
 
   const removeExampleItem = (equipmentIndex: number, exampleIndex: number) => {
-    const equipment = member.equipment[equipmentIndex];
+    const equipment = section.equipment[equipmentIndex];
     if (!equipment.examples) return;
 
     updateEquipmentItem(equipmentIndex, {
@@ -119,7 +119,7 @@ export function MemberCardBuilder({
     exampleIndex: number,
     value: string
   ) => {
-    const equipment = member.equipment[equipmentIndex];
+    const equipment = section.equipment[equipmentIndex];
     if (!equipment.examples) return;
 
     updateEquipmentItem(equipmentIndex, {
@@ -133,7 +133,7 @@ export function MemberCardBuilder({
   };
 
   const updateExamplesTitle = (equipmentIndex: number, title: string) => {
-    const equipment = member.equipment[equipmentIndex];
+    const equipment = section.equipment[equipmentIndex];
     if (!equipment.examples) return;
 
     updateEquipmentItem(equipmentIndex, {
@@ -162,26 +162,28 @@ export function MemberCardBuilder({
 
       <div className="space-y-6 transition-all duration-200">
         <div className="space-y-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <MusicalInstrumentSelector
-              value={member.icon}
-              onChange={(icon) => updateMember({ icon })}
+              value={section.icon}
+              onChange={(icon) => updateInstrumentSection({ icon })}
             />
             <div className="flex-1 space-y-2">
               <input
                 type="text"
-                value={member.name}
-                onChange={(e) => updateMember({ name: e.target.value })}
+                value={section.name}
+                onChange={(e) =>
+                  updateInstrumentSection({ name: e.target.value })
+                }
                 className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                placeholder="Member Name"
+                placeholder="Section Name"
               />
-              <input
+              {/* <input
                 type="text"
                 value={member.role}
                 onChange={(e) => updateMember({ role: e.target.value })}
                 className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
-                placeholder="Role"
-              />
+                placeholder="Role (Optional)"
+              /> */}
             </div>
           </div>
         </div>
@@ -191,7 +193,7 @@ export function MemberCardBuilder({
             <h4 className="text-lg font-semibold text-gray-800">Equipment</h4>
           </div>
 
-          {member.equipment.map((item, equipmentIndex) => {
+          {section.equipment.map((item, equipmentIndex) => {
             const title =
               (item.name?.trim() || "New equipment") +
               (item.quantity ? ` × ${item.quantity}` : "");

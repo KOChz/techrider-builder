@@ -4,12 +4,16 @@ import { useState } from "react";
 
 import { StagePlanBuilderContent } from "../builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "../builder-tabs-content/settings-content/settings-content";
-import { MembersContent } from "../builder-tabs-content/members-content/members-content";
+import { EquipmentSetupContent } from "../builder-tabs-content/equipment-setup-content/equipment-setup-content";
 import { BandInfoContent } from "../builder-tabs-content/band-info-content/band-info-content";
 import { useCreateProject } from "@/hooks/use-create-project";
 import Link from "next/link";
 
-type TTabId = "band-info" | "members" | "stage-plan" | "settings";
+export type TTabId =
+  | "band-info"
+  | "equipment-setup"
+  | "stage-plan"
+  | "settings";
 
 interface ITab {
   id: TTabId;
@@ -18,7 +22,7 @@ interface ITab {
 
 export const CREATE_PROJECT_TABS: ITab[] = [
   { id: "band-info", label: "Band Info" },
-  { id: "members", label: "Band Members" },
+  { id: "equipment-setup", label: "Equipment Setup" },
   { id: "stage-plan", label: "Stage Plan" },
   { id: "settings", label: "Project Settings" },
 ];
@@ -31,8 +35,8 @@ export default function ProjectCreationTabs() {
     switch (activeTab) {
       case "band-info":
         return <BandInfoContent />;
-      case "members":
-        return <MembersContent />;
+      case "equipment-setup":
+        return <EquipmentSetupContent />;
       case "stage-plan":
         return <StagePlanBuilderContent />;
       case "settings":

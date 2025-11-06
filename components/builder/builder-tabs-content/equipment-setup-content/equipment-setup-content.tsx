@@ -2,14 +2,14 @@
 
 import { useProjectStore } from "@/stores/use-project-creation-store";
 import {
-  MemberCardBuilder,
+  InstrumentSectionCardBuilder,
   TBandMemberBuilder,
 } from "../../member-card-builder/member-card-builder";
 
-export function MembersContent() {
+export function EquipmentSetupContent() {
   const { members, addMember, updateMember, removeMember } = useProjectStore();
 
-  const handleAddMember = () => {
+  const handleAddEquipmentSetup = () => {
     const newMember: TBandMemberBuilder = {
       id: crypto.randomUUID(),
       name: "",
@@ -22,28 +22,21 @@ export function MembersContent() {
 
   return (
     <div className="min-h-[360px] space-y-2">
-      <h3 className="text-2xl font-semibold text-slate-900">Band Members</h3>
+      <h3 className="text-2xl font-semibold text-slate-900">
+        Instrument Sections
+      </h3>
       <p className="pb-1 text-sm text-gray-600">
-        Add and manage your band members
+        Define instrument sections and their required equipment
       </p>
-
-      {/* <button
-        onClick={handleAddMember}
-        className="cursor-pointer rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
-      >
-        + Add Member
-      </button> */}
 
       {members.length === 0 ? (
         <div className="py-12 text-center text-gray-500">
-          <p>
-            No band members yet. Click &quot;Add Member&quot; to get started!
-          </p>
+          <p>No equipment yet. Click &quot;Add Section&quot; to get started!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
           {members.map((member) => (
-            <MemberCardBuilder
+            <InstrumentSectionCardBuilder
               key={member.id}
               initialMember={member}
               onChange={(updated) => updateMember(member.id, updated)}
@@ -55,10 +48,10 @@ export function MembersContent() {
 
       <div className="justify-end-safe flex w-full">
         <button
-          onClick={handleAddMember}
+          onClick={handleAddEquipmentSetup}
           className="cursor-pointer rounded-md bg-green-600 p-3 text-sm text-white transition-colors hover:bg-green-700"
         >
-          + Add Member
+          + Add Section
         </button>
       </div>
     </div>

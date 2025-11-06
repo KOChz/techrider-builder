@@ -3,7 +3,7 @@ import { z } from "zod";
 const zBandMemberBuilder = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
-  role: z.string().min(1, "Role is required"),
+  role: z.string().optional(),
   imageUrl: z.string().url().optional(),
 });
 
