@@ -27,7 +27,7 @@ export const CREATE_PROJECT_TABS: ITab[] = [
   { id: "equipment-setup", label: "Equipment Setup" },
   { id: "io-aux-setup", label: "I/O & AUX Setup" },
   { id: "stage-plan", label: "Stage Plan" },
-  { id: "settings", label: "Project Settings" },
+  // { id: "settings", label: "Settings" },
 ];
 
 export default function ProjectCreationTabs() {

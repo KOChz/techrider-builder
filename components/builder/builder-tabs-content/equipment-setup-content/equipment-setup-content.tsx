@@ -16,11 +16,7 @@ export function EquipmentSetupContent() {
   const lastCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (
-      members.length > 1 &&
-      members.length > previousLengthRef.current &&
-      lastCardRef.current
-    ) {
+    if (members.length > previousLengthRef.current && lastCardRef.current) {
       const timeoutId = setTimeout(() => {
         lastCardRef.current?.scrollIntoView({
           behavior: "smooth",

@@ -6,6 +6,30 @@ import { IChannelItem, IIoRoutingItem } from "@/stores/io-aux-types";
 import { ChannelListTable } from "@/components/tables/channel-list-table/channel-list-table";
 import { IoRoutingTable } from "@/components/tables/io-routing-table/io-routing-table";
 
+/** Utility: scrolls target into view after layout settles (double RAF to be iOS-safe) */
+function scrollIntoViewAfterLayout(el: HTMLElement | null) {
+  if (!el) return;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+}
+
+/** Hook: only scroll when count increases (i.e., on add), never on initial render */
+function useScrollOnAdd(
+  count: number,
+  targetRef: React.RefObject<HTMLElement>
+) {
+  const prev = useRef(count);
+  useEffect(() => {
+    if (count > prev.current) {
+      scrollIntoViewAfterLayout(targetRef.current);
+    }
+    prev.current = count;
+  }, [count, targetRef]);
+}
+
 const INITIAL_CHANNELS: IChannelItem[] = [
   {
     id: crypto.randomUUID(),
@@ -48,27 +72,15 @@ export function IoAuxSetupContent() {
   const addButtonChannelRef = useRef<HTMLButtonElement>(null);
   const addButtonRoutingRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      addButtonChannelRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }, 120);
-
-    return () => clearTimeout(timeoutId);
-  }, [channels.length]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      addButtonRoutingRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }, 120);
-
-    return () => clearTimeout(timeoutId);
-  }, [ioRouting.length]);
+  // Autoscroll only on "add", not on first paint
+  useScrollOnAdd(
+    channels.length,
+    addButtonChannelRef as React.RefObject<HTMLElement>
+  );
+  useScrollOnAdd(
+    ioRouting.length,
+    addButtonRoutingRef as React.RefObject<HTMLElement>
+  );
 
   const handleAddChannel = () => {
     const newChannel: IChannelItem = {
@@ -79,17 +91,17 @@ export function IoAuxSetupContent() {
       position: "",
       stand: "",
     };
-    setChannels([...channels, newChannel]);
+    setChannels((prev) => [...prev, newChannel]);
   };
 
   const handleUpdateChannel = (id: string, updates: Partial<IChannelItem>) => {
-    setChannels(
-      channels.map((ch) => (ch.id === id ? { ...ch, ...updates } : ch))
+    setChannels((prev) =>
+      prev.map((ch) => (ch.id === id ? { ...ch, ...updates } : ch))
     );
   };
 
   const handleRemoveChannel = (id: string) => {
-    setChannels(channels.filter((ch) => ch.id !== id));
+    setChannels((prev) => prev.filter((ch) => ch.id !== id));
   };
 
   const handleAddIoRouting = () => {
@@ -99,20 +111,20 @@ export function IoAuxSetupContent() {
       assignment: "",
       connectionType: "wired",
     };
-    setIoRouting([...ioRouting, newRouting]);
+    setIoRouting((prev) => [...prev, newRouting]);
   };
 
   const handleUpdateIoRouting = (
     id: string,
     updates: Partial<IIoRoutingItem>
   ) => {
-    setIoRouting(
-      ioRouting.map((io) => (io.id === id ? { ...io, ...updates } : io))
+    setIoRouting((prev) =>
+      prev.map((io) => (io.id === id ? { ...io, ...updates } : io))
     );
   };
 
   const handleRemoveIoRouting = (id: string) => {
-    setIoRouting(ioRouting.filter((io) => io.id !== id));
+    setIoRouting((prev) => prev.filter((io) => io.id !== id));
   };
 
   return (
@@ -122,7 +134,7 @@ export function IoAuxSetupContent() {
           I/O & AUX Setup
         </h3>
         <p className="pb-1 text-sm text-gray-600">
-          Configure your input/output channels and routing setup
+          Configure your channels and input/output routing setup
         </p>
       </div>
 
