@@ -137,7 +137,7 @@ export function IoRoutingTable({
                     onChange={(e) =>
                       onUpdate?.(route.id, { channelPair: e.target.value })
                     }
-                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="1/2"
                   />
                 </div>
@@ -152,7 +152,7 @@ export function IoRoutingTable({
                     onChange={(e) =>
                       onUpdate?.(route.id, { assignment: e.target.value })
                     }
-                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="DR"
                   />
                 </div>
@@ -171,7 +171,7 @@ export function IoRoutingTable({
                         .value as IIoRoutingItem["connectionType"],
                     })
                   }
-                  className="w-full rounded border border-gray-300 bg-white px-2 text-[16px] focus:border-green-500 focus:outline-none"
+                  className="w-full rounded border border-gray-300 bg-white px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                 >
                   <option value="">Select</option>
                   {CONNECTION_OPTIONS.map((conn) => (

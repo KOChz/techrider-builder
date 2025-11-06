@@ -182,7 +182,7 @@ export function ChannelListTable({
                     onChange={(e) =>
                       onUpdate?.(channel.id, { channelNumber: e.target.value })
                     }
-                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="01"
                   />
                 </div>
@@ -197,7 +197,7 @@ export function ChannelListTable({
                     onChange={(e) =>
                       onUpdate?.(channel.id, { source: e.target.value })
                     }
-                    className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
+                    className="h-full w-full rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                     placeholder="Kick in"
                   />
                 </div>
@@ -214,7 +214,7 @@ export function ChannelListTable({
                   onChange={(e) =>
                     onUpdate?.(channel.id, { micDi: e.target.value })
                   }
-                  className="h-full w-full rounded border border-gray-300 px-2 text-[16px] focus:border-green-500 focus:outline-none"
+                  className="h-full w-full rounded border border-gray-300 px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none"
                   placeholder="Shure b91; Beyer tg70"
                 />
               </div>
@@ -263,7 +263,7 @@ export function ChannelListTable({
                         stand: e.target.value as IChannelItem["stand"],
                       })
                     }
-                    className="h-[52px] w-full rounded border border-gray-300 bg-white px-2 text-[16px] focus:border-green-500 focus:outline-none md:h-full"
+                    className="h-[52px] w-full rounded border border-gray-300 bg-white px-2 py-1 text-[16px] focus:border-green-500 focus:outline-none md:h-full"
                   >
                     <option value="">Select</option>
                     {STAND_OPTIONS.map((stand) => (
