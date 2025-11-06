@@ -23,10 +23,10 @@ export function EquipmentSetupContent() {
   return (
     <div className="min-h-[360px] space-y-2">
       <h3 className="text-2xl font-semibold text-slate-900">
-        Instrument Sections
+        Equipment Sections
       </h3>
       <p className="pb-1 text-sm text-gray-600">
-        Define instrument sections and their required equipment
+        Define equipment sections and their required equipment
       </p>
 
       {members.length === 0 ? (

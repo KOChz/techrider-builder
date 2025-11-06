@@ -51,15 +51,26 @@ export function TechRiderClientPage({
               <TechRiderDropdown members={project.members} />
 
               {isOwner && (
-                <li>
-                  <Link
-                    href="/dashboard/my-projects"
-                    aria-label="Home"
-                    className="text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 md:text-sm"
-                  >
-                    Home
-                  </Link>
-                </li>
+                <>
+                  <li>
+                    <Link
+                      href="/dashboard/my-projects"
+                      aria-label="Home"
+                      className="text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 md:text-sm"
+                    >
+                      Home
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      href={`/dashboard/edit-project/${project.id}`}
+                      className="text-xs font-medium uppercase tracking-wide text-gray-600 transition-colors hover:text-gray-900 md:text-sm"
+                    >
+                      Edit
+                    </Link>
+                  </li>
+                </>
               )}
 
               <DownloadPageButton
