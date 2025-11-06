@@ -42,6 +42,7 @@ const inputEditSchema = z.object({
   contactInfo: z.string().optional(),
   isPublic: z.boolean().optional(),
   stagePlanConfig: stagePlanConfigSchema.optional(),
+  ioSetupConfig: z.any().optional(),
   members: z.array(memberInputSchema).optional(),
   revalidate: z
     .object({ path: z.string().optional(), tag: z.string().optional() })
@@ -111,7 +112,8 @@ export async function createNewProject(raw: TCreateNewProjectInput) {
     name: input.name,
     isPublic: !!input.isPublic,
     slug: slugify(input.name),
-    stagePlanConfig: input.stagePlanConfig as any,
+    stagePlanConfig: input.stagePlanConfig || null,
+    ioSetupConfig: input.ioSetupConfig || null,
     notes: input.notes || "",
     contactInfo: input.contactInfo || "",
     id: uuidv4(),

@@ -6,12 +6,16 @@ import { TInstrumentSectionBuilder } from "@/components/builder/instrument-secti
 import { Edge, type Node } from "@xyflow/react";
 import { TMeasurmentData } from "@/components/builder/stage-plan-builder/edges/measure-edge";
 import { TEquipmentData } from "@/components/builder/stage-plan-builder/nodes/equipment-node";
+import {
+  TChannelListItem,
+  TIORoutingItem,
+  TIOSetupConfig,
+} from "./io-aux-types";
 
 export interface IStagePlanFlowConfig {
   nodes: Node<TEquipmentData>[];
   edges: Edge<TMeasurmentData>[];
   version?: number;
-  // position: { x: number; y: number };
 }
 
 interface IProjectStore {
@@ -20,7 +24,16 @@ interface IProjectStore {
   contactInfo: string;
   isPublic: boolean;
   stagePlanConfig: IStagePlanFlowConfig;
+  ioSetupConfig: TIOSetupConfig;
   members: TInstrumentSectionBuilder[];
+
+  addChannel: (channel: TChannelListItem) => void;
+  updateChannel: (id: string, updates: Partial<TChannelListItem>) => void;
+  removeChannel: (id: string) => void;
+
+  addIoRouting: (routing: TIORoutingItem) => void;
+  updateIoRouting: (id: string, updates: Partial<TIORoutingItem>) => void;
+  removeIoRouting: (id: string) => void;
 
   setName: (name: string) => void;
   setNotes: (notes: string) => void;
@@ -28,6 +41,7 @@ interface IProjectStore {
 
   setIsPublic: (isPublic: boolean) => void;
   setStagePlanConfig: (config: IStagePlanFlowConfig) => void;
+  setIOSetupConfig: (config: TIOSetupConfig) => void;
 
   addNode: (node: Node<TEquipmentData>[]) => void;
   updateNodeLabel: (nodeId: string, newLabel: string) => void;
@@ -47,6 +61,9 @@ interface IProjectStore {
 
 const getInitialStore = (): Omit<
   IProjectStore,
+  | "addIoRouting"
+  | "updateIoRouting"
+  | "removeIoRouting"
   | "setName"
   | "setNotes"
   | "setIsPublic"
@@ -58,9 +75,13 @@ const getInitialStore = (): Omit<
   | "updateMeasurementDistance"
   | "deleteMeasurement"
   | "addMember"
+  | "setIOSetupConfig"
   | "updateMember"
   | "removeMember"
   | "initializeWithProject"
+  | "addChannel"
+  | "updateChannel"
+  | "removeChannel"
   | "resetForm"
   | "setEdges"
   | "updateNodeRotation"
@@ -74,6 +95,10 @@ const getInitialStore = (): Omit<
     nodes: [],
     edges: [],
     version: 1,
+  },
+  ioSetupConfig: {
+    channelList: [],
+    ioRouting: [],
   },
   members: [],
 });
@@ -90,6 +115,8 @@ export const useProjectStore = create<IProjectStore>()(
       setContactInfo: (contactInfo) => set({ contactInfo }),
 
       setIsPublic: (isPublic) => set({ isPublic }),
+
+      setIOSetupConfig: (ioSetupConfig) => set({ ioSetupConfig }),
 
       setStagePlanConfig: (stagePlanConfig) => set({ stagePlanConfig }),
 
@@ -157,6 +184,64 @@ export const useProjectStore = create<IProjectStore>()(
       removeMember: (id) =>
         set((state) => ({
           members: state.members.filter((m) => m.id !== id),
+        })),
+
+      // Channel management
+      addChannel: (channel) =>
+        set((state) => ({
+          ioSetupConfig: {
+            ...state.ioSetupConfig,
+            channelList: [...state.ioSetupConfig.channelList, channel],
+          },
+        })),
+
+      updateChannel: (id, updates) =>
+        set((state) => ({
+          ioSetupConfig: {
+            ...state.ioSetupConfig,
+            channelList: state.ioSetupConfig.channelList.map((ch) =>
+              ch.id === id ? { ...ch, ...updates } : ch
+            ),
+          },
+        })),
+
+      removeChannel: (id) =>
+        set((state) => ({
+          ioSetupConfig: {
+            ...state.ioSetupConfig,
+            channelList: state.ioSetupConfig.channelList.filter(
+              (ch) => ch.id !== id
+            ),
+          },
+        })),
+
+      // IO Routing management
+      addIoRouting: (routing) =>
+        set((state) => ({
+          ioSetupConfig: {
+            ...state.ioSetupConfig,
+            ioRouting: [...state.ioSetupConfig.ioRouting, routing],
+          },
+        })),
+
+      updateIoRouting: (id, updates) =>
+        set((state) => ({
+          ioSetupConfig: {
+            ...state.ioSetupConfig,
+            ioRouting: state.ioSetupConfig.ioRouting.map((io) =>
+              io.id === id ? { ...io, ...updates } : io
+            ),
+          },
+        })),
+
+      removeIoRouting: (id) =>
+        set((state) => ({
+          ioSetupConfig: {
+            ...state.ioSetupConfig,
+            ioRouting: state.ioSetupConfig.ioRouting.filter(
+              (io) => io.id !== id
+            ),
+          },
         })),
 
       initializeWithProject: (projectData) =>

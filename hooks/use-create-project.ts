@@ -25,6 +25,7 @@ export function useCreateProject(): IUseCreateProjectReturn {
     notes,
     isPublic,
     stagePlanConfig,
+    ioSetupConfig,
     members,
     resetForm,
   } = useProjectStore();
@@ -51,6 +52,7 @@ export function useCreateProject(): IUseCreateProjectReturn {
         contactInfo,
         isPublic,
         stagePlanConfig,
+        ioSetupConfig,
         members: members.map((m, index) => ({
           name: m.name.trim(),
           role: m.role.trim() || undefined,
@@ -63,7 +65,6 @@ export function useCreateProject(): IUseCreateProjectReturn {
       };
 
       const result = await createNewProject(input);
-      console.log("🚀 ~ createProject ~ result:", result);
 
       resetForm();
       router.push(`/dashboard/my-projects`);

@@ -60,6 +60,7 @@ export default function EditProjectTabs({
       notes: project.notes ?? "",
       isPublic: project.isPublic,
       stagePlanConfig: project.stagePlanConfig as IStagePlanFlowConfig,
+      ioSetupConfig: project.ioSetupConfig,
       members: project.members as TInstrumentSectionBuilder[],
     });
 

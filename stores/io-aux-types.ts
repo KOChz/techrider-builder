@@ -1,11 +1,3 @@
-export type TStandType =
-  | "small"
-  | "norm"
-  | "small or clamp"
-  | "Clamp or mid"
-  | "small or cabGrab"
-  | "";
-
 export type TConnectionType = "wired" | "wireless (RF)" | "";
 
 export interface IChannelItem {
@@ -14,17 +6,17 @@ export interface IChannelItem {
   source: string;
   micDi: string;
   position: string;
-  stand: TStandType;
+  stand: string;
 }
 
 export interface IIoRoutingItem {
   id: string;
   channelPair: string;
   assignment: string;
-  connectionType: TConnectionType;
+  connectionType: string;
 }
 
-export const STAND_OPTIONS: TStandType[] = [
+export const STAND_OPTIONS = [
   "small",
   "norm",
   "small or clamp",
@@ -35,17 +27,19 @@ export const STAND_OPTIONS: TStandType[] = [
 export const CONNECTION_OPTIONS: TConnectionType[] = ["wired", "wireless (RF)"];
 
 export type TChannelListItem = {
+  id: string;
   channelNumber: string;
   source: string;
-  micAndDI: string;
+  micDi: string;
   position: string;
   stand: string;
 };
 
 export type TIORoutingItem = {
+  id: string;
   channelPair: string;
   assignment: string;
-  connection: string;
+  connectionType: string;
 };
 
 export type TIOSetupConfig = {

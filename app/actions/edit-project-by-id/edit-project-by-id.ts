@@ -42,6 +42,7 @@ const inputSchema = z.object({
   contactInfo: z.string().optional(),
   isPublic: z.boolean().optional(),
   stagePlanConfig: stagePlanConfigSchema.optional(),
+  ioSetupConfig: z.any().optional(),
   members: z.array(memberInputSchema).optional(),
   revalidate: z
     .object({ path: z.string().optional(), tag: z.string().optional() })
@@ -64,6 +65,7 @@ export type TEditProjectByIdResult = {
 export async function editProjectById(
   raw: TEditProjectByIdInput
 ): Promise<TEditProjectByIdResult> {
+  console.log("🚀 ~ editProjectById ~ raw:", raw);
   const input = inputSchema.parse(raw);
 
   const cookieStore = await cookies();
@@ -118,6 +120,10 @@ export async function editProjectById(
         ...input.stagePlanConfig,
         nodes: input.stagePlanConfig.nodes || [],
       };
+
+    if (input.ioSetupConfig !== undefined) {
+      updateData.ioSetupConfig = input.ioSetupConfig;
+    }
 
     console.log("input.stagePlanConfig", input.stagePlanConfig?.nodes);
     updateData.updatedAt = new Date();

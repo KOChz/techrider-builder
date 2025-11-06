@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Plus } from "lucide-react";
 import { IChannelItem, IIoRoutingItem } from "@/stores/io-aux-types";
 import { ChannelListTable } from "@/components/tables/channel-list-table/channel-list-table";
 import { IoRoutingTable } from "@/components/tables/io-routing-table/io-routing-table";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 function scrollIntoViewAfterLayout(el: HTMLElement | null) {
   if (!el) return;
@@ -28,44 +29,17 @@ function useScrollOnAdd(
   }, [count, targetRef]);
 }
 
-const INITIAL_CHANNELS: IChannelItem[] = [
-  {
-    id: crypto.randomUUID(),
-    channelNumber: "01",
-    source: "Kick in",
-    micDi: "Shure b91; Beyer tg70",
-    position: "DR",
-    stand: "small",
-  },
-  {
-    id: crypto.randomUUID(),
-    channelNumber: "02",
-    source: "kick out",
-    micDi: "Shure b52; Audix D6",
-    position: "DR",
-    stand: "",
-  },
-];
-
-const INITIAL_IO_ROUTING: IIoRoutingItem[] = [
-  {
-    id: crypto.randomUUID(),
-    channelPair: "1/2",
-    assignment: "DR",
-    connectionType: "wired",
-  },
-  {
-    id: crypto.randomUUID(),
-    channelPair: "3/4",
-    assignment: "GUIT",
-    connectionType: "wired",
-  },
-];
-
 export function IoAuxSetupContent() {
-  const [channels, setChannels] = useState<IChannelItem[]>(INITIAL_CHANNELS);
-  const [ioRouting, setIoRouting] =
-    useState<IIoRoutingItem[]>(INITIAL_IO_ROUTING);
+  const channels = useProjectStore((state) => state.ioSetupConfig.channelList);
+  const ioRouting = useProjectStore((state) => state.ioSetupConfig.ioRouting);
+
+  const addChannel = useProjectStore((state) => state.addChannel);
+  const updateChannel = useProjectStore((state) => state.updateChannel);
+  const removeChannel = useProjectStore((state) => state.removeChannel);
+
+  const addIoRouting = useProjectStore((state) => state.addIoRouting);
+  const updateIoRouting = useProjectStore((state) => state.updateIoRouting);
+  const removeIoRouting = useProjectStore((state) => state.removeIoRouting);
 
   const addButtonChannelRef = useRef<HTMLButtonElement>(null);
   const addButtonRoutingRef = useRef<HTMLButtonElement>(null);
@@ -88,17 +62,7 @@ export function IoAuxSetupContent() {
       position: "",
       stand: "",
     };
-    setChannels((prev) => [...prev, newChannel]);
-  };
-
-  const handleUpdateChannel = (id: string, updates: Partial<IChannelItem>) => {
-    setChannels((prev) =>
-      prev.map((ch) => (ch.id === id ? { ...ch, ...updates } : ch))
-    );
-  };
-
-  const handleRemoveChannel = (id: string) => {
-    setChannels((prev) => prev.filter((ch) => ch.id !== id));
+    addChannel(newChannel);
   };
 
   const handleAddIoRouting = () => {
@@ -108,20 +72,7 @@ export function IoAuxSetupContent() {
       assignment: "",
       connectionType: "wired",
     };
-    setIoRouting((prev) => [...prev, newRouting]);
-  };
-
-  const handleUpdateIoRouting = (
-    id: string,
-    updates: Partial<IIoRoutingItem>
-  ) => {
-    setIoRouting((prev) =>
-      prev.map((io) => (io.id === id ? { ...io, ...updates } : io))
-    );
-  };
-
-  const handleRemoveIoRouting = (id: string) => {
-    setIoRouting((prev) => prev.filter((io) => io.id !== id));
+    addIoRouting(newRouting);
   };
 
   return (
@@ -143,8 +94,8 @@ export function IoAuxSetupContent() {
 
         <ChannelListTable
           channels={channels}
-          onUpdate={handleUpdateChannel}
-          onRemove={handleRemoveChannel}
+          onUpdate={updateChannel}
+          onRemove={removeChannel}
         />
 
         <div className="flex items-center justify-between">
@@ -168,8 +119,8 @@ export function IoAuxSetupContent() {
 
         <IoRoutingTable
           routing={ioRouting}
-          onUpdate={handleUpdateIoRouting}
-          onRemove={handleRemoveIoRouting}
+          onUpdate={updateIoRouting}
+          onRemove={removeIoRouting}
         />
 
         <div className="flex items-center justify-between">
