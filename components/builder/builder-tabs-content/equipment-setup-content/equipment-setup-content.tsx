@@ -3,14 +3,14 @@
 import { useProjectStore } from "@/stores/use-project-creation-store";
 import {
   InstrumentSectionCardBuilder,
-  TBandMemberBuilder,
-} from "../../member-card-builder/member-card-builder";
+  TInstrumentSectionBuilder,
+} from "../../instrument-section-card-builder/instrument-section-card-builder";
 
 export function EquipmentSetupContent() {
   const { members, addMember, updateMember, removeMember } = useProjectStore();
 
   const handleAddEquipmentSetup = () => {
-    const newMember: TBandMemberBuilder = {
+    const newMember: TInstrumentSectionBuilder = {
       id: crypto.randomUUID(),
       name: "",
       icon: "🎸",

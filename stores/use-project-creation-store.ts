@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
+import { TInstrumentSectionBuilder } from "@/components/builder/instrument-section-card-builder/instrument-section-card-builder";
 
 import { Edge, type Node } from "@xyflow/react";
 import { TMeasurmentData } from "@/components/builder/stage-plan-builder/edges/measure-edge";
@@ -20,7 +20,7 @@ interface IProjectStore {
   contactInfo: string;
   isPublic: boolean;
   stagePlanConfig: IStagePlanFlowConfig;
-  members: TBandMemberBuilder[];
+  members: TInstrumentSectionBuilder[];
 
   setName: (name: string) => void;
   setNotes: (notes: string) => void;
@@ -37,8 +37,8 @@ interface IProjectStore {
   updateMeasurementDistance: (measurementId: number, distance: string) => void;
   deleteMeasurement: (measurementId: number) => void;
 
-  addMember: (member: TBandMemberBuilder) => void;
-  updateMember: (id: string, member: TBandMemberBuilder) => void;
+  addMember: (member: TInstrumentSectionBuilder) => void;
+  updateMember: (id: string, member: TInstrumentSectionBuilder) => void;
   removeMember: (id: string) => void;
 
   initializeWithProject: (projectData: Partial<IProjectStore>) => void;

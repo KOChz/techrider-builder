@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
-import { ChevronDown, Trash2, X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { ExampleItemsList } from "./example-items-list";
 import { ExampleInput } from "./example-input";
 
@@ -17,7 +18,7 @@ export type TEquipmentItemBuilder = {
   examples?: TEquipmentExample;
 };
 
-export type TBandMemberBuilder = {
+export type TInstrumentSectionBuilder = {
   id: string;
   name: string;
   icon: string;
@@ -26,8 +27,8 @@ export type TBandMemberBuilder = {
 };
 
 interface IMemberCardBuilderProps {
-  initialMember?: TBandMemberBuilder;
-  onChange?: (member: TBandMemberBuilder) => void;
+  initialMember?: TInstrumentSectionBuilder;
+  onChange?: (member: TInstrumentSectionBuilder) => void;
   onRemove?: () => void;
 }
 
@@ -36,7 +37,7 @@ export function InstrumentSectionCardBuilder({
   onChange,
   onRemove,
 }: IMemberCardBuilderProps) {
-  const [section, setSection] = useState<TBandMemberBuilder>(
+  const [section, setSection] = useState<TInstrumentSectionBuilder>(
     initialMember || {
       id: crypto.randomUUID(),
       name: "",
@@ -46,7 +47,9 @@ export function InstrumentSectionCardBuilder({
     }
   );
 
-  const updateInstrumentSection = (updates: Partial<TBandMemberBuilder>) => {
+  const updateInstrumentSection = (
+    updates: Partial<TInstrumentSectionBuilder>
+  ) => {
     const updatedMember = { ...section, ...updates };
     setSection(updatedMember);
     onChange?.(updatedMember);
@@ -146,7 +149,7 @@ export function InstrumentSectionCardBuilder({
 
   return (
     <div
-      id="MemberCardBuilder"
+      id="InstrumentSectionCardBuilder"
       className="relative h-fit min-w-min max-w-4xl rounded-lg border-2 border-gray-300/80 bg-white p-2 text-sm lg:max-w-none lg:p-4 xl:p-6"
     >
       {onRemove && (
@@ -154,7 +157,7 @@ export function InstrumentSectionCardBuilder({
           type="button"
           onClick={onRemove}
           className="absolute -right-3 -top-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-lg text-white transition-colors hover:bg-red-600"
-          aria-label="Remove member"
+          aria-label="Remove Section"
         >
           <X size={16} />
         </button>

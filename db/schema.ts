@@ -1,4 +1,4 @@
-import { TEquipmentItemBuilder } from "@/components/builder/member-card-builder/member-card-builder";
+import { TEquipmentItemBuilder } from "@/components/builder/instrument-section-card-builder/instrument-section-card-builder";
 import { IStagePlanFlowConfig } from "@/stores/use-project-creation-store";
 import { relations, sql } from "drizzle-orm";
 import {

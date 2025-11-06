@@ -14,7 +14,7 @@ import {
   useProjectStore,
 } from "@/stores/use-project-creation-store";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
-import { TBandMemberBuilder } from "@/components/builder/member-card-builder/member-card-builder";
+import { TInstrumentSectionBuilder } from "@/components/builder/instrument-section-card-builder/instrument-section-card-builder";
 import { useEditProject } from "@/hooks/use-edit-project";
 import {
   CREATE_PROJECT_TABS,
@@ -57,7 +57,7 @@ export default function EditProjectTabs({
       notes: project.notes ?? "",
       isPublic: project.isPublic,
       stagePlanConfig: project.stagePlanConfig as IStagePlanFlowConfig,
-      members: project.members as TBandMemberBuilder[],
+      members: project.members as TInstrumentSectionBuilder[],
     });
 
     return () => {
