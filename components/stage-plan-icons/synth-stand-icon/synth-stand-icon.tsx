@@ -16,7 +16,7 @@ export type TSynthStandIconProps = Omit<
 const SynthStandIcon = React.forwardRef<SVGSVGElement, TSynthStandIconProps>(
   (
     {
-      title = "Synth Stage",
+      title = "Synth Stand",
       titleId,
       className,
       hitboxPadding = 5,

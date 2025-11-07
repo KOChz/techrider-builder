@@ -41,7 +41,7 @@ export const templates = [
           id: nanoid(),
           data: {
             kind: "synth-stand",
-            label: "Synth Stand",
+            label: "Synth/Laptop Stand",
             rotation: 0,
           },
           type: "equipment",
@@ -103,10 +103,6 @@ export const templates = [
               title: "Examples:",
               items: ["Nord Stage", "Roland RD-2000", "Yamaha CP88"],
             },
-          },
-          {
-            name: "Synth Stand",
-            quantity: "1",
           },
           {
             name: "Power Strip",
@@ -1031,18 +1027,18 @@ export const templates = [
           dragging: false,
           selected: false,
         },
-        {
-          id: nanoid(),
-          data: {
-            kind: "laptop",
-            label: "Laptop",
-            rotation: 0,
-          },
-          type: "equipment",
-          position: { x: -150, y: 0 },
-          dragging: false,
-          selected: false,
-        },
+        // {
+        //   id: nanoid(),
+        //   data: {
+        //     kind: "laptop",
+        //     label: "Laptop",
+        //     rotation: 0,
+        //   },
+        //   type: "equipment",
+        //   position: { x: -150, y: 0 },
+        //   dragging: false,
+        //   selected: false,
+        // },
         {
           id: nanoid(),
           data: {
@@ -1119,27 +1115,10 @@ export const templates = [
         icon: "🎧",
         equipment: [
           {
-            name: "DJ Controller",
+            name: "Synth/Laptop Stand",
             quantity: "1",
-            examples: {
-              title: "Examples:",
-              items: [
-                "Pioneer DDJ-1000",
-                "Native Instruments Traktor S4",
-                "Denon DJ Prime 4",
-              ],
-            },
           },
-          {
-            name: "Laptop",
-            quantity: "1",
-            examples: {
-              title: "Requirements:",
-              items: [
-                "With DJ software installed (Rekordbox, Serato, Traktor)",
-              ],
-            },
-          },
+
           {
             name: "DJ Headphones",
             quantity: "1",
@@ -1170,14 +1149,6 @@ export const templates = [
             examples: {
               title: "Requirements:",
               items: ["Minimum 10m each"],
-            },
-          },
-          {
-            name: "USB Cable",
-            quantity: "1",
-            examples: {
-              title: "Requirements:",
-              items: ["USB-B or USB-C depending on controller"],
             },
           },
           {
