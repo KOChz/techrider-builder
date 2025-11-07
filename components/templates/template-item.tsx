@@ -31,7 +31,7 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
       className="min-w-40 group relative flex cursor-pointer flex-col gap-3 rounded-lg bg-white p-3 shadow-sm transition-all duration-200 hover:shadow-md md:min-w-[200px]"
       aria-label={`Select ${template.name} template`}
     >
-      <div className="aspect-3/4 relative overflow-hidden rounded-md bg-gray-100">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-gray-100 [@supports(not_(aspect-ratio:1/1))]:h-[200px]">
         <Image
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}

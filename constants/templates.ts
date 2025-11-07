@@ -40,8 +40,8 @@ export const templates = [
         {
           id: nanoid(),
           data: {
-            kind: "keyboard",
-            label: "Keyboard",
+            kind: "synth-stand",
+            label: "Synth Stand",
             rotation: 0,
           },
           type: "equipment",
@@ -97,7 +97,7 @@ export const templates = [
             quantity: "1",
           },
           {
-            name: "Keyboard/Piano",
+            name: "Synth Stand",
             quantity: "1",
             examples: {
               title: "Examples:",
@@ -105,7 +105,7 @@ export const templates = [
             },
           },
           {
-            name: "Keyboard Stand",
+            name: "Synth Stand",
             quantity: "1",
           },
           {
