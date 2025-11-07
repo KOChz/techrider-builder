@@ -1,18 +1,20 @@
 import { createStageAnnotations } from "@/lib/utils/stage-annotations";
+import { nanoid } from "nanoid";
 
 const TEMPLATE_PROJECT_ID = "template-project";
 const CURRENT_DATE = new Date().toISOString();
 
 export const templates = [
   {
-    id: "solo-artist",
+    id: nanoid(),
+    templateId: "solo-artist",
     name: "Solo Artist",
     slug: "solo-artist",
     stagePlanConfig: {
       nodes: [
         ...createStageAnnotations(),
         {
-          id: "mic-stand-1",
+          id: nanoid(),
           data: {
             kind: "mic-stand",
             label: "Mic Stand",
@@ -24,7 +26,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-1",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Floor Monitor",
@@ -36,7 +38,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "keyboard-1",
+          id: nanoid(),
           data: {
             kind: "keyboard",
             label: "Keyboard",
@@ -48,7 +50,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-1",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -68,7 +70,7 @@ export const templates = [
     },
     members: [
       {
-        id: "solo-member-1",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Vocalist",
         role: "Lead Vocal",
@@ -127,14 +129,15 @@ export const templates = [
     updatedAt: CURRENT_DATE,
   },
   {
-    id: "2-piece-band",
+    templateId: "2-piece-band",
+    id: nanoid(),
     name: "2 Piece Band",
     slug: "2-piece-band",
     stagePlanConfig: {
       nodes: [
         ...createStageAnnotations(),
         {
-          id: "drumkit-1",
+          id: nanoid(),
           data: {
             kind: "drumkit",
             label: "Drumkit",
@@ -146,7 +149,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "guitar-amp-1",
+          id: nanoid(),
           data: {
             kind: "amp",
             label: "Guitar Amp",
@@ -158,7 +161,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "mic-stand-1",
+          id: nanoid(),
           data: {
             kind: "mic-stand",
             label: "Mic Stand",
@@ -170,7 +173,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-1",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -182,7 +185,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-2",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -194,7 +197,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-1",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -206,7 +209,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-2",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -226,7 +229,7 @@ export const templates = [
     },
     members: [
       {
-        id: "2piece-member-1",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Drums",
         role: "Drums",
@@ -266,7 +269,7 @@ export const templates = [
         updatedAt: CURRENT_DATE,
       },
       {
-        id: "2piece-member-2",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Voc/Guitar",
         role: "Vocal/Guitar",
@@ -333,14 +336,15 @@ export const templates = [
     updatedAt: CURRENT_DATE,
   },
   {
-    id: "3-piece-band",
+    templateId: "3-piece-band",
+    id: nanoid(),
     name: "3 Piece Band",
     slug: "3-piece-band",
     stagePlanConfig: {
       nodes: [
         ...createStageAnnotations(),
         {
-          id: "drumkit-1",
+          id: nanoid(),
           data: {
             kind: "drumkit",
             label: "Drumkit",
@@ -352,7 +356,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "guitar-amp-1",
+          id: nanoid(),
           data: {
             kind: "amp",
             label: "Guitar Amp",
@@ -364,7 +368,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "bass-amp-1",
+          id: nanoid(),
           data: {
             kind: "amp",
             label: "Bass Amp",
@@ -376,7 +380,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-1",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -388,7 +392,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-2",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -400,7 +404,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-3",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -412,7 +416,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-4",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -424,7 +428,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "mic-stand-1",
+          id: nanoid(),
           data: {
             kind: "mic-stand",
             label: "Mic Stand",
@@ -436,7 +440,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-1",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -448,7 +452,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-2",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -460,7 +464,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-3",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -472,22 +476,22 @@ export const templates = [
           selected: false,
         },
       ],
-      edges: [
-        {
-          id: "measure-edge-1",
-          data: {},
-          type: "measure",
-          source: "drumkit-1",
-          target: "monitor-3",
-        },
-        {
-          id: "measure-edge-2",
-          data: {},
-          type: "measure",
-          source: "power-1",
-          target: "power-3",
-        },
-      ],
+      //   edges: [
+      //     {
+      //       id: nanoid(),
+      //       data: {},
+      //       type: "measure",
+      //       source: "drumkit-1",
+      //       target: "monitor-3",
+      //     },
+      //     {
+      //       id: nanoid(),
+      //       data: {},
+      //       type: "measure",
+      //       source: "power-1",
+      //       target: "power-3",
+      //     },
+      //   ],
     },
     ioSetupConfig: {
       ioRouting: [],
@@ -495,7 +499,7 @@ export const templates = [
     },
     members: [
       {
-        id: "3piece-member-1",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Drums",
         role: "Drums",
@@ -539,7 +543,7 @@ export const templates = [
         updatedAt: CURRENT_DATE,
       },
       {
-        id: "3piece-member-2",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Voc/Guitar",
         role: "Vocal/Guitar",
@@ -599,7 +603,7 @@ export const templates = [
         updatedAt: CURRENT_DATE,
       },
       {
-        id: "3piece-member-3",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Bass",
         role: "Bass",
@@ -646,14 +650,15 @@ export const templates = [
     updatedAt: CURRENT_DATE,
   },
   {
-    id: "4-piece-band",
+    templateId: "4-piece-band",
+    id: nanoid(),
     name: "4 Piece Band",
     slug: "4-piece-band",
     stagePlanConfig: {
       nodes: [
         ...createStageAnnotations(),
         {
-          id: "drumkit-1",
+          id: nanoid(),
           data: {
             kind: "drumkit",
             label: "Drumkit",
@@ -665,7 +670,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "guitar-amp-1",
+          id: nanoid(),
           data: {
             kind: "amp",
             label: "Guitar Amp",
@@ -677,7 +682,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "guitar-amp-2",
+          id: nanoid(),
           data: {
             kind: "amp",
             label: "Guitar Amp",
@@ -689,7 +694,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "bass-amp-1",
+          id: nanoid(),
           data: {
             kind: "amp",
             label: "Bass Amp",
@@ -701,7 +706,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-1",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -713,7 +718,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-2",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -725,7 +730,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-3",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -737,7 +742,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-4",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "Monitor",
@@ -749,7 +754,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "mic-stand-1",
+          id: nanoid(),
           data: {
             kind: "mic-stand",
             label: "Mic Stand",
@@ -761,7 +766,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-1",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -773,7 +778,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-2",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -785,7 +790,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-3",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -797,22 +802,22 @@ export const templates = [
           selected: false,
         },
       ],
-      edges: [
-        {
-          id: "measure-edge-1",
-          data: {},
-          type: "measure",
-          source: "drumkit-1",
-          target: "monitor-3",
-        },
-        {
-          id: "measure-edge-2",
-          data: {},
-          type: "measure",
-          source: "power-1",
-          target: "power-3",
-        },
-      ],
+      //   edges: [
+      //     {
+      //       id: nanoid(),
+      //       data: {},
+      //       type: "measure",
+      //       source: "drumkit-1",
+      //       target: "monitor-3",
+      //     },
+      //     {
+      //       id: nanoid(),
+      //       data: {},
+      //       type: "measure",
+      //       source: "power-1",
+      //       target: "power-3",
+      //     },
+      //   ],
     },
     ioSetupConfig: {
       ioRouting: [],
@@ -820,7 +825,7 @@ export const templates = [
     },
     members: [
       {
-        id: "4piece-member-1",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Drums",
         role: "Drums",
@@ -864,7 +869,7 @@ export const templates = [
         updatedAt: CURRENT_DATE,
       },
       {
-        id: "4piece-member-2",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Voc/Guitar",
         role: "Vocal/Guitar",
@@ -924,7 +929,7 @@ export const templates = [
         updatedAt: CURRENT_DATE,
       },
       {
-        id: "4piece-member-3",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Bass",
         role: "Bass",
@@ -964,7 +969,7 @@ export const templates = [
         updatedAt: CURRENT_DATE,
       },
       {
-        id: "4piece-member-4",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "Guitar",
         role: "Guitar",
@@ -1007,14 +1012,15 @@ export const templates = [
     updatedAt: CURRENT_DATE,
   },
   {
-    id: "dj-setup",
+    templateId: "dj-setup",
+    id: nanoid(),
     name: "DJ Setup",
     slug: "dj-setup",
     stagePlanConfig: {
       nodes: [
         ...createStageAnnotations(),
         {
-          id: "dj-controller-1",
+          id: nanoid(),
           data: {
             kind: "dj-controller",
             label: "DJ Controller",
@@ -1026,7 +1032,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "laptop-1",
+          id: nanoid(),
           data: {
             kind: "laptop",
             label: "Laptop",
@@ -1038,7 +1044,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "speaker-1",
+          id: nanoid(),
           data: {
             kind: "speaker",
             label: "Speaker L",
@@ -1050,7 +1056,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "speaker-2",
+          id: nanoid(),
           data: {
             kind: "speaker",
             label: "Speaker R",
@@ -1062,7 +1068,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "monitor-1",
+          id: nanoid(),
           data: {
             kind: "monitor",
             label: "DJ Monitor",
@@ -1074,7 +1080,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-1",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -1086,7 +1092,7 @@ export const templates = [
           selected: false,
         },
         {
-          id: "power-2",
+          id: nanoid(),
           data: {
             kind: "power-extension",
             label: "Power Strip 220V",
@@ -1106,7 +1112,7 @@ export const templates = [
     },
     members: [
       {
-        id: "dj-member-1",
+        id: nanoid(),
         projectId: TEMPLATE_PROJECT_ID,
         name: "DJ",
         role: "DJ",

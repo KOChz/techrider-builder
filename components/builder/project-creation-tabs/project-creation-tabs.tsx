@@ -60,7 +60,9 @@ export default function ProjectCreationTabs({
 
   useLayoutEffect(() => {
     templateId &&
-      initializeWithProject(templates.find((t) => t.id === templateId) as any);
+      initializeWithProject(
+        templates.find((t) => t.templateId === templateId) as any
+      );
   }, [templateId]);
 
   return (
