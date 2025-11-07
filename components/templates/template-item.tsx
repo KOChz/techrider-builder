@@ -17,8 +17,6 @@ export type TTemplateCategory =
   | "orchestra"
   | "custom";
 
-import Image from "next/image";
-
 interface ITemplateCardProps {
   template: ITemplateItem;
   onSelect: (template: ITemplateItem) => void;
@@ -32,15 +30,11 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
       aria-label={`Select ${template.name} template`}
     >
       <div className="aspect-3/4 relative overflow-hidden rounded-md bg-gray-100">
-        <Image
+        <img
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}
-          fill
-          className="object-cover transition-transform duration-200 group-hover:scale-105"
-          sizes="(max-width: 768px) 160px, 200px"
-          // width={500}
-          // height={300}
-          unoptimized={true}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+          loading="lazy"
         />
 
         {template.isPopular && (
