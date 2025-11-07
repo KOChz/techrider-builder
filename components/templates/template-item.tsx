@@ -34,7 +34,6 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-          loading="lazy"
         />
 
         {template.isPopular && (
