@@ -146,7 +146,8 @@ export function TechRiderClientPage({
               ))}
             </div>
 
-            {project.ioSetupConfig && (
+            {(project.ioSetupConfig.channelList.length > 0 ||
+              project.ioSetupConfig.ioRouting.length > 0) && (
               <section id="io-aux-section" className="space-y-3">
                 <h2 className="bg-linear-to-r text-shadow-2xs from-green-600 via-emerald-500 to-teal-600 bg-clip-text py-5 text-center text-4xl font-bold capitalize text-transparent">
                   I/O & AUX Configuration
