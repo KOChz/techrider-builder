@@ -38,7 +38,7 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}
           style={{ objectFit: "cover" }}
-          // className="absolute inset-0 h-full w-full scale-105 object-cover transition-transform duration-200 group-hover:scale-110"
+          className="h-full w-full scale-105 object-cover transition-transform duration-200 will-change-transform group-hover:scale-110"
         />
 
         {template.isPopular && (
