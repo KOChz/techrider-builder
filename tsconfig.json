@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "/public",
+    "public",
     "components/builder/stage-plan-builder/stage-plan-builder.tsx"
   ],
   "exclude": ["node_modules"]
