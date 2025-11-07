@@ -31,13 +31,16 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
       className="min-w-40 group relative flex cursor-pointer flex-col gap-3 rounded-lg bg-white p-3 shadow-sm transition-all duration-200 hover:shadow-md md:min-w-[200px]"
       aria-label={`Select ${template.name} template`}
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-gray-100 [@supports(not_(aspect-ratio:1/1))]:h-[200px]">
+      <div className="aspect-3/4 relative overflow-hidden rounded-md bg-gray-100">
         <Image
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}
           fill
           className="object-cover transition-transform duration-200 group-hover:scale-105"
           sizes="(max-width: 768px) 160px, 200px"
+          // width={500}
+          // height={300}
+          unoptimized={true}
         />
 
         {template.isPopular && (

@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { TGetMyProjectsResult } from "@/app/actions/get-my-projects/get-my-projects";
 import { ProjectCard } from "../dashboard/my-project/project-card/project-card";
 import { ITemplateItem } from "../templates/template-item";
 import { TemplateGallery } from "../templates/template-gallery";
-import { useRouter } from "next/navigation";
 
 const templates: ITemplateItem[] = [
   {
     id: "3-piece-band",
     name: "3-Piece Band",
     description: "Band with additional keys/guitar",
-    thumbnailUrl: "/images/3piece-band.png",
+    thumbnailUrl: "/images/3-piece-band.png",
     category: "Band",
     isPopular: true,
     memberCount: 3,
@@ -22,7 +22,7 @@ const templates: ITemplateItem[] = [
     id: "4-piece-band",
     name: "4-Piece Band",
     description: "Standard rock/pop band setup",
-    thumbnailUrl: "/images/4piece-band.png",
+    thumbnailUrl: "/images/4-piece-band.png",
     category: "Band",
     memberCount: 4,
   },
@@ -30,7 +30,7 @@ const templates: ITemplateItem[] = [
     id: "2-piece-band",
     name: "2-Piece Band",
     description: "Standard rock/pop band setup",
-    thumbnailUrl: "/images/2piece-band.png",
+    thumbnailUrl: "/images/2-piece-band.png",
     category: "Band",
     memberCount: 2,
   },
