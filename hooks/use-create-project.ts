@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import { useProjectStore } from "@/stores/use-project-creation-store";
+import {
+  IProjectStore,
+  useProjectStore,
+} from "@/stores/use-project-creation-store";
 import {
   createNewProject,
   TCreateNewProjectInput,
@@ -12,6 +15,7 @@ interface IUseCreateProjectReturn {
   isCreating: boolean;
   error: string | null;
   createProject: () => Promise<void>;
+  initializeWithProject: (projectData: Partial<IProjectStore>) => void;
 }
 
 export function useCreateProject(): IUseCreateProjectReturn {
@@ -28,6 +32,7 @@ export function useCreateProject(): IUseCreateProjectReturn {
     ioSetupConfig,
     members,
     resetForm,
+    initializeWithProject,
   } = useProjectStore();
 
   const createProject = async () => {
@@ -80,5 +85,5 @@ export function useCreateProject(): IUseCreateProjectReturn {
     }
   };
 
-  return { isCreating, error, createProject };
+  return { isCreating, error, createProject, initializeWithProject };
 }

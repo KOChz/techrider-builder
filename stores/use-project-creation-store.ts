@@ -18,7 +18,7 @@ export interface IStagePlanFlowConfig {
   version?: number;
 }
 
-interface IProjectStore {
+export interface IProjectStore {
   name: string;
   notes: string;
   contactInfo: string;

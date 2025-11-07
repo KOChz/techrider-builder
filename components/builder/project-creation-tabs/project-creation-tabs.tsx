@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 import { StagePlanBuilderContent } from "../builder-tabs-content/stage-plan-builder-content";
 import { SettingsContent } from "../builder-tabs-content/settings-content/settings-content";
@@ -9,6 +9,8 @@ import { BandInfoContent } from "../builder-tabs-content/band-info-content/band-
 import { useCreateProject } from "@/hooks/use-create-project";
 import Link from "next/link";
 import { IoAuxSetupContent } from "../builder-tabs-content/io-aux-setup-content/io-aux-setup-content";
+import { nanoid } from "zod";
+import { templates } from "@/constants/templates";
 
 export type TTabId =
   | "band-info"
@@ -30,9 +32,14 @@ export const CREATE_PROJECT_TABS: ITab[] = [
   // { id: "settings", label: "Settings" },
 ];
 
-export default function ProjectCreationTabs() {
+export default function ProjectCreationTabs({
+  templateId,
+}: {
+  templateId?: string | null;
+}) {
   const [activeTab, setActiveTab] = useState<TTabId>("band-info");
-  const { isCreating, error, createProject } = useCreateProject();
+  const { isCreating, error, createProject, initializeWithProject } =
+    useCreateProject();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -50,6 +57,11 @@ export default function ProjectCreationTabs() {
         return null;
     }
   };
+
+  useLayoutEffect(() => {
+    templateId &&
+      initializeWithProject(templates.find((t) => t.id === templateId) as any);
+  }, [templateId]);
 
   return (
     <div className="w-full">
