@@ -31,6 +31,8 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
     >
       <div className="aspect-3/4 relative overflow-hidden rounded-md bg-gray-100">
         <img
+          width={50}
+          height={100}
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
