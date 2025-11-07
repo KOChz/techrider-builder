@@ -60,7 +60,7 @@ export function MemberCard({ member, isOpened = false }: IMemberCardProps) {
         <span className="member-icon">{member.icon}</span>
         <div className="member-info">
           <h3>{member.name}</h3>
-          <p className="member-role">{member.role}</p>
+          {/* <p className="member-role">{member.role}</p> */}
         </div>
       </div>
       <ul className="equipment-list">
