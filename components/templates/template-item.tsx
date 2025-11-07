@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export interface ITemplateItem {
   id: string;
   name: string;
@@ -30,9 +32,9 @@ export function TemplateCard({ template, onSelect }: ITemplateCardProps) {
       aria-label={`Select ${template.name} template`}
     >
       <div className="aspect-3/4 relative overflow-hidden rounded-md bg-gray-100">
-        <img
-          width={50}
-          height={100}
+        <Image
+          width={150}
+          height={300}
           src={template.thumbnailUrl}
           alt={`${template.name} template preview`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
