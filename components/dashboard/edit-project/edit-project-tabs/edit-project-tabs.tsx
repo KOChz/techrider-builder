@@ -21,7 +21,7 @@ import {
   TTabId,
 } from "@/components/builder/project-creation-tabs/project-creation-tabs";
 import { IoAuxSetupContent } from "@/components/builder/builder-tabs-content/io-aux-setup-content/io-aux-setup-content";
-import { ClientDndProvider } from "@/lib/client-dnd-rrovider";
+import { ClientDndProvider } from "@/lib/client-dnd-provider";
 
 export default function EditProjectTabs({
   project,

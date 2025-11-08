@@ -12,7 +12,7 @@ import { IoAuxSetupContent } from "../builder-tabs-content/io-aux-setup-content/
 import { nanoid } from "zod";
 import { templates } from "@/constants/templates";
 import { IProjectStore } from "@/stores/use-project-creation-store";
-import { ClientDndProvider } from "@/lib/client-dnd-rrovider";
+import { ClientDndProvider } from "@/lib/client-dnd-provider";
 
 export type TTabId =
   | "band-info"

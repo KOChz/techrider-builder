@@ -10,10 +10,7 @@ export function ClientDndProvider({ children }: PropsWithChildren) {
     typeof window !== "undefined" &&
     ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-  const backend = useMemo(
-    () => (isTouch ? TouchBackend : HTML5Backend),
-    [isTouch]
-  );
+  const backend = useMemo(() => HTML5Backend, [isTouch]);
 
   const options = isTouch
     ? {
