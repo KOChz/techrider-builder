@@ -12,6 +12,7 @@ export const MUSICAL_INSTRUMENTS = [
   { emoji: "🎻", label: "Violin" },
   { emoji: "🪕", label: "Banjo" },
   { emoji: "🪘", label: "Drum" },
+  { emoji: "🎥", label: "Visuals" },
 ] as const;
 
 interface IMusicalInstrumentSelectorProps {
@@ -55,14 +56,14 @@ export function MusicalInstrumentSelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 cursor-pointer text-3xl flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-green-500 focus:border-green-500 focus:outline-none transition-colors bg-white"
+        className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-lg border-2 border-gray-300 bg-white text-3xl transition-colors hover:border-green-500 focus:border-green-500 focus:outline-none"
         aria-label="Select musical instrument icon"
       >
         {value || "🎸"}
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-full min-w-72 px-2 bg-white border-2 border-gray-300 rounded-lg shadow-lg p-3">
+        <div className="min-w-72 absolute z-10 mt-2 w-full rounded-lg border-2 border-gray-300 bg-white p-3 px-2 shadow-lg">
           <div className="grid grid-cols-5 gap-3">
             {MUSICAL_INSTRUMENTS.map(({ emoji, label }) => (
               <button

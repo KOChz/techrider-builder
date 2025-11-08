@@ -54,7 +54,7 @@ export function DownloadPageButton({
 
       await exportStitchedPDF(baseOptions);
 
-      toast.success(`${format.toUpperCase()} generated!`);
+      toast.success(`PDF generated!`);
     } catch (error) {
       console.error(error);
       toast.error(`Failed to generate ${format.toUpperCase()}`);
