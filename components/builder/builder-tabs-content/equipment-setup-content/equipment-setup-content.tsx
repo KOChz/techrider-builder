@@ -9,6 +9,8 @@ import {
 } from "../../instrument-section-card-builder/instrument-section-card-builder";
 import { Plus } from "lucide-react";
 import { DraggableSection } from "@/components/draggable-section/draggable-section";
+import { MobileReorderControls } from "../../instrument-section-card-builder/mobile-reorder-controls";
+import { useDevice } from "@/hooks/use-device";
 
 export function EquipmentSetupContent() {
   const { members, addMember, updateMember, removeMember, moveMember } =
@@ -42,6 +44,8 @@ export function EquipmentSetupContent() {
     addMember(newMember);
   };
 
+  const { isMobile } = useDevice();
+
   return (
     <div className="min-h-[360px] space-y-2">
       <h3 className="text-2xl font-semibold text-slate-900">
@@ -57,26 +61,42 @@ export function EquipmentSetupContent() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-          {members.map((member, index) => (
-            <DraggableSection
-              key={member.id}
-              id={member.id}
-              index={index}
-              move={moveMember}
-            >
+          {members.map((member, index) => {
+            const card = (
               <div
-                className="scroll-mb-48"
+                className="relative scroll-mb-48"
                 style={{ scrollMarginBottom: "12rem" }}
                 ref={index === members.length - 1 ? lastCardRef : null}
               >
+                {/* Mobile reorder overlay */}
+                <MobileReorderControls
+                  index={index}
+                  total={members.length}
+                  onMoveUp={() => moveMember(index, index - 1)}
+                  onMoveDown={() => moveMember(index, index + 1)}
+                />
+
                 <InstrumentSectionCardBuilder
                   initialMember={member}
                   onChange={(updated) => updateMember(member.id, updated)}
                   onRemove={() => removeMember(member.id)}
                 />
               </div>
-            </DraggableSection>
-          ))}
+            );
+
+            return isMobile ? (
+              <div key={member.id}>{card}</div>
+            ) : (
+              <DraggableSection
+                key={member.id}
+                id={member.id}
+                index={index}
+                move={moveMember}
+              >
+                {card}
+              </DraggableSection>
+            );
+          })}
         </div>
       )}
 
