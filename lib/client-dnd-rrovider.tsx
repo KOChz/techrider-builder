@@ -10,12 +10,20 @@ export function ClientDndProvider({ children }: PropsWithChildren) {
     typeof window !== "undefined" &&
     ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-  // Touch backend with mouse events enabled helps on hybrid devices
   const backend = useMemo(
     () => (isTouch ? TouchBackend : HTML5Backend),
     [isTouch]
   );
-  const options = isTouch ? { enableMouseEvents: true } : undefined;
+
+  const options = isTouch
+    ? {
+        enableMouseEvents: true, // hybrid devices
+        delay: 150, // press-and-hold to start drag (prevents accidental drags while scrolling)
+        touchSlop: 8, // px movement allowed before drag
+        // allow vertical scroll to pass through when gesture is ~vertical
+        scrollAngleRanges: [{ start: 80, end: 100 }],
+      }
+    : undefined;
 
   return (
     <DndProvider backend={backend} options={options as any}>

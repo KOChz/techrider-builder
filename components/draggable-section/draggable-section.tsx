@@ -25,25 +25,21 @@ export function DraggableSection({
   const lastPointerTargetRef = useRef<EventTarget | null>(null);
 
   // Capture pointer target to decide if drag can start.
+  // in DraggableSection
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
     const onPointerDown = (e: Event) => {
       lastPointerTargetRef.current = e.target;
     };
-    el.addEventListener("pointerdown", onPointerDown, { capture: true });
-    el.addEventListener("touchstart", onPointerDown, { capture: true });
-    el.addEventListener("mousedown", onPointerDown, { capture: true });
+    const opts: AddEventListenerOptions = { capture: true, passive: true };
+    el.addEventListener("pointerdown", onPointerDown, opts);
+    el.addEventListener("touchstart", onPointerDown, opts);
+    el.addEventListener("mousedown", onPointerDown, opts);
     return () => {
-      el.removeEventListener("pointerdown", onPointerDown, {
-        capture: true,
-      } as any);
-      el.removeEventListener("touchstart", onPointerDown, {
-        capture: true,
-      } as any);
-      el.removeEventListener("mousedown", onPointerDown, {
-        capture: true,
-      } as any);
+      el.removeEventListener("pointerdown", onPointerDown, opts);
+      el.removeEventListener("touchstart", onPointerDown, opts);
+      el.removeEventListener("mousedown", onPointerDown, opts);
     };
   }, []);
 
@@ -92,6 +88,11 @@ export function DraggableSection({
         opacity: isDragging ? 0.55 : 1,
         transition: "opacity 120ms ease",
         borderRadius: 12,
+        // block browser gestures only during drag; scrolling works normally otherwise
+        touchAction: isDragging ? "none" : undefined,
+        WebkitUserSelect: isDragging ? "none" : undefined,
+        userSelect: isDragging ? "none" : undefined,
+        WebkitTouchCallout: isDragging ? "none" : undefined,
       }}
     >
       {children}
