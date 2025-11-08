@@ -11,6 +11,7 @@ import Link from "next/link";
 import { IoAuxSetupContent } from "../builder-tabs-content/io-aux-setup-content/io-aux-setup-content";
 import { nanoid } from "zod";
 import { templates } from "@/constants/templates";
+import { IProjectStore } from "@/stores/use-project-creation-store";
 
 export type TTabId =
   | "band-info"
@@ -61,7 +62,9 @@ export default function ProjectCreationTabs({
   useLayoutEffect(() => {
     templateId &&
       initializeWithProject(
-        templates.find((t) => t.templateId === templateId) as any
+        templates.find(
+          (t) => t.templateId === templateId
+        ) as Partial<IProjectStore>
       );
   }, [templateId]);
 

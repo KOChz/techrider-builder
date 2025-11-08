@@ -8,7 +8,7 @@ import {
   TEditProjectByIdInput,
 } from "@/app/actions/edit-project-by-id/edit-project-by-id";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
-import { slugify } from "@/lib/utils/slugify";
+import { slugify } from "transliteration";
 
 interface IUseEditProjectParams {
   project: TProjectWithRelations;

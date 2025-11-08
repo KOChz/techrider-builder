@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type TConnectionType = "wired" | "wireless (RF)" | "";
 
 export interface IChannelItem {
@@ -46,3 +48,26 @@ export type TIOSetupConfig = {
   channelList: TChannelListItem[];
   ioRouting: TIORoutingItem[];
 };
+
+const channelListItemSchema = z.object({
+  id: z.string(),
+  channelNumber: z.string(),
+  source: z.string(),
+  micDi: z.string(),
+  position: z.string(),
+  stand: z.string(),
+});
+
+const ioRoutingItemSchema = z.object({
+  id: z.string(),
+  channelPair: z.string(),
+  assignment: z.string(),
+  connectionType: z.string(),
+});
+
+export const ioSetupConfigSchema = z.object({
+  channelList: z.array(channelListItemSchema),
+  ioRouting: z.array(ioRoutingItemSchema),
+});
+
+export type TIOSetupConfigZod = z.infer<typeof ioSetupConfigSchema>;

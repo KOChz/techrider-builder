@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { View, Copy, Check } from "lucide-react";
-import { slugify } from "@/lib/utils/slugify";
+import { slugify } from "transliteration";
 import toast from "react-hot-toast";
 
 interface IProjectLinkWithCopyProps {

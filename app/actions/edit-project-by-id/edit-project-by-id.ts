@@ -14,7 +14,8 @@ import {
   type TProjectMember,
 } from "@/db/schema";
 import { stagePlanConfigSchema } from "@/types/zod-types";
-import { slugify } from "@/lib/utils/slugify";
+import { ioSetupConfigSchema } from "@/stores/io-aux-types";
+import { slugify } from "transliteration";
 
 const equipmentExampleSchema = z.object({
   title: z.string(),
@@ -42,7 +43,7 @@ const inputSchema = z.object({
   contactInfo: z.string().optional(),
   isPublic: z.boolean().optional(),
   stagePlanConfig: stagePlanConfigSchema.optional(),
-  ioSetupConfig: z.any().optional(),
+  ioSetupConfig: ioSetupConfigSchema.optional(),
   members: z.array(memberInputSchema).optional(),
   revalidate: z
     .object({ path: z.string().optional(), tag: z.string().optional() })

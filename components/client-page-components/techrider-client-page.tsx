@@ -10,7 +10,8 @@ import { DownloadPageButton } from "../download-page-button/download-page-button
 import { MemberCard } from "../member-card/member-card";
 import { StagePlanViewer } from "../builder/stage-plan-builder/stage-plan-viewer";
 import { User } from "@supabase/supabase-js";
-import { slugify } from "@/lib/utils/slugify";
+import { slugify } from "transliteration";
+
 import { NotesSection } from "../techrider/notes-section";
 import { IoRoutingTable } from "../tables/io-routing-table/io-routing-table";
 import { ChannelListTable } from "../tables/channel-list-table/channel-list-table";

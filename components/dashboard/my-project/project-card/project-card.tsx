@@ -8,8 +8,8 @@ import { FolderIcon } from "lucide-react";
 import { ProjectCardActions } from "./project-card-actions";
 import { useRouter } from "next/navigation";
 import { TProjectWithRelations } from "@/app/actions/get-my-projects/get-my-projects";
-import { slugify } from "@/lib/utils/slugify";
 import { deleteProject } from "@/app/actions/delete-project/delete-project";
+import { slugify } from "transliteration";
 
 interface IProjectCardProps {
   onDelete?: () => void;

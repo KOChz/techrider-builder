@@ -1,6 +1,8 @@
 "use server";
 
 import { z } from "zod";
+import { slugify } from "transliteration";
+
 import { cookies } from "next/headers";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { createServerClient } from "@supabase/ssr";
@@ -15,8 +17,8 @@ import {
 } from "@/db/schema";
 import { stagePlanConfigSchema, TStagePlanConfig } from "@/types/zod-types";
 import { TSupabaseUserMetadata } from "@/types/user-types";
-import { slugify } from "@/lib/utils/slugify";
 import { v4 as uuidv4 } from "uuid";
+import { ioSetupConfigSchema, TIOSetupConfig } from "@/stores/io-aux-types";
 
 const equipmentExampleSchema = z.object({
   title: z.string(),
@@ -42,7 +44,7 @@ const inputEditSchema = z.object({
   contactInfo: z.string().optional(),
   isPublic: z.boolean().optional(),
   stagePlanConfig: stagePlanConfigSchema.optional(),
-  ioSetupConfig: z.any().optional(),
+  ioSetupConfig: ioSetupConfigSchema.optional(),
   members: z.array(memberInputSchema).optional(),
   revalidate: z
     .object({ path: z.string().optional(), tag: z.string().optional() })
@@ -113,7 +115,7 @@ export async function createNewProject(raw: TCreateNewProjectInput) {
     isPublic: !!input.isPublic,
     slug: slugify(input.name),
     stagePlanConfig: input.stagePlanConfig || null,
-    ioSetupConfig: input.ioSetupConfig || null,
+    ioSetupConfig: input.ioSetupConfig as TIOSetupConfig,
     notes: input.notes || "",
     contactInfo: input.contactInfo || "",
     id: uuidv4(),
