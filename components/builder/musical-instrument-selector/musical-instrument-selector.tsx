@@ -56,7 +56,7 @@ export function MusicalInstrumentSelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-lg border-2 border-gray-300 bg-white text-3xl transition-colors hover:border-green-500 focus:border-green-500 focus:outline-none"
+        className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-3xl transition-colors hover:border-green-500 focus:border-green-500 focus:outline-none"
         aria-label="Select musical instrument icon"
       >
         {value || "🎸"}

@@ -176,9 +176,9 @@ export function InstrumentSectionCardBuilder({
   return (
     <div
       id="InstrumentSectionCardBuilder"
-      className="relative h-fit min-w-min max-w-4xl rounded-lg border-2 border-gray-300/80 bg-white p-2 text-sm lg:max-w-none lg:p-4 xl:p-6"
+      className="relative h-fit min-w-min max-w-4xl rounded-xl border border-gray-300/80 bg-white p-2 text-sm shadow-sm lg:max-w-none lg:p-4 xl:p-6"
     >
-      <div className="items-center-safe flex flex-row justify-between gap-2 pb-3">
+      <div className="items-center-safe flex flex-row justify-between gap-2 pb-2">
         {onRemove && (
           <button
             type="button"
@@ -216,7 +216,7 @@ export function InstrumentSectionCardBuilder({
                 onChange={(e) =>
                   updateInstrumentSection({ name: e.target.value })
                 }
-                className="w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-[16px] placeholder-slate-500 focus:border-green-500 focus:outline-none"
                 placeholder="Section Name"
               />
             </div>
