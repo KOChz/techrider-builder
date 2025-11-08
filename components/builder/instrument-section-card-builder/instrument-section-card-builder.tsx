@@ -178,16 +178,28 @@ export function InstrumentSectionCardBuilder({
       id="InstrumentSectionCardBuilder"
       className="relative h-fit min-w-min max-w-4xl rounded-lg border-2 border-gray-300/80 bg-white p-2 text-sm lg:max-w-none lg:p-4 xl:p-6"
     >
-      {onRemove && (
-        <button
-          type="button"
-          onClick={onRemove}
-          className="absolute -right-3 -top-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-red-500 text-lg text-white transition-colors hover:bg-red-600"
-          aria-label="Remove Section"
-        >
-          <X size={16} />
-        </button>
-      )}
+      <div className="items-center-safe flex flex-row justify-between gap-2 pb-3">
+        {onRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="absolute right-2 top-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-red-600"
+            aria-label="Remove Section"
+          >
+            <X size={22} />
+          </button>
+        )}
+
+        {/* Mobile controls - separate, in normal flow */}
+        <div className="pb-3">
+          <MobileReorderControls
+            index={index}
+            total={members.length}
+            onMoveUp={() => moveMember(index, index - 1)}
+            onMoveDown={() => moveMember(index, index + 1)}
+          />
+        </div>
+      </div>
 
       <div className="space-y-6 transition-all duration-200">
         <div className="space-y-4">
@@ -208,12 +220,6 @@ export function InstrumentSectionCardBuilder({
                 placeholder="Section Name"
               />
             </div>
-            <MobileReorderControls
-              index={index}
-              total={members.length}
-              onMoveUp={() => moveMember(index, index - 1)}
-              onMoveDown={() => moveMember(index, index + 1)}
-            />
           </div>
         </div>
 
@@ -252,7 +258,7 @@ export function InstrumentSectionCardBuilder({
                       e.preventDefault();
                       removeEquipmentItem(equipmentIndex);
                     }}
-                    className="p group cursor-pointer rounded-lg text-gray-400 transition-all duration-200 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
+                    className="group cursor-pointer rounded-lg text-gray-400 transition-all duration-200 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
                     aria-label="Remove this equipment"
                   >
                     <X className="h-4 w-4 transition-transform group-hover:scale-110" />

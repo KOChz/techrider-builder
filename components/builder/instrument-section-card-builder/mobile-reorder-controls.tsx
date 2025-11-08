@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils/cn";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface IMobileReorderControlsProps {
@@ -24,7 +25,11 @@ export function MobileReorderControls({
 
   return (
     <div
-      className={`z-20 w-min flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white md:hidden ${className}`}
+      id="MobileReorderControls"
+      className={cn(
+        `z-20 w-min flex flex-row overflow-hidden rounded-lg border border-slate-200 bg-white md:hidden`,
+        className
+      )}
       role="group"
       aria-label="Reorder section controls"
     >
