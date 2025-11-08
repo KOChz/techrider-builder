@@ -8,9 +8,11 @@ import {
   TInstrumentSectionBuilder,
 } from "../../instrument-section-card-builder/instrument-section-card-builder";
 import { Plus } from "lucide-react";
+import { DraggableSection } from "@/components/draggable-section/draggable-section";
 
 export function EquipmentSetupContent() {
-  const { members, addMember, updateMember, removeMember } = useProjectStore();
+  const { members, addMember, updateMember, removeMember, moveMember } =
+    useProjectStore();
 
   const previousLengthRef = useRef(members.length);
   const lastCardRef = useRef<HTMLDivElement>(null);
@@ -56,18 +58,24 @@ export function EquipmentSetupContent() {
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
           {members.map((member, index) => (
-            <div
+            <DraggableSection
               key={member.id}
-              ref={index === members.length - 1 ? lastCardRef : null}
-              className="scroll-mb-48"
-              style={{ scrollMarginBottom: "12rem" }}
+              id={member.id}
+              index={index}
+              move={moveMember}
             >
-              <InstrumentSectionCardBuilder
-                initialMember={member}
-                onChange={(updated) => updateMember(member.id, updated)}
-                onRemove={() => removeMember(member.id)}
-              />
-            </div>
+              <div
+                className="scroll-mb-48"
+                style={{ scrollMarginBottom: "12rem" }}
+                ref={index === members.length - 1 ? lastCardRef : null}
+              >
+                <InstrumentSectionCardBuilder
+                  initialMember={member}
+                  onChange={(updated) => updateMember(member.id, updated)}
+                  onRemove={() => removeMember(member.id)}
+                />
+              </div>
+            </DraggableSection>
           ))}
         </div>
       )}

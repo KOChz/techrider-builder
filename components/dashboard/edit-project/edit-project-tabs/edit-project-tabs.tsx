@@ -21,6 +21,7 @@ import {
   TTabId,
 } from "@/components/builder/project-creation-tabs/project-creation-tabs";
 import { IoAuxSetupContent } from "@/components/builder/builder-tabs-content/io-aux-setup-content/io-aux-setup-content";
+import { ClientDndProvider } from "@/lib/client-dnd-rrovider";
 
 export default function EditProjectTabs({
   project,
@@ -41,7 +42,11 @@ export default function EditProjectTabs({
       case "band-info":
         return <BandInfoContent />;
       case "equipment-setup":
-        return <EquipmentSetupContent />;
+        return (
+          <ClientDndProvider>
+            <EquipmentSetupContent />
+          </ClientDndProvider>
+        );
       case "io-aux-setup":
         return <IoAuxSetupContent />;
       case "stage-plan":

@@ -12,6 +12,7 @@ import { IoAuxSetupContent } from "../builder-tabs-content/io-aux-setup-content/
 import { nanoid } from "zod";
 import { templates } from "@/constants/templates";
 import { IProjectStore } from "@/stores/use-project-creation-store";
+import { ClientDndProvider } from "@/lib/client-dnd-rrovider";
 
 export type TTabId =
   | "band-info"
@@ -47,7 +48,11 @@ export default function ProjectCreationTabs({
       case "band-info":
         return <BandInfoContent />;
       case "equipment-setup":
-        return <EquipmentSetupContent />;
+        return (
+          <ClientDndProvider>
+            <EquipmentSetupContent />
+          </ClientDndProvider>
+        );
       case "io-aux-setup":
         return <IoAuxSetupContent />;
       case "stage-plan":

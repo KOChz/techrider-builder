@@ -54,6 +54,7 @@ export interface IProjectStore {
   addMember: (member: TInstrumentSectionBuilder) => void;
   updateMember: (id: string, member: TInstrumentSectionBuilder) => void;
   removeMember: (id: string) => void;
+  moveMember: (fromIndex: number, toIndex: number) => void;
 
   initializeWithProject: (projectData: Partial<IProjectStore>) => void;
   resetForm: () => void;
@@ -76,6 +77,7 @@ const getInitialStore = (): Omit<
   | "deleteMeasurement"
   | "addMember"
   | "setIOSetupConfig"
+  | "moveMember"
   | "updateMember"
   | "removeMember"
   | "initializeWithProject"
@@ -185,6 +187,15 @@ export const useProjectStore = create<IProjectStore>()(
         set((state) => ({
           members: state.members.filter((m) => m.id !== id),
         })),
+
+      moveMember: (fromIndex, toIndex) =>
+        set((state) => {
+          if (fromIndex === toIndex) return state;
+          const next = [...state.members];
+          const [m] = next.splice(fromIndex, 1);
+          next.splice(toIndex, 0, m);
+          return { ...state, members: next };
+        }),
 
       // Channel management
       addChannel: (channel) =>
