@@ -24,7 +24,7 @@ export function MobileReorderControls({
 
   return (
     <div
-      className={`absolute right-2 top-14 z-20 flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white md:hidden ${className}`}
+      className={`z-20 w-min flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white md:hidden ${className}`}
       role="group"
       aria-label="Reorder section controls"
     >

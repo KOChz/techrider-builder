@@ -6,6 +6,8 @@ import { ChevronDown, Plus, X } from "lucide-react";
 import { MusicalInstrumentSelector } from "../musical-instrument-selector/musical-instrument-selector";
 import { DetailsItemsList } from "./details-items-list";
 import { DetailsInput } from "./details-input";
+import { MobileReorderControls } from "./mobile-reorder-controls";
+import { useProjectStore } from "@/stores/use-project-creation-store";
 
 export type TEquipmentExample = {
   title: string;
@@ -30,13 +32,17 @@ interface IMemberCardBuilderProps {
   initialMember?: TInstrumentSectionBuilder;
   onChange?: (member: TInstrumentSectionBuilder) => void;
   onRemove?: () => void;
+  index: number;
 }
 
 export function InstrumentSectionCardBuilder({
   initialMember,
   onChange,
   onRemove,
+  index,
 }: IMemberCardBuilderProps) {
+  const { members, moveMember } = useProjectStore();
+
   const [section, setSection] = useState<TInstrumentSectionBuilder>(
     initialMember || {
       id: crypto.randomUUID(),
@@ -190,6 +196,7 @@ export function InstrumentSectionCardBuilder({
               value={section.icon}
               onChange={(icon) => updateInstrumentSection({ icon })}
             />
+
             <div className="flex-1 space-y-2">
               <input
                 type="text"
@@ -201,6 +208,12 @@ export function InstrumentSectionCardBuilder({
                 placeholder="Section Name"
               />
             </div>
+            <MobileReorderControls
+              index={index}
+              total={members.length}
+              onMoveUp={() => moveMember(index, index - 1)}
+              onMoveDown={() => moveMember(index, index + 1)}
+            />
           </div>
         </div>
 

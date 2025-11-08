@@ -69,14 +69,15 @@ export function EquipmentSetupContent() {
                 ref={index === members.length - 1 ? lastCardRef : null}
               >
                 {/* Mobile reorder overlay */}
-                <MobileReorderControls
+                {/* <MobileReorderControls
                   index={index}
                   total={members.length}
                   onMoveUp={() => moveMember(index, index - 1)}
                   onMoveDown={() => moveMember(index, index + 1)}
-                />
+                /> */}
 
                 <InstrumentSectionCardBuilder
+                  index={index}
                   initialMember={member}
                   onChange={(updated) => updateMember(member.id, updated)}
                   onRemove={() => removeMember(member.id)}
