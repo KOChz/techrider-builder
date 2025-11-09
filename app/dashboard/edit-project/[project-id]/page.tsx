@@ -28,7 +28,7 @@ export default async function EditProjectPage({
         <ProjectLinkWithCopy projectName={project.name} />
       </div>
 
-      <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3 md:p-5 lg:p-8">
+      <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3.5 md:p-5 lg:p-8">
         <EditProjectTabs project={project} />
       </div>
     </div>
