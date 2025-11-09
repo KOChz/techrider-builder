@@ -19,19 +19,6 @@ export default async function EditProjectPage({
   const { project } = await getProjectById({ projectId });
 
   return (
-    // <div id="EditProjectPage">
-    //   <div className="flex flex-row items-center justify-between pb-6">
-    //     <h2 className="text-shadow-2xs text-3xl font-bold text-slate-900">
-    //       Edit {project.name}
-    //     </h2>
-
-    //     <ProjectLinkWithCopy projectName={project.name} />
-    //   </div>
-    //   <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 md:p-5 lg:p-8">
-    //     <EditProjectTabs project={project} />
-    //   </div>
-    // </div>
-
     <div id="EditProjectPage">
       <div className="flex flex-col items-stretch gap-3 pb-4 md:flex-row md:items-center md:justify-between md:pb-6">
         <h2 className="text-shadow-2xs truncate text-2xl font-bold text-slate-900 md:text-3xl">
@@ -41,7 +28,7 @@ export default async function EditProjectPage({
         <ProjectLinkWithCopy projectName={project.name} />
       </div>
 
-      <div className="flex flex-col rounded-lg border border-slate-200 bg-white p-3 md:p-5 lg:p-8">
+      <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3 md:p-5 lg:p-8">
         <EditProjectTabs project={project} />
       </div>
     </div>
