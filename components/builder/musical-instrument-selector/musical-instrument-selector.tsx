@@ -63,7 +63,7 @@ export function MusicalInstrumentSelector({
       </button>
 
       {isOpen && (
-        <div className="min-w-72 absolute z-10 mt-2 w-full rounded-lg border-2 border-gray-300 bg-white p-3 px-2 shadow-lg">
+        <div className="min-w-72 absolute z-10 mt-2 w-full rounded-xl border border-gray-300 bg-white p-2.5 shadow-lg">
           <div className="grid grid-cols-5 gap-3">
             {MUSICAL_INSTRUMENTS.map(({ emoji, label }) => (
               <button
