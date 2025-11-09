@@ -44,7 +44,7 @@ export function DetailsInput({
         className="group cursor-pointer px-3 text-gray-400 transition-all duration-200 hover:bg-red-50 hover:text-red-500 focus:bg-red-50 focus:text-red-500 focus:outline-none"
         aria-label="Remove this example"
       >
-        <X className="h-4 w-4 transition-transform group-hover:scale-110" />
+        <X className="h-4 w-4" />
       </button>
     </div>
   );

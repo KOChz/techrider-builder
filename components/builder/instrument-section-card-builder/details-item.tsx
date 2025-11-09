@@ -54,9 +54,9 @@ export function DetailsItem({
       <button
         type="button"
         onClick={() => onRemoveExample(equipmentIndex, exampleIndex)}
-        className="absolute -right-1 -top-1 flex h-[18px] w-[18px] cursor-pointer items-center justify-center rounded-full border border-red-400 bg-red-500 text-white transition-colors hover:bg-red-600"
+        className="absolute right-2 top-2 flex h-[18px] w-[18px] cursor-pointer items-center justify-center text-gray-400 transition-colors hover:text-red-600"
       >
-        <X size={12} />
+        <X className="h-4 w-4" />
       </button>
     </div>
   );
