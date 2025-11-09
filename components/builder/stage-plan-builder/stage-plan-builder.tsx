@@ -316,7 +316,7 @@ export default function StagePlanBuilder({
 
           <div className="h-px bg-slate-200" />
 
-          <div className="grid gap-2 pb-6">
+          <div className="grid gap-2 pb-3">
             <strong className="text-xs text-slate-900">Equipment</strong>
             <Palette onAddNode={handleAddNode} />
             <span className="text-xs text-slate-600 md:hidden">

@@ -64,7 +64,7 @@ export function Palette({ onAddNode }: IPaletteProps) {
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-lg border border-slate-400/75 bg-white shadow-lg">
+          <div className="no-scrollbar absolute left-0 right-0 top-full z-50 mt-2 rounded-xl border border-slate-300/75 bg-white shadow-lg">
             <div className="max-h-64 overflow-y-auto p-2">
               <div className="grid gap-2">
                 <PaletteItem

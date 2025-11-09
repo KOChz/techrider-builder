@@ -111,7 +111,7 @@ export default function ProjectCreationTabs({
         role="tabpanel"
         id={`panel-${activeTab}`}
         aria-labelledby={`tab-${activeTab}`}
-        className="py-6 pb-0"
+        className="pt-4"
       >
         {renderContent()}
       </div>
